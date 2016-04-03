@@ -49,9 +49,28 @@ stdenv.mkDerivation rec {
     "security_INSTALL_DIR=\$(out)/bin"
   ];
 
-  propagatedBuildInputs = [ GSS Kerberos Security-framework PCSC Foundation ];
+  propagatedBuildInputs = [ AppKit GSS Kerberos Security-framework PCSC Foundation ];
 
   __propagatedImpureHostDeps = [ "/System/Library/Keychains" ];
+
+  propagatedSandboxProfile = ''
+    (allow mach-lookup
+      (global-name "com.apple.SecurityServer")
+      (global-name "com.apple.cfprefsd.daemon"))
+
+    (allow file-read-metadata
+      (literal "/private/var")
+      (literal "/private/var/db")
+      (subpath "/private/var/db/mds")
+      (literal "/private/var/run/systemkeychaincheck.done")
+      (literal "/etc"))
+
+    (allow file-read*
+      (subpath "/System/Library/PrivateFrameworks/Heimdal.framework")
+      (subpath "/System/Library/Frameworks/GSS.framework"))
+
+    (allow file-write* (subpath "/mds"))
+  '';
 
   buildInputs = [
     gnustep.make
