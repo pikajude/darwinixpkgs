@@ -9,4 +9,11 @@ import ./nodejs.nix (args // rec {
     url = "http://nodejs.org/dist/v${version}/node-v${version}.tar.xz";
     sha256 = "4f926373f11f2a25156eee1804ec012eb912c42e5d34fc2909889da22efdadfe";
   };
+
+  propagatedSandboxProfile = ''
+    (allow file-read*
+      (subpath "/etc")
+      (literal "/private/etc/resolv.conf")
+      (literal "/private/var/run/resolv.conf"))
+  '';
 })
