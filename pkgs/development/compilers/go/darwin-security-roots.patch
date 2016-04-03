@@ -1,0 +1,15 @@
+diff --git a/src/crypto/x509/root.go b/src/crypto/x509/root.go
+index 8aae14e..110ec18 100644
+--- a/src/crypto/x509/root.go
++++ b/src/crypto/x509/root.go
+@@ -12,6 +12,9 @@ var (
+ )
+ 
+ func systemRootsPool() *CertPool {
+-	once.Do(initSystemRoots)
++	once.Do(func() {
++		roots, _ := execSecurityRoots()
++		systemRoots = roots
++	})
+ 	return systemRoots
+ }

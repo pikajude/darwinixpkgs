@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ perl which pkgconfig patch ];
   buildInputs = [ pcre ];
   propagatedBuildInputs = lib.optionals stdenv.isDarwin [
-    Security Foundation
+    darwin.security_tool darwin.apple_sdk.frameworks.AppKit
   ];
 
   hardeningDisable = [ "all" ];
@@ -53,6 +53,8 @@ stdenv.mkDerivation rec {
     # and thus it is not corrected by patchShebangs.
     substituteInPlace misc/cgo/testcarchive/test.bash \
       --replace '#!/usr/bin/env bash' '#!${stdenv.shell}'
+    substituteInPlace src/crypto/x509/root_darwin.go \
+      --replace /usr/bin/security security
 
     # Disabling the 'os/http/net' tests (they want files not available in
     # chroot builds)
@@ -87,6 +89,7 @@ stdenv.mkDerivation rec {
     sed -i '/TestChdirAndGetwd/areturn' src/os/os_test.go
     sed -i '/TestRead0/areturn' src/os/os_test.go
     sed -i '/TestNohup/areturn' src/os/signal/signal_test.go
+    sed -i '/TestGoVerify/areturn' src/crypto/x509/verify_test.go
     sed -i '/TestSystemRoots/areturn' src/crypto/x509/root_darwin_test.go
 
     sed -i '/TestGoInstallRebuildsStalePackagesInOtherGOPATH/areturn' src/cmd/go/go_test.go
@@ -110,6 +113,8 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./remove-tools-1.5.patch
+  ] ++ stdenv.lib.optionals stdenv.isDarwin [
+    ./darwin-security-roots.patch
   ];
 
   GOOS = if stdenv.isDarwin then "darwin" else "linux";
