@@ -88,6 +88,8 @@ in
     outputs = [ "out" "dev" "man" ];
     preConfigure = setMalloc0ReturnsNullCrossCompiling + ''
       sed 's,^as_dummy.*,as_dummy="\$PATH",' -i configure
+    '' + stdenv.lib.optionalString stdenv.isDarwin ''
+      substituteInPlace configure --replace "ac_prog in cpp" "ac_prog in foobar"
     '';
     postInstall =
       ''
