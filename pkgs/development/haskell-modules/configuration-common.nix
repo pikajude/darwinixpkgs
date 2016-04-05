@@ -220,6 +220,11 @@ self: super: {
   gtksourceview2 = (addPkgconfigDepend super.gtksourceview2 pkgs.gtk2).override { inherit (pkgs.gnome2) gtksourceview; };
   gtksourceview3 = super.gtksourceview3.override { inherit (pkgs.gnome3) gtksourceview; };
 
+  pango = addBuildDepends super.pango
+    (pkgs.lib.optional pkgs.stdenv.isDarwin pkgs.darwin.apple_sdk.frameworks.ApplicationServices);
+  reflex-dom = addBuildDepends super.reflex-dom
+    (pkgs.lib.optional pkgs.stdenv.isDarwin pkgs.darwin.apple_sdk.frameworks.Cocoa);
+
   # Need WebkitGTK, not just webkit.
   webkit = super.webkit.override { webkit = pkgs.webkitgtk2; };
   webkitgtk3 = super.webkitgtk3.override { webkit = pkgs.webkitgtk24x; };
