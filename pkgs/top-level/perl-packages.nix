@@ -6709,6 +6709,13 @@ let self = _self // overrides; _self = with self; {
       url = "mirror://cpan/authors/id/T/TO/TODDR/${name}.tar.gz";
       sha256 = "0399anjy3bc0w8xzsc3qx5vcyqryc9gc52lc7wh7i49hsdq8gvx2";
     };
+    sandboxProfile = ''
+      (allow file*
+        (regex #"^/dev/pt.*")
+        (regex #"^/dev/tty.*"))
+
+      (allow pseudo-tty)
+    '';
   };
 
   IPCRun = buildPerlPackage {
