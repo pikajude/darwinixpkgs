@@ -134,6 +134,8 @@ in
   libXt = attrs: attrs // {
     preConfigure = setMalloc0ReturnsNullCrossCompiling + ''
       sed 's,^as_dummy.*,as_dummy="\$PATH",' -i configure
+    '' + stdenv.lib.optionalString stdenv.isDarwin ''
+      substituteInPlace configure --replace "ac_prog in cpp" "ac_prog in foobar"
     '';
     propagatedBuildInputs = [ xorg.libSM ];
     CPP = stdenv.lib.optionalString stdenv.isDarwin "clang -E -";
