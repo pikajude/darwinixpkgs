@@ -1,5 +1,5 @@
 { stdenv, fetchurl, pkgconfig, gettext, glib, atk, pango, cairo, perl, xorg
-, gdk_pixbuf, libintlOrEmpty, xlibsWrapper
+, gdk_pixbuf, libintlOrEmpty, xlibsWrapper, darwin
 , xineramaSupport ? stdenv.isLinux
 , cupsSupport ? true, cups ? null
 }:
@@ -33,7 +33,7 @@ stdenv.mkDerivation rec {
     ++ optionals (stdenv.isLinux || stdenv.isDarwin) [
          libXrandr libXrender libXcomposite libXi libXcursor
        ]
-    ++ optionals stdenv.isDarwin [ xlibsWrapper libXdamage ]
+    ++ optionals stdenv.isDarwin [ xlibsWrapper libXdamage darwin.apple_sdk.frameworks.ApplicationServices ]
     ++ libintlOrEmpty
     ++ optional xineramaSupport libXinerama
     ++ optionals cupsSupport [ cups ];
