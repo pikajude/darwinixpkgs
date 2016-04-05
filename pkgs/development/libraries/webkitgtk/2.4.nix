@@ -44,6 +44,8 @@ stdenv.mkDerivation rec {
     ./plugin-none.patch
   ];
 
+  __impureHostDeps = [ "/usr/lib/libicucore.dylib" ];
+
   configureFlags = with stdenv.lib; [
     "--disable-geolocation"
     "--disable-jit"
