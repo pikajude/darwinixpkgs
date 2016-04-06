@@ -8,8 +8,6 @@
 , tcl ? null, tk ? null, xlibsWrapper ? null, libX11 ? null, x11Support ? !stdenv.isCygwin
 , zlib ? null, zlibSupport ? true
 , expat, libffi
-
-, CF, configd
 }:
 
 assert zlibSupport -> zlib != null;
@@ -105,10 +103,7 @@ let
         [ db gdbm ncurses sqlite readline
         ] ++ optionals x11Support [ tcl tk xlibsWrapper libX11 ]
     )
-    ++ optional zlibSupport zlib
-    ++ optional stdenv.isDarwin CF;
-
-  propagatedBuildInputs = optional stdenv.isDarwin configd;
+    ++ optional zlibSupport zlib;
 
   mkPaths = paths: {
     C_INCLUDE_PATH = makeSearchPathOutput "dev" "include" paths;
@@ -121,7 +116,7 @@ let
     name = "python-${version}";
     pythonVersion = majorVersion;
 
-    inherit majorVersion version src patches buildInputs propagatedBuildInputs
+    inherit majorVersion version src patches buildInputs
             preConfigure configureFlags;
 
     LDFLAGS = stdenv.lib.optionalString (!stdenv.isDarwin) "-lgcc_s";

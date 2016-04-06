@@ -19,7 +19,9 @@
 
 let
   libSystemProfile = ''
-    (import "${./standard-sandbox.sb}")
+    (allow process-fork)
+    (allow file* (subpath "/dev"))
+    (allow sysctl-read)
   '';
 in rec {
   allPackages = import ../../..;
@@ -29,17 +31,16 @@ in rec {
     export NIX_ENFORCE_NO_NATIVE="''${NIX_ENFORCE_NO_NATIVE-1}"
     export NIX_IGNORE_LD_THROUGH_GCC=1
     stripAllFlags=" " # the Darwin "strip" command doesn't know "-s"
-    export MACOSX_DEPLOYMENT_TARGET=10.7
-    export SDKROOT=
     export CMAKE_OSX_ARCHITECTURES=x86_64
     # Workaround for https://openradar.appspot.com/22671534 on 10.11.
     export gl_cv_func_getcwd_abort_bug=no
   '';
 
-  # The one dependency of /bin/sh :(
-  binShClosure = ''
-    (allow file-read* (literal "/usr/lib/libncurses.5.4.dylib"))
-  '';
+  __stdenvImpureHostDeps = [
+    "/usr/lib/libSystem.dylib"
+    "/usr/lib/system/libcache.dylib"
+    "/usr/lib/system/libkxld.dylib"
+  ];
 
   bootstrapTools = derivation rec {
     inherit system;
@@ -50,7 +51,9 @@ in rec {
 
     inherit (bootstrapFiles) mkdir bzip2 cpio tarball;
 
-    __sandboxProfile = binShClosure + libSystemProfile;
+    __sandboxProfile = libSystemProfile;
+
+    __impureHostDeps = __stdenvImpureHostDeps;
   };
 
   stageFun = step: last: {shell             ? "${bootstrapTools}/bin/sh",
@@ -72,7 +75,7 @@ in rec {
           nativeTools  = true;
           nativePrefix = bootstrapTools;
           nativeLibc   = false;
-          libc         = last.pkgs.darwin.Libsystem;
+          libc         = "$SDKROOT/usr";
           isClang      = true;
           cc           = { name = "clang-9.9.9"; outPath = bootstrapTools; };
         };
@@ -92,8 +95,11 @@ in rec {
         };
 
         # The stdenvs themselves don't use mkDerivation, so I need to specify this here
-        stdenvSandboxProfile = binShClosure + libSystemProfile;
-        extraSandboxProfile  = binShClosure + libSystemProfile;
+        stdenvSandboxProfile = libSystemProfile;
+        extraSandboxProfile  = libSystemProfile;
+
+        inherit __stdenvImpureHostDeps;
+        __extraImpureHostDeps = __stdenvImpureHostDeps;
 
         extraAttrs = { inherit platform; parent = last; };
         overrides  = pkgs: (overrides pkgs) // { fetchurl = thisStdenv.fetchurlBoot; };
@@ -108,14 +114,6 @@ in rec {
   stage0 = stageFun 0 null {
     overrides = orig: with stage0; rec {
       darwin = orig.darwin // {
-        Libsystem = stdenv.mkDerivation {
-          name = "bootstrap-Libsystem";
-          buildCommand = ''
-            mkdir -p $out
-            ln -s ${bootstrapTools}/lib $out/lib
-            ln -s ${bootstrapTools}/include-Libsystem $out/include
-          '';
-        };
         dyld = bootstrapTools;
       };
 
@@ -165,7 +163,7 @@ in rec {
 
     darwin = orig.darwin // {
       inherit (darwin)
-        dyld Libsystem xnu configd libdispatch libclosure launchd;
+        Libsystem xnu configd libdispatch libclosure launchd;
     };
   };
 
@@ -174,12 +172,12 @@ in rec {
       export PATH_LOCALE=${pkgs.darwin.locale}/share/locale
     '';
 
-    extraBuildInputs = with pkgs; [ xz darwin.CF libcxx ];
+    extraBuildInputs = with pkgs; [ xz libcxx ];
 
     allowedRequisites =
       [ bootstrapTools ] ++
       (with pkgs; [ xz.bin xz.out libcxx libcxxabi icu.out ]) ++
-      (with pkgs.darwin; [ dyld Libsystem CF locale ]);
+      (with pkgs.darwin; [ Libsystem locale ]);
 
     overrides = persistent1;
   };
@@ -205,7 +203,7 @@ in rec {
     # enables patchShebangs above. Unfortunately, patchShebangs ignores our $SHELL setting
     # and instead goes by $PATH, which happens to contain bootstrapTools. So it goes and
     # patches our shebangs back to point at bootstrapTools. This makes sure bash comes first.
-    extraBuildInputs = with pkgs; [ xz darwin.CF libcxx pkgs.bash ];
+    extraBuildInputs = with pkgs; [ xz libcxx pkgs.bash ];
 
     extraPreHook = ''
       export PATH=${pkgs.bash}/bin:$PATH
@@ -215,7 +213,7 @@ in rec {
     allowedRequisites =
       [ bootstrapTools ] ++
       (with pkgs; [ xz.bin xz.out icu.out bash libcxx libcxxabi ]) ++
-      (with pkgs.darwin; [ dyld Libsystem locale ]);
+      (with pkgs.darwin; [ Libsystem locale ]);
 
     overrides = persistent2;
   };
@@ -239,7 +237,7 @@ in rec {
 
   stage4 = with stage3; stageFun 4 stage3 {
     shell = "${pkgs.bash}/bin/bash";
-    extraBuildInputs = with pkgs; [ xz darwin.CF libcxx pkgs.bash ];
+    extraBuildInputs = with pkgs; [ xz libcxx pkgs.bash ];
     extraPreHook = ''
       export PATH_LOCALE=${pkgs.darwin.locale}/share/locale
     '';
@@ -284,14 +282,14 @@ in rec {
       inherit (pkgs) coreutils binutils gnugrep;
       inherit (pkgs.darwin) dyld;
       cc   = pkgs.llvmPackages.clang-unwrapped;
-      libc = pkgs.darwin.Libsystem;
+      libc = "$SDKROOT/usr";
     };
 
     extraBuildInputs = with pkgs; [ darwin.CF libcxx ];
 
     extraAttrs = {
       inherit platform bootstrapTools;
-      libc         = pkgs.darwin.Libsystem;
+      libc         = "$SDKROOT/usr";
       shellPackage = pkgs.bash;
       parent       = stage4;
     };

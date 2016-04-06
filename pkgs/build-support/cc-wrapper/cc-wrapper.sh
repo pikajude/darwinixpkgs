@@ -24,7 +24,7 @@ nonFlagArgs=0
 [[ "@prog@" = *++ ]] && isCpp=1 || isCpp=0
 cppInclude=1
 
-params=("$@")
+params=("$@" "-v")
 n=0
 while [ $n -lt ${#params[*]} ]; do
     p=${params[n]}

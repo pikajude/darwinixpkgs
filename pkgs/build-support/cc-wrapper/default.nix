@@ -61,6 +61,10 @@ stdenv.mkDerivation {
       }
     ''
 
+    + optionalString stdenv.isDarwin ''
+      export libc=$SDKROOT/usr
+    ''
+
     + optionalString (!nativeLibc) (if (!stdenv.isDarwin) then ''
       dynamicLinker="${libc_lib}/lib/$dynamicLinker"
       echo $dynamicLinker > $out/nix-support/dynamic-linker
@@ -97,6 +101,10 @@ stdenv.mkDerivation {
 
       echo "${libc_lib}" > $out/nix-support/orig-libc
       echo "${libc_dev}" > $out/nix-support/orig-libc-dev
+    ''
+
+    + optionalString stdenv.isDarwin ''
+      echo " -F$SDKROOT/System/Library/Frameworks" >> $out/nix-support/libc-ldflags
     ''
 
     + (if nativeTools then ''

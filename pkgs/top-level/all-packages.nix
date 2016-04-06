@@ -6108,7 +6108,6 @@ in
   };
   python27 = callPackage ../development/interpreters/python/cpython/2.7 {
     self = python27;
-    inherit (darwin) CF configd;
   };
   python33 = callPackage ../development/interpreters/python/cpython/3.3 {
     self = python33;
@@ -11107,8 +11106,17 @@ in
 
   darwin = let
     cmdline = callPackage ../os-specific/darwin/command-line-tools {};
-    apple-source-releases = callPackage ../os-specific/darwin/apple-source-releases { };
-  in apple-source-releases // rec {
+    apple-source-releases = callPackage ../os-specific/darwin/apple-source-releases {};
+  in rec {
+    Libsystem = stdenv.mkDerivation {
+      name = "Libsystem";
+      buildCommand = ''
+        mkdir $out
+      '';
+    };
+
+    inherit (apple-source-releases) ps libiconv locale;
+
     cctools_cross = callPackage (forceNativeDrv (callPackage ../os-specific/darwin/cctools/port.nix {}).cross) {
       cross = assert crossSystem != null; crossSystem;
       inherit maloader;
