@@ -15,22 +15,17 @@ stdenv.mkDerivation rec {
     sha256 = "0apcz4vy2z5645jhrs60wj3w27mncjjqv42h5lln36g6qs2n9113";
   };
 
-  patchPhase = ''
+  patchPhase =
     # copied from libsecurity_generic
-    ln -s ${osx_private_sdk}/PrivateSDK10.9.sparse.sdk/System/Library/Frameworks/Security.framework/Versions/A/PrivateHeaders Security
+    # ln -s ${osx_private_sdk}/PrivateSDK10.9.sparse.sdk/System/Library/Frameworks/Security.framework/Versions/A/PrivateHeaders Security
 
+  ''
     substituteInPlace cmsutil.c --replace \
       '<CoreServices/../Frameworks/CarbonCore.framework/Headers/MacErrors.h>' \
       '"${apple_sdk.sdk}/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers/MacErrors.h"'
     substituteInPlace createFVMaster.c --replace \
       '<CoreServices/../Frameworks/CarbonCore.framework/Headers/MacErrors.h>' \
       '"${apple_sdk.sdk}/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers/MacErrors.h"'
-  '';
-
-  postUnpack = ''
-    unpackFile ${Security.src}
-    cp Security-*/utilities/src/fileIo.c SecurityTool*
-    cp Security-*/utilities/src/fileIo.h SecurityTool*
   '';
 
   preBuild = ''
@@ -48,8 +43,6 @@ stdenv.mkDerivation rec {
   installFlags = [
     "security_INSTALL_DIR=\$(out)/bin"
   ];
-
-  propagatedBuildInputs = [ AppKit GSS Kerberos Security-framework PCSC Foundation ];
 
   __propagatedImpureHostDeps = [ "/System/Library/Keychains" ];
 
@@ -97,8 +90,6 @@ stdenv.mkDerivation rec {
   ];
 
   NIX_CFLAGS_COMPILE = [
-    "-F${Security}/Library/Frameworks"
-    "-F${PCSC}/Library/Frameworks"
     "-Wno-deprecated-declarations"
   ];
 

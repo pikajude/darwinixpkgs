@@ -11,12 +11,6 @@ stdenv.mkDerivation rec {
 
   patches = [ ]; # FIXME: remove on another stdenv rebuild
 
-  # avoid retaining reference to CF during stdenv bootstrap
-  configureFlags = stdenv.lib.optionals stdenv.isDarwin [
-    "gt_cv_func_CFPreferencesCopyAppValue=no"
-    "gt_cv_func_CFLocaleCopyCurrent=no"
-  ];
-
   # gnutar tries to call into gettext between `fork` and `exec`,
   # which is not safe on darwin.
   # see http://article.gmane.org/gmane.os.macosx.fink.devel/21882

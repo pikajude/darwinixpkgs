@@ -11,7 +11,7 @@ self: super: {
   jailbreak-cabal = (disableSharedExecutables super.jailbreak-cabal).override { Cabal = dontJailbreak self.Cabal_1_20_0_4; };
 
   # Apply NixOS-specific patches.
-  ghc-paths = appendPatch super.ghc-paths ./patches/ghc-paths-nix.patch;
+  # ghc-paths = appendPatch super.ghc-paths ./patches/ghc-paths-nix.patch;
 
   # Break infinite recursions.
   clock = dontCheck super.clock;
@@ -179,17 +179,6 @@ self: super: {
 
   # the system-fileio tests use canonicalizePath, which fails in the sandbox
   system-fileio = if pkgs.stdenv.isDarwin then dontCheck super.system-fileio else super.system-fileio;
-
-  # Prevents needing to add security_tool as a build tool to all of x509-system's
-  # dependencies.
-  x509-system = if pkgs.stdenv.isDarwin && !pkgs.stdenv.cc.nativeLibc
-    then let inherit (pkgs.darwin) security_tool;
-      in pkgs.lib.overrideDerivation (addBuildDepend super.x509-system security_tool) (drv: {
-        postPatch = (drv.postPatch or "") + ''
-          substituteInPlace System/X509/MacOS.hs --replace security ${security_tool}/bin/security
-        '';
-      })
-    else super.x509-system;
 
   double-conversion = if !pkgs.stdenv.isDarwin
     then addExtraLibrary super.double-conversion pkgs.stdenv.cc.cc.lib

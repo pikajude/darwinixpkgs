@@ -17,7 +17,7 @@ let
     "osx-10.10.5" = {
       adv_cmds      = "158";
       architecture  = "266";
-      CF            = "1153.18";
+      # CF            = "1153.18";
       CommonCrypto  = "60061.30.1";
       copyfile      = "118.1.2";
       Csu           = "85";
@@ -59,7 +59,7 @@ let
       IOKitUser                            = "1050.20.2";
     };
     "osx-10.9.5" = {
-      CF                 = "855.17";
+      # CF                 = "855.17";
       launchd            = "842.92.1";
       libauto            = "185.5";
       Libc               = "997.90.3";

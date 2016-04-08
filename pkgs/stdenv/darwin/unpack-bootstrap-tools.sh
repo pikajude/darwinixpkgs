@@ -52,3 +52,5 @@ cat >$out/bin/dsymutil << EOF
 EOF
 
 chmod +x $out/bin/egrep $out/bin/fgrep $out/bin/dsymutil
+
+rm -rf $out/Library

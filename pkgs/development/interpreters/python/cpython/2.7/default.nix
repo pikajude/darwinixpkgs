@@ -77,6 +77,9 @@ let
       substituteInPlace configure --replace '`/usr/bin/arch`' '"i386"'
       substituteInPlace Lib/multiprocessing/__init__.py \
         --replace 'os.popen(comm)' 'os.popen("nproc")'
+      substituteInPlace Lib/platform.py --replace \
+        /System/Library/CoreServices/SystemVersion.plist \
+        "$SDKROOT"/System/Library/CoreServices/SystemVersion.plist
     '';
 
   configureFlags = [
@@ -87,8 +90,6 @@ let
     "--with-system-ffi"
     "--with-system-expat"
     "ac_cv_func_bind_textdomain_codeset=yes"
-  ] ++ optionals stdenv.isDarwin [
-    "--disable-toolbox-glue"
   ];
 
   postConfigure = if stdenv.isCygwin then ''

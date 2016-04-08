@@ -72,8 +72,9 @@ rec {
 
   gitflow = callPackage ./gitflow { };
 
-  hub = callPackage ./hub {
-    inherit (darwin) Security;
+  hub = import ./hub {
+    inherit go;
+    inherit stdenv fetchgit;
   };
 
   qgit = callPackage ./qgit { };

@@ -4790,7 +4790,7 @@ in
   dotnetPackages = recurseIntoAttrs (callPackage ./dotnet-packages.nix {});
 
   go_bootstrap = callPackage ../development/compilers/go/1.4.nix {
-    inherit (darwin.apple_sdk.frameworks) Security;
+    inherit (darwin) security_tool;
   };
 
   go_1_6 = callPackage ../development/compilers/go/1.6.nix {
@@ -6113,7 +6113,6 @@ in
     self = python33;
   };
   python34 = hiPrio (callPackage ../development/interpreters/python/cpython/3.4 {
-    inherit (darwin) CF configd;
     self = python34;
   });
   python35 = hiPrio (callPackage ../development/interpreters/python/cpython/3.5 {
@@ -11115,7 +11114,13 @@ in
       '';
     };
 
-    inherit (apple-source-releases) ps libiconv locale;
+    inherit (apple-source-releases) ps locale libiconv
+      libsecurity_apple_csp libsecurity_apple_cspdl libsecurity_apple_file_dl
+      libsecurity_apple_x509_cl libsecurity_apple_x509_tp libsecurity_asn1
+      libsecurity_cdsa_client libsecurity_cdsa_plugin libsecurity_cdsa_utilities
+      libsecurity_cdsa_utils libsecurity_cssm libsecurity_filedb libsecurity_keychain
+      libsecurity_mds libsecurity_pkcs12 libsecurity_sd_cspdl libsecurity_utilities
+      libsecurityd;
 
     cctools_cross = callPackage (forceNativeDrv (callPackage ../os-specific/darwin/cctools/port.nix {}).cross) {
       cross = assert crossSystem != null; crossSystem;
@@ -11128,10 +11133,7 @@ in
       stdenv = if stdenv.isDarwin then stdenv else libcxxStdenv;
     }).native;
 
-    cf-private = callPackage ../os-specific/darwin/cf-private {
-      inherit (apple-source-releases) CF;
-      inherit osx_private_sdk;
-    };
+    cf-private = osx_private_sdk."10_10";
 
     maloader = callPackage ../os-specific/darwin/maloader {
       inherit opencflite;
@@ -11143,12 +11145,15 @@ in
 
     xcode = callPackage ../os-specific/darwin/xcode {};
 
-    osx_sdk = callPackage ../os-specific/darwin/osx-sdk {};
-    osx_private_sdk = callPackage ../os-specific/darwin/osx-private-sdk {};
+    osx_sdk = null; # callPackage ../os-specific/darwin/osx-sdk {};
+    osx_private_sdk = null; # callPackage ../os-specific/darwin/osx-private-sdk {};
 
-    security_tool = (newScope (darwin.apple_sdk.frameworks // darwin)) ../os-specific/darwin/security-tool {
+    security_tool = (newScope darwin) ../os-specific/darwin/security-tool {
       Security-framework = darwin.apple_sdk.frameworks.Security;
     };
+
+    CF = null;
+    IOKit = null;
 
     binutils = callPackage ../os-specific/darwin/binutils { inherit cctools; };
 
@@ -11157,7 +11162,7 @@ in
 
     apple_sdk = callPackage ../os-specific/darwin/apple-sdk {};
 
-    libobjc = apple-source-releases.objc4;
+    libobjc = null; # apple-source-releases.objc4;
 
     stubs = callPackages ../os-specific/darwin/stubs {};
   };

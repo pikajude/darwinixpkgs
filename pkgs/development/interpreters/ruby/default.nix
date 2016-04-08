@@ -77,8 +77,8 @@ let
           # support is not enabled, so add readline to the build inputs if curses
           # support is disabled (if it's enabled, we already have it) and we're
           # running on darwin
-          ++ (op (!cursesSupport && stdenv.isDarwin) readline)
-          ++ (ops stdenv.isDarwin (with darwin; [ libiconv libobjc libunwind ]));
+          ++ (op (!cursesSupport && stdenv.isDarwin) readline);
+          # ++ (ops stdenv.isDarwin (with darwin; [ libiconv libobjc libunwind ]));
 
         enableParallelBuilding = true;
 
@@ -116,6 +116,10 @@ let
             # on yosemite, "generating encdb.h" will hang for a very long time without this flag
             "--with-setjmp-type=setjmp"
           ];
+
+        preInstall = ''
+          unset SDKROOT
+        '';
 
         installFlags = stdenv.lib.optionalString docSupport "install-doc";
         # Bundler tries to create this directory

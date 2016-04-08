@@ -13,15 +13,23 @@
     bzip2   = fetch { file = "bzip2"; sha256 = "0zvqm977k11b5cl4ixxb5h0ds24g6z0f8m28z4pqxzpa353lqbla"; };
     mkdir   = fetch { file = "mkdir"; sha256 = "13frk8lsfgzlb65p9l26cvxf06aag43yjk7vg9msn7ix3v8cmrg1"; };
     cpio    = fetch { file = "cpio";  sha256 = "0ms5i9m1vdksj575sf1djwgm7zhnvfrrb44dxnfh9avr793rc2w4"; };
-    tarball = fetch { file = "bootstrap-tools.cpio.bz2"; sha256 = "1lz1b0grl4642h6n635xvi6imf0yyy1zyzdr9ing5aphzz0z5iic"; executable = false; };
+    tarball = ~/.src/bootstrap-tools/on-server/bootstrap-tools.cpio.bz2;
   }
 }:
 
 let
   libSystemProfile = ''
     (allow process-fork)
-    (allow file* (subpath "/dev"))
     (allow sysctl-read)
+    (allow signal)
+    (allow file*
+      (subpath "/dev")
+      (subpath "/System/Library/Frameworks")
+      (subpath "/System/Library/PrivateFrameworks")
+      (subpath "/usr/lib")
+      (literal "/tmp"))
+    (allow file* (regex #"^/private/tmp/strip.*"))
+    (allow file-read* (subpath "${builtins.xcodeSDKRoot}"))
   '';
 in rec {
   allPackages = import ../../..;
@@ -31,6 +39,8 @@ in rec {
     export NIX_ENFORCE_NO_NATIVE="''${NIX_ENFORCE_NO_NATIVE-1}"
     export NIX_IGNORE_LD_THROUGH_GCC=1
     stripAllFlags=" " # the Darwin "strip" command doesn't know "-s"
+    export MACOSX_DEPLOYMENT_TARGET="10.7"
+    export SDKROOT="${builtins.xcodeSDKRoot}"
     export CMAKE_OSX_ARCHITECTURES=x86_64
     # Workaround for https://openradar.appspot.com/22671534 on 10.11.
     export gl_cv_func_getcwd_abort_bug=no
@@ -75,7 +85,6 @@ in rec {
           nativeTools  = true;
           nativePrefix = bootstrapTools;
           nativeLibc   = false;
-          libc         = "$SDKROOT/usr";
           isClang      = true;
           cc           = { name = "clang-9.9.9"; outPath = bootstrapTools; };
         };
@@ -192,7 +201,7 @@ in rec {
 
     darwin = orig.darwin // {
       inherit (darwin)
-        dyld Libsystem xnu configd libdispatch libclosure launchd libiconv locale;
+        Libsystem xnu configd libdispatch libclosure launchd libiconv locale;
     };
   };
 
@@ -231,7 +240,7 @@ in rec {
     };
 
     darwin = orig.darwin // {
-      inherit (darwin) dyld Libsystem libiconv locale;
+      inherit (darwin) Libsystem libiconv locale;
     };
   };
 
@@ -255,7 +264,7 @@ in rec {
     };
 
     darwin = orig.darwin // {
-      inherit (darwin) dyld Libsystem cctools libiconv;
+      inherit (darwin) Libsystem cctools libiconv;
     };
   };
 
@@ -269,8 +278,8 @@ in rec {
       export PATH_LOCALE=${pkgs.darwin.locale}/share/locale
     '';
 
-    stdenvSandboxProfile = binShClosure + libSystemProfile;
-    extraSandboxProfile  = binShClosure + libSystemProfile;
+    stdenvSandboxProfile = libSystemProfile;
+    extraSandboxProfile  = libSystemProfile;
 
     initialPath = import ../common-path.nix { inherit pkgs; };
     shell       = "${pkgs.bash}/bin/bash";
@@ -282,16 +291,15 @@ in rec {
       inherit (pkgs) coreutils binutils gnugrep;
       inherit (pkgs.darwin) dyld;
       cc   = pkgs.llvmPackages.clang-unwrapped;
-      libc = "$SDKROOT/usr";
     };
 
-    extraBuildInputs = with pkgs; [ darwin.CF libcxx ];
+    extraBuildInputs = with pkgs; [ libcxx ];
 
     extraAttrs = {
       inherit platform bootstrapTools;
-      libc         = "$SDKROOT/usr";
       shellPackage = pkgs.bash;
       parent       = stage4;
+      libc        = "$(echo $SDKROOT)";
     };
 
     allowedRequisites = (with pkgs; [
@@ -301,7 +309,7 @@ in rec {
       gnugrep llvmPackages.clang-unwrapped patch pcre.out binutils-raw.out
       binutils-raw.dev binutils gettext
     ]) ++ (with pkgs.darwin; [
-      dyld Libsystem CF cctools libiconv locale
+      Libsystem cctools libiconv locale
     ]);
 
     overrides = orig: persistent4 orig // {

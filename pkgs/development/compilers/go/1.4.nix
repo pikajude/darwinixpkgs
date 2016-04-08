@@ -1,7 +1,7 @@
 { stdenv, lib, fetchurl, tzdata, iana_etc, libcCross
 , pkgconfig
 , pcre
-, Security }:
+, security_tool }:
 
 let
   libc = if stdenv ? "cross" then libcCross else stdenv.cc.libc;
@@ -18,7 +18,11 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ pkgconfig ];
   buildInputs = [ pcre ];
-  propagatedBuildInputs = lib.optional stdenv.isDarwin Security;
+  propagatedBuildInputs = lib.optional stdenv.isDarwin security_tool;
+
+  sandboxProfile = ''
+    (allow network*)
+  '';
 
   hardeningDisable = [ "all" ];
 
@@ -38,6 +42,8 @@ stdenv.mkDerivation rec {
 
     cd go
     patchShebangs ./ # replace /bin/bash
+
+    substituteInPlace src/crypto/x509/root_darwin.go --replace /usr/bin/security security
 
     # Disabling the 'os/http/net' tests (they want files not available in
     # chroot builds)
@@ -71,7 +77,6 @@ stdenv.mkDerivation rec {
     sed -i '/TestChdirAndGetwd/areturn' src/os/os_test.go
     sed -i '/TestDialDualStackLocalhost/areturn' src/net/dial_test.go
     sed -i '/TestRead0/areturn' src/os/os_test.go
-    sed -i '/TestSystemRoots/areturn' src/crypto/x509/root_darwin_test.go
 
     # fails when running inside tmux
     sed -i '/TestNohup/areturn' src/os/signal/signal_test.go

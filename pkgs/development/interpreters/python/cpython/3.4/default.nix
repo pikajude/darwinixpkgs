@@ -12,9 +12,6 @@
 , zlib
 , callPackage
 , self
-, python34Packages
-
-, CF, configd
 }:
 
 assert readline != null -> ncurses != null;
@@ -41,7 +38,7 @@ let
     tk
     libX11
     xproto
-  ] ++ optionals stdenv.isDarwin [ CF configd ];
+  ];
 
 in
 stdenv.mkDerivation {

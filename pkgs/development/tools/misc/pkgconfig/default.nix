@@ -24,6 +24,8 @@ stdenv.mkDerivation rec {
     ''cp -v ${automake}/share/automake*/config.{sub,guess} .'';
   buildInputs = stdenv.lib.optional (stdenv.isCygwin || stdenv.isDarwin || stdenv.isSunOS) libiconv;
 
+  NIX_LDFLAGS = stdenv.lib.optional stdenv.isDarwin "-framework CoreFoundation -framework CoreServices";
+
   configureFlags = [ "--with-internal-glib" ]
     ++ stdenv.lib.optional (stdenv.isSunOS) [ "--with-libiconv=gnu" "--with-system-library-path" "--with-system-include-path" "CFLAGS=-DENABLE_NLS" ];
 

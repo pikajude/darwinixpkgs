@@ -23,7 +23,7 @@ let
       presentproto
       libX11 libXext libxcb libXt libxshmfence
       libffi libvdpau
-    ] ++ stdenv.lib.optionals stdenv.isDarwin [ OpenGL apple_sdk.sdk Xplugin ];
+    ];
 
     propagatedBuildInputs = stdenv.lib.optionals stdenv.isDarwin [ OpenGL ];
 

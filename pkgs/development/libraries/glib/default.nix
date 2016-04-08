@@ -56,6 +56,10 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" "devdoc" ];
   outputBin = "dev";
 
+  prePatch = optional stdenv.isDarwin ''
+    substituteInPlace configure --replace '`sw_vers -productVersion`' "10.9.0"
+  '';
+
   setupHook = ./setup-hook.sh;
 
   buildInputs = [ libelf setupHook pcre ]

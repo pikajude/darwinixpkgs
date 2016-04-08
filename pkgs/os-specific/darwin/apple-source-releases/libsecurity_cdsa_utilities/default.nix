@@ -4,10 +4,13 @@ appleDerivation {
     libsecurity_utilities
     m4
   ];
+  NIX_CFLAGS_COMPILE = [
+    "-Wno-shift-op-parentheses"
+  ];
   patchPhase = ''
-    patch -p1 < ${./handletemplates.patch}
     unpackFile ${libsecurity_codesigning.src}
     mv libsecurity_codesigning*/lib security_codesigning
+    substituteInPlace lib/handletemplates.h \
+      --replace "state().findAllRefs" "state().template findAllRefs"
   '';
-  NIX_CFLAGS_COMPILE = "-I${CommonCrypto}/include/CommonCrypto";
 }

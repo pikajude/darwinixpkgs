@@ -45,7 +45,7 @@ let
     };
   };
 
-  framework = name: deps: stdenv.mkDerivation {
+  framework = name: deps: /* stdenv.mkDerivation {
     name = "apple-framework-${name}";
 
     phases = [ "installPhase" "fixupPhase" ];
@@ -125,10 +125,10 @@ let
       maintainers = with maintainers; [ copumpkin ];
       platforms   = platforms.darwin;
     };
-  };
+  } */ null;
 in rec {
   libs = {
-    xpc = stdenv.mkDerivation {
+    xpc = /* stdenv.mkDerivation {
       name   = "apple-lib-xpc";
       phases = [ "installPhase" "fixupPhase" ];
 
@@ -138,9 +138,9 @@ in rec {
         ln -s "${sdk}/include/xpc"
         popd >/dev/null
       '';
-    };
+    } */ null;
 
-    Xplugin = stdenv.mkDerivation {
+    Xplugin = /* stdenv.mkDerivation {
       name   = "apple-lib-Xplugin";
       phases = [ "installPhase" "fixupPhase" ];
 
@@ -156,9 +156,9 @@ in rec {
         ln -s "${sdk}/include/Xplugin.h" $out/include/Xplugin.h
         ln -s "/usr/lib/libXplugin.1.dylib" $out/lib/libXplugin.dylib
       '';
-    };
+    } */ null;
 
-    utmp = stdenv.mkDerivation {
+    utmp = /* stdenv.mkDerivation {
       name   = "apple-lib-utmp";
       phases = [ "installPhase" "fixupPhase" ];
 
@@ -169,7 +169,7 @@ in rec {
         ln -s "${sdk}/include/utmpx.h"
         popd >/dev/null
       '';
-    };
+    } */ null;
   };
 
   overrides = super: {
@@ -197,7 +197,7 @@ in rec {
     inherit (pkgs.darwin) CF cf-private libobjc;
   });
 
-  frameworks = bareFrameworks // overrides bareFrameworks;
+  frameworks = bareFrameworks;
 
   inherit sdk;
 }

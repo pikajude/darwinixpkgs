@@ -26,11 +26,6 @@ stdenv.mkDerivation rec {
             "--with-included-gettext"
             "--with-included-glib"
             "--with-included-libcroco"
-        ]
-     # avoid retaining reference to CF during stdenv bootstrap
-     ++ lib.optionals stdenv.isDarwin [
-            "gt_cv_func_CFPreferencesCopyAppValue=no"
-            "gt_cv_func_CFLocaleCopyCurrent=no"
         ];
 
   postPatch = ''

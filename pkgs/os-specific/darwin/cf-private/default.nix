@@ -1,4 +1,4 @@
-{ stdenv, osx_private_sdk, CF }:
+{ stdenv, osx_private_sdk }:
 
 let
   headers = [
@@ -14,18 +14,13 @@ let
   ];
 
 in stdenv.mkDerivation {
-  name = "${CF.name}-private";
+  name = "CF-private-headers";
   phases = [ "installPhase" "fixupPhase" ];
   installPhase = ''
-    dest=$out/Library/Frameworks/CoreFoundation.framework/Headers
+    dest=$out/include/CoreFoundation
     mkdir -p $dest
-    pushd $dest
-    for file in ${CF}/Library/Frameworks/CoreFoundation.framework/Headers/*; do
-      ln -s $file
-    done
-    popd
-
     install -m 0644 ${osx_private_sdk}/PrivateSDK10.10.sparse.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/{${stdenv.lib.concatStringsSep "," headers}} $dest
+    install -m 0644 ${osx_private_sdk}/PrivateSDK10.10.sparse.sdk/System/Library/Frameworks/CoreFoundation.framework/PrivateHeaders/* $dest
   '';
 
   setupHook = ./setup-hook.sh;
