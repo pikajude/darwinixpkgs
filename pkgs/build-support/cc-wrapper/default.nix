@@ -17,7 +17,7 @@ with stdenv.lib;
 assert nativeTools -> nativePrefix != "";
 assert !nativeTools ->
   cc != null && binutils != null && coreutils != null && gnugrep != null;
-assert !nativeLibc -> libc != null;
+assert !nativeLibc -> libc != null || stdenv.isDarwin;
 
 # For ghdl (the vhdl language provider to gcc) we need zlib in the wrapper.
 assert cc.langVhdl or false -> zlib != null;
@@ -105,6 +105,7 @@ stdenv.mkDerivation {
 
     + optionalString stdenv.isDarwin ''
       echo " -F$SDKROOT/System/Library/Frameworks" >> $out/nix-support/libc-ldflags
+      echo " -F$SDKROOT/System/Library/Frameworks" >> $out/nix-support/libc-cflags
     ''
 
     + (if nativeTools then ''
