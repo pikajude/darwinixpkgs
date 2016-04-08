@@ -10,8 +10,6 @@ skip () {
 badPath() {
     local p=$1
 
-    return 1
-
     # Relative paths are okay (since they're presumably relative to
     # the temporary build directory).
     if [ "${p:0:1}" != / ]; then return 1; fi
