@@ -26,6 +26,8 @@ stdenv.mkDerivation rec {
 
   NIX_LDFLAGS = stdenv.lib.optional stdenv.isDarwin "-framework CoreFoundation -framework CoreServices";
 
+  frameworks = [ "Carbon" "Cocoa" ];
+
   configureFlags = [ "--with-internal-glib" ]
     ++ stdenv.lib.optional (stdenv.isSunOS) [ "--with-libiconv=gnu" "--with-system-library-path" "--with-system-include-path" "CFLAGS=-DENABLE_NLS" ];
 

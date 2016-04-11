@@ -12,23 +12,11 @@
 ; Unix sockets
 (allow system-socket)
 
-; all runtime dependencies of libSystem.dylib
-(allow file-read*
-       (literal "/usr/lib/libSystem.dylib")
-       (literal "/usr/lib/libSystem.B.dylib")
-       (literal "/usr/lib/libobjc.A.dylib")
-       (literal "/usr/lib/libobjc.dylib")
-       (literal "/usr/lib/libauto.dylib")
-       (literal "/usr/lib/libc++abi.dylib")
-       (literal "/usr/lib/libc++.1.dylib")
-       (literal "/usr/lib/libDiagnosticMessagesClient.dylib")
-       (subpath "/usr/lib/system"))
-
 ; tmp
 (allow file* process-exec (literal "/tmp") (subpath TMPDIR))
 
 ; clang likes to read the system version
-(allow file-read* (literal "/System/Library/CoreServices/SystemVersion.plist"))
+; (allow file-read* (literal "/System/Library/CoreServices/SystemVersion.plist"))
 
 ; used for bootstrap builders
 (allow process-exec* (literal "/bin/sh"))
@@ -70,3 +58,33 @@
 
 ; allow networking on localhost
 (allow network* (local ip) (remote unix-socket))
+
+(define (sdk-path str)
+  (string-append SDKROOT str))
+
+(define (sdk-regex str)
+  (regex (string-append "^" (regex-quote SDKROOT) str)))
+
+; everything needed for libsystem in the xcode root
+(allow file-read*
+       (literal SDKROOT)
+       (literal (sdk-path "/usr/lib"))
+       (subpath (sdk-path "/usr/include"))
+       (subpath (sdk-path "/usr/lib/system"))
+       (sdk-regex "/usr/lib/crt.*"))
+
+(allow file-read* (literal "/usr/lib/libncurses.5.4.dylib"))
+
+(define extra-libs '(
+  ; libc aliases
+  "c" "dbm" "dl" "info" "m" "mx" "poll" "proc" "pthread" "rpcsvc" "util" "gcc_s.10.4" "gcc_s.10.5"
+  ; other closed-source libs
+  "objc" "objc.A"
+  ))
+
+(for-each
+  (lambda (lib)
+    (allow file-read*
+           (literal (sdk-path
+             (string-append "/usr/lib/lib" lib ".tbd")))))
+    extra-libs)

@@ -11133,7 +11133,7 @@ in
       stdenv = if stdenv.isDarwin then stdenv else libcxxStdenv;
     }).native;
 
-    cf-private = osx_private_sdk."10_10";
+    # cf-private = osx_private_sdk."10_10";
 
     maloader = callPackage ../os-specific/darwin/maloader {
       inherit opencflite;
@@ -14186,8 +14186,7 @@ in
   mendeley = callPackage ../applications/office/mendeley { };
 
   mercurial = callPackage ../applications/version-management/mercurial {
-    inherit (darwin.apple_sdk.frameworks) ApplicationServices;
-    inherit (darwin) cf-private;
+    inherit (pythonPackages) curses docutils hg-git dulwich;
     guiSupport = false; # use mercurialFull to get hgk GUI
   };
 

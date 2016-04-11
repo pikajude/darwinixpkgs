@@ -19,17 +19,9 @@
 
 let
   libSystemProfile = ''
-    (allow process-fork)
-    (allow sysctl-read)
-    (allow signal)
-    (allow file*
-      (subpath "/dev")
-      (subpath "/System/Library/Frameworks")
-      (subpath "/System/Library/PrivateFrameworks")
-      (subpath "/usr/lib")
-      (literal "/tmp"))
-    (allow file* (regex #"^/private/tmp/strip.*"))
-    (allow file-read* (subpath "${builtins.xcodeSDKRoot}"))
+    (define SDKROOT "${builtins.xcodeSDKRoot}")
+
+    ${builtins.readFile ./standard-sandbox.sb}
   '';
 in rec {
   allPackages = import ../../..;
@@ -47,8 +39,9 @@ in rec {
   '';
 
   __stdenvImpureHostDeps = [
+    "${builtins.xcodeSDKRoot}/usr/lib/libSystem.tbd"
+    "${builtins.xcodeSDKRoot}/usr/lib/libresolv.tbd"
     "/usr/lib/libSystem.dylib"
-    "/usr/lib/system/libcache.dylib"
     "/usr/lib/system/libkxld.dylib"
   ];
 
@@ -154,7 +147,6 @@ in rec {
   persistent0 = _: {};
 
   stage1 = with stage0; stageFun 1 stage0 {
-    extraPreHook = "export NIX_CFLAGS_COMPILE+=\" -F${bootstrapTools}/Library/Frameworks\"";
     extraBuildInputs = [ pkgs.libcxx ];
 
     allowedRequisites =
@@ -299,7 +291,7 @@ in rec {
       inherit platform bootstrapTools;
       shellPackage = pkgs.bash;
       parent       = stage4;
-      libc        = "$(echo $SDKROOT)";
+      libc        = builtins.xcodeSDKRoot;
     };
 
     allowedRequisites = (with pkgs; [
@@ -316,6 +308,9 @@ in rec {
       clang = cc;
       inherit cc;
     };
+
+    inherit __stdenvImpureHostDeps;
+    __extraImpureHostDeps = __stdenvImpureHostDeps;
   };
 
   stdenvDarwin = stage5;

@@ -92,6 +92,8 @@ let
     "ac_cv_func_bind_textdomain_codeset=yes"
   ];
 
+  frameworks = [ "Carbon" "DiskArbitration" "Security" "SystemConfiguration" ];
+
   postConfigure = if stdenv.isCygwin then ''
     sed -i Makefile -e 's,PYTHONPATH="$(srcdir),PYTHONPATH="$(abs_srcdir),'
   '' else null;
@@ -118,7 +120,7 @@ let
     pythonVersion = majorVersion;
 
     inherit majorVersion version src patches buildInputs
-            preConfigure configureFlags;
+            preConfigure configureFlags frameworks;
 
     LDFLAGS = stdenv.lib.optionalString (!stdenv.isDarwin) "-lgcc_s";
     inherit (mkPaths buildInputs) C_INCLUDE_PATH LIBRARY_PATH;

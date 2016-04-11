@@ -114,6 +114,8 @@ let
     , __propagatedImpureHostDeps ? []
     , sandboxProfile ? ""
     , propagatedSandboxProfile ? ""
+    , frameworks ? []
+    , propagatedFrameworks ? []
     , ... } @ attrs:
     let
       pos' =
@@ -187,14 +189,30 @@ let
            "__impureHostDeps" "__propagatedImpureHostDeps"
            "sandboxProfile" "propagatedSandboxProfile"])
         // (let
+          computeFrameworkDeps = lib.concatMap (framework: [framework] ++
+            computeFrameworkDeps ((import ../darwin/framework-hierarchy.nix)."${framework}" or []));
+          baseFrameworks = computeFrameworkDeps [ "CoreFoundation" "CoreServices" ];
+          frameworks' = computeFrameworkDeps frameworks;
+          propagatedFrameworks' = computeFrameworkDeps propagatedFrameworks;
           computedSandboxProfile =
             lib.concatMap (input: input.__propagatedSandboxProfile or []) (extraBuildInputs ++ buildInputs' ++ nativeBuildInputs');
           computedPropagatedSandboxProfile =
             lib.concatMap (input: input.__propagatedSandboxProfile or []) (propagatedBuildInputs' ++ propagatedNativeBuildInputs');
           computedImpureHostDeps =
-            lib.unique (lib.concatMap (input: input.__propagatedImpureHostDeps or []) (extraBuildInputs ++ buildInputs' ++ nativeBuildInputs'));
+            lib.unique (lib.concatMap (input: input.__propagatedImpureHostDeps or [])
+              (extraBuildInputs ++ buildInputs' ++ nativeBuildInputs')
+            ++ lib.concatMap (fw: [
+              "${builtins.xcodeSDKRoot}/System/Library/Frameworks/${fw}.framework"
+              "${builtins.xcodeSDKRoot}/System/Library/Frameworks/${fw}.framework/${fw}.tbd"
+              "/System/Library/Frameworks/${fw}.framework/${fw}"
+              ]) (frameworks' ++ propagatedFrameworks' ++ baseFrameworks));
           computedPropagatedImpureHostDeps =
-            lib.unique (lib.concatMap (input: input.__propagatedImpureHostDeps or []) (propagatedBuildInputs' ++ propagatedNativeBuildInputs'));
+            lib.unique (lib.concatMap (input: input.__propagatedImpureHostDeps or []) (propagatedBuildInputs' ++ propagatedNativeBuildInputs')
+              ++ lib.concatMap (fw: [
+                "${builtins.xcodeSDKRoot}/System/Library/Frameworks/${fw}.framework"
+                "${builtins.xcodeSDKRoot}/System/Library/Frameworks/${fw}.framework/${fw}.tbd"
+                "/System/Library/Frameworks/${fw}.framework/${fw}"
+                ]) propagatedFrameworks');
         in
         {
           builder = attrs.realBuilder or shell;
@@ -224,12 +242,7 @@ let
               final = lib.concatStringsSep "\n" (lib.filter (x: x != "") (lib.unique profiles));
           in final;
           __propagatedSandboxProfile = lib.unique (computedPropagatedSandboxProfile ++ [ propagatedSandboxProfile ]);
-          __impureHostDeps = computedImpureHostDeps ++ computedPropagatedImpureHostDeps ++ __propagatedImpureHostDeps ++ __impureHostDeps ++ __extraImpureHostDeps ++ [
-            "/dev/zero"
-            "/dev/random"
-            "/dev/urandom"
-            "/bin/sh"
-          ];
+          __impureHostDeps = computedImpureHostDeps ++ computedPropagatedImpureHostDeps ++ __propagatedImpureHostDeps ++ __impureHostDeps ++ __extraImpureHostDeps;
           __propagatedImpureHostDeps = computedPropagatedImpureHostDeps ++ __propagatedImpureHostDeps;
         } // (if outputs' != [ "out" ] then {
           outputs = outputs';

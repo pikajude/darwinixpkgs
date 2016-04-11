@@ -35,6 +35,7 @@ stdenv.mkDerivation rec {
     ++ optional (!perlSupport)  "-DENABLE_PERL=OFF"
     ++ optional (!rubySupport)  "-DENABLE_RUBY=OFF"
     ++ optional (!tclSupport)   "-DENABLE_TCL=OFF"
+    ++ [ "-Wdev" "--debug-output" "--trace" ]
     ;
 
   buildInputs = with stdenv.lib; [
@@ -42,7 +43,7 @@ stdenv.mkDerivation rec {
       libgcrypt pycrypto makeWrapper
       cmake
     ]
-    ++ optionals stdenv.isDarwin [ pync libobjc ]
+    ++ optionals stdenv.isDarwin [ pync ]
     ++ optional  guileSupport    guile
     ++ optional  luaSupport      lua5
     ++ optional  perlSupport     perl

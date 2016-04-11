@@ -4669,6 +4669,12 @@ in modules // {
       rm testing/test_argcomplete.py
     '';
 
+    sandboxProfile = ''
+      (allow mach-lookup
+        (global-name "com.apple.system.notification_center")
+        (global-name "com.apple.system.opendirectoryd.libinfo"))
+    '';
+
     propagatedBuildInputs = with self; [ py ]
       ++ (optional isPy26 argparse)
       ++ stdenv.lib.optional
