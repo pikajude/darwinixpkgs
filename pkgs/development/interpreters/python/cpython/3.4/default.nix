@@ -67,6 +67,9 @@ stdenv.mkDerivation {
     ${optionalString stdenv.isDarwin ''
        export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -msse2"
        export MACOSX_DEPLOYMENT_TARGET=10.6
+       substituteInPlace Lib/platform.py --replace \
+         /System/Library/CoreServices/SystemVersion.plist \
+         "$SDKROOT"/System/Library/CoreServices/SystemVersion.plist
      ''}
 
     configureFlagsArray=( --enable-shared --with-threads
@@ -75,6 +78,8 @@ stdenv.mkDerivation {
                           LIBS="${optionalString (!stdenv.isDarwin) "-lcrypt"} ${optionalString (ncurses != null) "-lncurses"}"
                         )
   '';
+
+  frameworks = [ "Carbon" "SystemConfiguration" ];
 
   setupHook = ./setup-hook.sh;
 

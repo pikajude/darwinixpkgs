@@ -38,6 +38,8 @@ stdenv.mkDerivation rec {
     ++ optional xineramaSupport libXinerama
     ++ optionals cupsSupport [ cups ];
 
+  frameworks = [ "ApplicationServices" ];
+
   configureFlags = if stdenv.isDarwin
     then "--disable-glibtest --disable-introspection --disable-visibility"
     else "--with-xinput=yes";

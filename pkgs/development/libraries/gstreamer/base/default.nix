@@ -31,6 +31,8 @@ stdenv.mkDerivation rec {
   ++ stdenv.lib.optional stdenv.isLinux alsaLib
   ++ stdenv.lib.optional (!stdenv.isDarwin) libvisual;
 
+  frameworks = [ "ApplicationServices" ];
+
   propagatedBuildInputs = [ gstreamer ];
 
   configureFlags = if stdenv.isDarwin then [

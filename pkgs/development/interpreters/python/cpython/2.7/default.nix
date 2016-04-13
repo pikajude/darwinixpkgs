@@ -92,7 +92,7 @@ let
     "ac_cv_func_bind_textdomain_codeset=yes"
   ];
 
-  frameworks = [ "Carbon" "DiskArbitration" "Security" "SystemConfiguration" ];
+  frameworks = [ "Carbon" "SystemConfiguration" ];
 
   postConfigure = if stdenv.isCygwin then ''
     sed -i Makefile -e 's,PYTHONPATH="$(srcdir),PYTHONPATH="$(abs_srcdir),'

@@ -18,7 +18,10 @@ stdenv.mkDerivation rec {
 
   outputs = [ "bin" "dev" "out" "devdoc" ];
 
-  buildInputs = [ gobjectIntrospection ];
+  frameworks = [ "Carbon" ];
+
+  buildInputs = [ gobjectIntrospection ]
+    ++ optional stdenv.isDarwin fontconfig;
   nativeBuildInputs = [ pkgconfig ];
   propagatedBuildInputs = [ cairo harfbuzz libXft ] ++ libintlOrEmpty;
 

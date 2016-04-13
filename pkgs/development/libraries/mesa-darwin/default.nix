@@ -35,6 +35,8 @@ let
       substituteInPlace bin/mklib --replace g++ clang++
     '';
 
+    frameworks = [ "OpenGL" ];
+
     patches = [
       ./patches/0003-mesa-fix-per-level-max-texture-size-error-checking.patch
       ./patches/0008-glsl-initialise-const-force-glsl-extension-warning-i.patch

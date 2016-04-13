@@ -20,11 +20,33 @@ stdenv.mkDerivation rec {
     LIBTOOLIZE=libtoolize ./autogen.sh
   '';
 
-  meta = with lib; {
-    description = "A multi-platform support library with a focus on asynchronous I/O";
-    homepage    = https://github.com/libuv/libuv;
-    maintainers = with maintainers; [ cstrahan ];
-    platforms   = with platforms; linux ++ darwin;
+      mkdir build/lib
+      mv build/libuv.* build/lib
+
+      pushd build/lib
+      lib=$(basename libuv.*)
+      ext="''${lib##*.}"
+      mv $lib libuv.10.$ext
+      ln -s libuv.10.$ext libuv.$ext
+      popd
+    '';
+    installPhase = ''
+      cp -r build $out
+    '';
+    inherit meta;
+  };
+
+  # for versions > 0.11.6
+  mkWithAutotools = stability: version: sha256: stdenv.mkDerivation {
+    name = mkName stability version;
+    src = mkSrc version sha256;
+    frameworks = [ "ApplicationServices" ];
+    buildInputs = [ automake autoconf libtool pkgconfig ]
+      ++ stdenv.lib.optionals stdenv.isDarwin [ ApplicationServices CoreServices ];
+    preConfigure = ''
+      LIBTOOLIZE=libtoolize ./autogen.sh
+    '';
+    inherit meta;
   };
 
 }

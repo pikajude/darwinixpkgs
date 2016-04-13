@@ -51,6 +51,8 @@ stdenv.mkDerivation rec {
 
   hardeningDisable = [ "format" ];
 
+  propagatedFrameworks = [ "AppKit" ];
+
   configureFlags = [ "--with-modules" ] ++
    (if stdenv.isDarwin
       then [ "--with-ns" "--disable-ns-self-contained" ]

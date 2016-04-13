@@ -71,13 +71,16 @@
        (literal (sdk-path "/usr/lib"))
        (subpath (sdk-path "/usr/include"))
        (subpath (sdk-path "/usr/lib/system"))
-       (sdk-regex "/usr/lib/crt.*"))
+       (sdk-regex "/usr/lib/.*o$"))
 
-(allow file-read* (literal "/usr/lib/libncurses.5.4.dylib"))
+(allow file-read*
+       (literal "/usr/lib/libncurses.5.4.dylib")
+       (literal "/usr/lib/libgcc_s.1.dylib")
+       (literal "/usr/lib/libutil.dylib"))
 
 (define extra-libs '(
   ; libc aliases
-  "c" "dbm" "dl" "info" "m" "mx" "poll" "proc" "pthread" "rpcsvc" "util" "gcc_s.10.4" "gcc_s.10.5"
+  "c" "dbm" "dl" "info" "m" "mx" "poll" "proc" "pthread" "rpcsvc"
   ; other closed-source libs
   "objc" "objc.A"
   ))

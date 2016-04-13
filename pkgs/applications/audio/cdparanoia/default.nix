@@ -23,6 +23,8 @@ stdenv.mkDerivation rec {
     })
   ];
 
+  frameworks = [ "AppKit" "Carbon" "Foundation" ];
+
   propagatedBuildInputs = stdenv.lib.optionals stdenv.isDarwin [
     Carbon
     IOKit

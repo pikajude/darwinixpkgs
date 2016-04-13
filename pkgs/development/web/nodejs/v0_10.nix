@@ -56,6 +56,10 @@ in stdenv.mkDerivation {
   propagatedBuildInputs = optionals stdenv.isDarwin [ Carbon ];
   setupHook = ./setup-hook.sh;
 
+  frameworks = [ "ApplicationServices" "Foundation" ];
+
+  propagatedFrameworks = [ "Carbon" ];
+
   enableParallelBuilding = true;
 
   postFixup = ''

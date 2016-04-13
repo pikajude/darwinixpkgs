@@ -40,8 +40,15 @@ in rec {
 
   __stdenvImpureHostDeps = [
     "${builtins.xcodeSDKRoot}/usr/lib/libSystem.tbd"
+    "${builtins.xcodeSDKRoot}/usr/lib/libgcc_s.10.5.tbd"
+    "${builtins.xcodeSDKRoot}/usr/lib/libgcc_s.10.4.tbd"
     "${builtins.xcodeSDKRoot}/usr/lib/libresolv.tbd"
+    "${builtins.xcodeSDKRoot}/usr/lib/libutil.tbd"
+
+    # needed because libSystem.tbd points to libSystem.B.dylib
     "/usr/lib/libSystem.dylib"
+
+    # incurred by bootstrap-tools, vestigial
     "/usr/lib/system/libkxld.dylib"
   ];
 
@@ -291,7 +298,7 @@ in rec {
       inherit platform bootstrapTools;
       shellPackage = pkgs.bash;
       parent       = stage4;
-      libc        = builtins.xcodeSDKRoot;
+      libc         = "${builtins.xcodeSDKRoot}/usr";
     };
 
     allowedRequisites = (with pkgs; [

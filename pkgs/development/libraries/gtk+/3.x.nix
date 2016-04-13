@@ -41,6 +41,10 @@ stdenv.mkDerivation rec {
     ++ optional cupsSupport cups;
   #TODO: colord?
 
+  propagatedFrameworks = [ "AppKit" "Cocoa" ];
+
+  frameworks = [ "Carbon" ];
+
   NIX_LDFLAGS = optionalString stdenv.isDarwin "-lintl";
 
   # demos fail to install, no idea where's the problem
