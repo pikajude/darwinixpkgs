@@ -13,7 +13,10 @@
     bzip2   = fetch { file = "bzip2"; sha256 = "0zvqm977k11b5cl4ixxb5h0ds24g6z0f8m28z4pqxzpa353lqbla"; };
     mkdir   = fetch { file = "mkdir"; sha256 = "13frk8lsfgzlb65p9l26cvxf06aag43yjk7vg9msn7ix3v8cmrg1"; };
     cpio    = fetch { file = "cpio";  sha256 = "0ms5i9m1vdksj575sf1djwgm7zhnvfrrb44dxnfh9avr793rc2w4"; };
-    tarball = ~/.src/bootstrap-tools/on-server/bootstrap-tools.cpio.bz2;
+    tarball = import <nix/fetchurl.nix> {
+      url = "https://dl.dropboxusercontent.com/u/2857322/darwinix/bootstrap-tools.cpio.bz2";
+      sha256 = "028g1mfh3vnwgygfgm1p28vsg1lbms1hi9rb9gi2cnmfad086ys9";
+    };
   }
 }:
 
