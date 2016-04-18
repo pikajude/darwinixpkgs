@@ -24,7 +24,8 @@ let
   libSystemProfile = ''
     (define SDKROOT "${builtins.xcodeSDKRoot}")
 
-    ${builtins.readFile ./standard-sandbox.sb}
+    (import "${./sandbox/defaults.sb}")
+    (import "${./sandbox/includes.sb}")
   '';
 in rec {
   allPackages = import ../../..;

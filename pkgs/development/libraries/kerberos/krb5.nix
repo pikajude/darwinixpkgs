@@ -1,5 +1,5 @@
-{ stdenv, fetchurl, pkgconfig, perl, yacc, bootstrap_cmds
-, openssl, openldap, libedit
+{ stdenv, fetchurl, pkgconfig, perl, yacc
+, openssl, openldap, libedit, bootstrap_cmds
 
 # Extra Arguments
 , type ? ""
@@ -20,11 +20,10 @@ stdenv.mkDerivation rec {
 
   configureFlags = optional stdenv.isFreeBSD ''WARN_CFLAGS=""'';
 
-  nativeBuildInputs = [ pkgconfig perl yacc ]
-    # Provides the mig command used by the build scripts
-    ++ optional stdenv.isDarwin bootstrap_cmds;
+  nativeBuildInputs = [ pkgconfig perl yacc ];
   buildInputs = [ openssl ]
-    ++ optionals (!libOnly) [ openldap libedit ];
+    ++ optionals (!libOnly) [ openldap libedit ]
+    ++ optional stdenv.isDarwin bootstrap_cmds;
 
   patches = [ ./path_char_fix.patch ];
 

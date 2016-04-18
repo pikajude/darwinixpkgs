@@ -12,6 +12,10 @@ stdenv.mkDerivation {
 
   hardeningDisable = [ "format" ];
 
+  sandboxProfile = ''
+    (deny file* (subpath "${builtins.xcodeSDKRoot}/usr/include/gssapi"))
+  '';
+
   preConfigure = ''
     # Apply the Debian patches.
     for p in "debian/patches/"*; do

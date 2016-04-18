@@ -31,6 +31,23 @@ let
       EOF
     '';
 
+    propagatedFrameworks = [
+      "Cocoa" "JavaVM"
+    ];
+
+    __propagatedImpureHostDeps = [
+      "/usr/lib/libstdc++.6.dylib"
+      "/usr/lib/libobjc.dylib"
+      "/System/Library/Frameworks/JavaVM.framework/Frameworks"
+      "/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaRuntimeSupport.framework/JavaRuntimeSupport"
+      "/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaRuntimeSupport.framework/Versions/A/JavaRuntimeSupport"
+    ];
+
+
+    propagatedSandboxProfile = ''
+      (allow mach-lookup)
+    '';
+
     passthru = {
       jre = jdk;
       home = jdk;

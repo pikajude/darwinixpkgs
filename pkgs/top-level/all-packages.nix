@@ -11120,7 +11120,7 @@ in
       libsecurity_cdsa_client libsecurity_cdsa_plugin libsecurity_cdsa_utilities
       libsecurity_cdsa_utils libsecurity_cssm libsecurity_filedb libsecurity_keychain
       libsecurity_mds libsecurity_pkcs12 libsecurity_sd_cspdl libsecurity_utilities
-      libsecurityd;
+      libsecurityd bootstrap_cmds;
 
     cctools_cross = callPackage (forceNativeDrv (callPackage ../os-specific/darwin/cctools/port.nix {}).cross) {
       cross = assert crossSystem != null; crossSystem;
@@ -11148,9 +11148,7 @@ in
     osx_sdk = null; # callPackage ../os-specific/darwin/osx-sdk {};
     osx_private_sdk = null; # callPackage ../os-specific/darwin/osx-private-sdk {};
 
-    security_tool = (newScope darwin) ../os-specific/darwin/security-tool {
-      Security-framework = darwin.apple_sdk.frameworks.Security;
-    };
+    security_tool = (newScope darwin) ../os-specific/darwin/security-tool { };
 
     CF = null;
     IOKit = null;

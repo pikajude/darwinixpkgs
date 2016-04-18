@@ -1,6 +1,5 @@
-{ stdenv, fetchurl, pythonPackages, makeWrapper, docutils, unzip
-, guiSupport ? false, tk ? null
-, ApplicationServices, cf-private }:
+{ stdenv, fetchurl, python, makeWrapper, docutils, unzip, hg-git, dulwich
+, guiSupport ? false, tk ? null, curses }:
 
 let
   # if you bump version, update pkgs.tortoisehg too or ping maintainer
@@ -21,9 +20,6 @@ stdenv.mkDerivation {
   pythonPackages = [ curses ];
 
   buildInputs = [ python makeWrapper docutils unzip ];
-
-  propagatedBuildInputs = stdenv.lib.optionals stdenv.isDarwin
-    [ ApplicationServices cf-private ];
 
   makeFlags = "PREFIX=$(out)";
 
@@ -61,6 +57,8 @@ stdenv.mkDerivation {
       # install bash completion
       install -D -v contrib/bash_completion $out/share/bash-completion/completions/mercurial
     '';
+
+  frameworks = [ "ApplicationServices" ];
 
   meta = {
     inherit version;

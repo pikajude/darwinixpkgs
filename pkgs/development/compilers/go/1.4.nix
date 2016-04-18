@@ -1,7 +1,7 @@
 { stdenv, lib, fetchurl, tzdata, iana_etc, libcCross
 , pkgconfig
 , pcre
-, security_tool }:
+ }:
 
 let
   libc = if stdenv ? "cross" then libcCross else stdenv.cc.libc;
@@ -18,7 +18,6 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ pkgconfig ];
   buildInputs = [ pcre ];
-  propagatedBuildInputs = lib.optional stdenv.isDarwin security_tool;
 
   sandboxProfile = ''
     (allow network*)

@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ perl which pkgconfig patch ];
   buildInputs = [ pcre ];
   propagatedBuildInputs = lib.optionals stdenv.isDarwin [
-    darwin.security_tool darwin.apple_sdk.frameworks.AppKit
+    darwin.apple_sdk.frameworks.AppKit
   ];
 
   hardeningDisable = [ "all" ];
@@ -90,7 +90,6 @@ stdenv.mkDerivation rec {
     sed -i '/TestRead0/areturn' src/os/os_test.go
     sed -i '/TestNohup/areturn' src/os/signal/signal_test.go
     sed -i '/TestGoVerify/areturn' src/crypto/x509/verify_test.go
-    sed -i '/TestSystemRoots/areturn' src/crypto/x509/root_darwin_test.go
 
     sed -i '/TestGoInstallRebuildsStalePackagesInOtherGOPATH/areturn' src/cmd/go/go_test.go
     sed -i '/TestBuildDashIInstallsDependencies/areturn' src/cmd/go/go_test.go

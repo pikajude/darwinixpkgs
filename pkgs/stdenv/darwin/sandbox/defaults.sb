@@ -69,7 +69,7 @@
 (allow file-read*
        (literal SDKROOT)
        (literal (sdk-path "/usr/lib"))
-       (subpath (sdk-path "/usr/include"))
+       (literal (sdk-path "/usr/include"))
        (subpath (sdk-path "/usr/lib/system"))
        (sdk-regex "/usr/lib/.*o$"))
 

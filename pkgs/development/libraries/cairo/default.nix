@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
     Carbon
   ]);
 
-  frameworks = [ "ApplicationServices" "Carbon" "CoreGraphics" ];
+  frameworks = [ "ApplicationServices" "Carbon" "CoreGraphics" "Quartz" ];
 
   propagatedBuildInputs =
     with xorg; [ libXext fontconfig expat freetype pixman zlib libpng libXrender ]

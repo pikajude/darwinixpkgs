@@ -14,8 +14,7 @@ stdenv.mkDerivation rec {
   buildInputs =
     [ openssl db gettext kerberos ]
     ++ lib.optional stdenv.isFreeBSD autoreconfHook
-    ++ lib.optional stdenv.isLinux pam
-    ++ lib.optional stdenv.isDarwin fixDarwinDylibNames;
+    ++ lib.optional stdenv.isLinux pam;
 
   patches = [
     ./missing-size_t.patch # https://bugzilla.redhat.com/show_bug.cgi?id=906519
