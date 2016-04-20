@@ -34,9 +34,7 @@ stdenv.mkDerivation rec {
     ++ optional (!luaSupport)   "-DENABLE_LUA=OFF"
     ++ optional (!perlSupport)  "-DENABLE_PERL=OFF"
     ++ optional (!rubySupport)  "-DENABLE_RUBY=OFF"
-    ++ optional (!tclSupport)   "-DENABLE_TCL=OFF"
-    ++ [ "-Wdev" "--debug-output" "--trace" ]
-    ;
+    ++ optional (!tclSupport)   "-DENABLE_TCL=OFF";
 
   buildInputs = with stdenv.lib; [
       ncurses python openssl aspell gnutls zlib curl pkgconfig
