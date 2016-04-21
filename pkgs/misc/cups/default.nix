@@ -22,10 +22,7 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" "man" ]; # TODO: above
 
   buildInputs = [ pkgconfig zlib libjpeg libpng libtiff libusb gnutls libpaper ]
-    ++ optionals stdenv.isLinux [ avahi pam dbus systemd acl ]
-    ++ optionals stdenv.isDarwin (with darwin; [
-      configd apple_sdk.frameworks.ApplicationServices
-    ]);
+    ++ optionals stdenv.isLinux [ avahi pam dbus.libs acl ];
 
   propagatedBuildInputs = [ gmp ];
 
@@ -46,6 +43,10 @@ stdenv.mkDerivation rec {
     "--with-bundledir=$out"
     "--disable-launchd"
   ];
+
+  NIX_CFLAGS_COMPILE = "-Wno-deprecated-declarations";
+
+  frameworks = [ "ApplicationServices" "SystemConfiguration" ];
 
   installFlags =
     [ # Don't try to write in /var at build time.

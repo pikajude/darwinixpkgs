@@ -48,13 +48,17 @@ in stdenv.mkDerivation rec {
       darwin.libobjc fakeClang cups
     ]);
 
+  frameworks = [ "ApplicationServices" "AppKit" "Carbon" "Cocoa" "SystemConfiguration" ];
+
+  __impureHostDeps = [
+    "${builtins.xcodeSDKRoot}/usr/lib/libicucore.tbd"
+  ];
 
   patchPhase = ''
     patchShebangs .
     sed -i -e 's|/bin/pwd|pwd|' src/qt/qtbase/configure
     touch src/qt/{qtbase,qtwebkit,3rdparty}/.git
   '' + stdenv.lib.optionalString stdenv.isDarwin ''
-    sed -i 's,-licucore,/usr/lib/libicucore.dylib,' src/qt/qtwebkit/Source/WTF/WTF.pri
     substituteInPlace src/qt/qtwebkit/Tools/qmake/mkspecs/features/features.pri \
       --replace "ENABLE_3D_RENDERING=1" "ENABLE_3D_RENDERING=0"
     sed -i 88d src/qt/qtwebkit/Tools/qmake/mkspecs/features/features.prf
@@ -79,25 +83,19 @@ in stdenv.mkDerivation rec {
     popd
   '';
 
-  __impureHostDeps = stdenv.lib.optional stdenv.isDarwin "/usr/lib/libicucore.dylib";
-
   buildPhase = "./build.py --confirm -j$NIX_BUILD_CORES";
 
   enableParallelBuilding = true;
+
+  buildPhase = "./build.sh --confirm";
 
   installPhase = ''
     mkdir -p $out/share/doc/phantomjs
     cp -a bin $out
     cp -a ChangeLog examples LICENSE.BSD README.md third-party.txt $out/share/doc/phantomjs
-  '' + stdenv.lib.optionalString stdenv.isDarwin ''
-    install_name_tool -change \
-        ${darwin.CF}/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation \
-        /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation \
-      -change \
-        ${darwin.configd}/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration \
-        /System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration \
-    $out/bin/phantomjs
   '';
+
+  NIX_CFLAGS_COMPILE = "-Wno-deprecated-declarations";
 
   meta = with stdenv.lib; {
     description = "Headless WebKit with JavaScript API";
