@@ -4638,7 +4638,6 @@ in
 
   gfortran = if !stdenv.isDarwin then gfortran5
              else callPackage ../development/compilers/gcc/gfortran-darwin.nix {
-    inherit (darwin) Libsystem;
   };
 
   gfortran48 = wrapCC (gcc48.cc.override {

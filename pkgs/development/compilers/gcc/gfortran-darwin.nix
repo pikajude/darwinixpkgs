@@ -1,7 +1,5 @@
 # This is a derivation specific to OS X (Darwin)
 {gmp, mpfr, libmpc, isl_0_14, cloog, zlib, fetchurl, stdenv
-
-, Libsystem
 }:
 
 stdenv.mkDerivation rec {
@@ -31,7 +29,7 @@ stdenv.mkDerivation rec {
     --with-isl=${isl_0_14}
     --with-mpc=${libmpc}
     --with-mpfr=${mpfr.dev}
-    --with-native-system-header-dir=${Libsystem}/include
+    --with-native-system-header-dir=${builtins.xcodeSDKRoot}/usr/include
     --with-system-zlib
   '';
 
