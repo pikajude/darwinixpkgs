@@ -31,8 +31,9 @@ buildPythonPackage rec {
 
   buildInputs = [ python which sphinx stdenv ]
     ++ stdenv.lib.optional enableGhostscript ghostscript
-    ++ stdenv.lib.optionals stdenv.isDarwin [ Cocoa Foundation CoreData
-                                              cf-private libobjc ];
+    ++ stdenv.lib.optionals stdenv.isDarwin [ Cocoa Foundation CoreData ];
+
+  frameworks = [ "Cocoa" "Foundation" ];
 
   propagatedBuildInputs =
     [ cycler dateutil nose numpy pyparsing tornado freetype 
