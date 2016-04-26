@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, pkgconfig, libXft, cairo, harfbuzz
+{ stdenv, fetchurl, pkgconfig, libXft, cairo, harfbuzz, fontconfig
 , libintlOrEmpty, gobjectIntrospection
 }:
 

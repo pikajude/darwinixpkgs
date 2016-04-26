@@ -8819,7 +8819,7 @@ in
   libutempter = callPackage ../development/libraries/libutempter { };
 
   libunwind = if stdenv.isDarwin
-    then darwin.libunwind
+    then null
     else callPackage ../development/libraries/libunwind { };
 
   libuv = callPackage ../development/libraries/libuv {

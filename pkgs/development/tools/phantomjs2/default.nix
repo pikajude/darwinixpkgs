@@ -87,8 +87,6 @@ in stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  buildPhase = "./build.sh --confirm";
-
   installPhase = ''
     mkdir -p $out/share/doc/phantomjs
     cp -a bin $out

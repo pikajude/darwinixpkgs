@@ -91,6 +91,7 @@ in rec {
           nativeLibc   = false;
           isClang      = true;
           cc           = { name = "clang-9.9.9"; outPath = bootstrapTools; };
+          libc         = "${builtins.xcodeSDKRoot}/usr";
         };
 
         preHook = stage0.stdenv.lib.optionalString (shell == "${bootstrapTools}/bin/sh") ''
@@ -294,6 +295,7 @@ in rec {
       inherit (pkgs) coreutils binutils gnugrep;
       inherit (pkgs.darwin) dyld;
       cc   = pkgs.llvmPackages.clang-unwrapped;
+      libc = "${builtins.xcodeSDKRoot}/usr";
     };
 
     extraBuildInputs = with pkgs; [ libcxx ];
