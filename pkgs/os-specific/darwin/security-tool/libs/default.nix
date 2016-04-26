@@ -1,4 +1,4 @@
-{ stdenv, src, callPackage, fetchzip, sqlite, runCommand, darwin, antlr }:
+{ stdenv, src, callPackage, fetchzip, sqlite, runCommand, darwin, antlr, openssl }:
 
 let
   xpcPrivate = runCommand "xpc-private" {} ''
@@ -8,20 +8,94 @@ let
     extern void xpc_connection_set_target_uid(xpc_connection_t, uid_t);
     extern void xpc_connection_set_instance(xpc_connection_t, uuid_t);
     extern void xpc_dictionary_set_mach_send(xpc_object_t, const char*, mach_port_t);
+    extern int _xpc_runtime_is_app_sandboxed();
     EOF
     cat >$out/include/CoreFoundation/CFXPCBridge.h <<EOF
     extern CFTypeRef _CFXPCCreateCFObjectFromXPCObject(xpc_object_t);
     extern xpc_object_t _CFXPCCreateXPCObjectFromCFObject(CFTypeRef);
     EOF
+    cat >$out/include/sandbox_private.h <<EOF
+    #ifndef _SANDBOX_PRIVATE_H_
+    #define _SANDBOX_PRIVATE_H_
+
+    #include <sandbox.h>
+
+    __BEGIN_DECLS
+
+    #define SANDBOX_NAMED_BUILTIN	0x0002
+    #define SANDBOX_NAMED_EXTERNAL	0x0003
+    #define SANDBOX_NAMED_MASK	0x000f
+
+    int sandbox_init_with_parameters(const char *profile, uint64_t flags, const char *const parameters[], char **errorbuf);
+
+    int sandbox_init_with_extensions(const char *profile, uint64_t flags, const char *const extensions[], char **errorbuf);
+
+    enum sandbox_filter_type {
+    	SANDBOX_FILTER_NONE,
+    	SANDBOX_FILTER_PATH,
+    	SANDBOX_FILTER_GLOBAL_NAME,
+    	SANDBOX_FILTER_LOCAL_NAME,
+    	SANDBOX_FILTER_APPLEEVENT_DESTINATION,
+    	SANDBOX_FILTER_RIGHT_NAME,
+    };
+
+    extern const enum sandbox_filter_type SANDBOX_CHECK_NO_REPORT __attribute__((weak_import));
+
+    enum sandbox_extension_flags {
+    	FS_EXT_DEFAULTS =              0,
+    	FS_EXT_FOR_PATH =       (1 << 0),
+    	FS_EXT_FOR_FILE =       (1 << 1),
+    	FS_EXT_READ =           (1 << 2),
+    	FS_EXT_WRITE =          (1 << 3),
+    	FS_EXT_PREFER_FILEID =  (1 << 4),
+    };
+
+    int sandbox_check(pid_t pid, const char *operation, enum sandbox_filter_type type, ...);
+
+    int sandbox_note(const char *note);
+
+    int sandbox_suspend(pid_t pid);
+    int sandbox_unsuspend(void);
+
+    int sandbox_issue_extension(const char *path, char **ext_token);
+    int sandbox_issue_fs_extension(const char *path, uint64_t flags, char **ext_token);
+    int sandbox_issue_fs_rw_extension(const char *path, char **ext_token);
+    int sandbox_issue_mach_extension(const char *name, char **ext_token);
+
+    int sandbox_consume_extension(const char *path, const char *ext_token);
+    int sandbox_consume_fs_extension(const char *ext_token, char **path);
+    int sandbox_consume_mach_extension(const char *ext_token, char **name);
+
+    int sandbox_release_fs_extension(const char *ext_token);
+
+    int sandbox_container_path_for_pid(pid_t pid, char *buffer, size_t bufsize);
+
+    int sandbox_wakeup_daemon(char **errorbuf);
+
+    const char *_amkrtemp(const char *);
+
+    __END_DECLS
+
+    #endif /* _SANDBOX_H_ */
+    EOF
   '';
+
+  deps = [ "CF" "CommonCrypto" "IOKitUser" "Libinfo" "launchd" "libauto" "securityd"
+  "libsecurity_agent" "security_dotmac_tp" "xnu" ];
+
+  srcs = import ./srcs.nix { inherit fetchzip; };
+  srcs_filter = stdenv.lib.filterAttrs (x: y: builtins.elem x deps) srcs;
+  srcs_map = stdenv.lib.mapAttrs' (n: v: stdenv.lib.nameValuePair ("srcs_${n}") v) srcs_filter;
 
 in stdenv.mkDerivation ({
   name = "security-tool-libs";
   inherit src;
-  builder = ./builder.sh;
+  builder = "${./scripts}/builder.sh";
   maker = ./Makefile;
 
-  buildInputs = [ antlr darwin.bootstrap_cmds sqlite xpcPrivate ];
+  inherit sqlite;
+
+  buildInputs = [ antlr darwin.bootstrap_cmds sqlite xpcPrivate openssl ];
 
   __impureHostDeps = [
     "${builtins.xcodeSDKRoot}/usr/lib/libauto.tbd"
@@ -30,18 +104,20 @@ in stdenv.mkDerivation ({
     "${builtins.xcodeSDKRoot}/usr/lib/libOpenScriptingUtil.tbd"
   ];
 
-  NIX_CFLAGS_COMPILE = "-Wno-deprecated-declarations";
+  NIX_CFLAGS_COMPILE = [
+    "-Wno-deprecated-declarations"
+  ];
 
   LIBS = [
-    "authd"
-    "security_utilities" "securityd" "security_codesigning"
-    "security_cdsa_utilities" "security_authorization"
+    "authd" "security_utilities" "securityd" "security_codesigning"
+    "security_smime" "security_cdsa_utils" "security_cdsa_utilities" "security_authorization"
+    "security_asn1" "security_cdsa_client"
   ];
 
   frameworks = [ "PCSC" "System" ];
-} // stdenv.lib.mapAttrs' (name: value:
-  stdenv.lib.nameValuePair ("srcs_${name}") value
-) (import ./srcs.nix { inherit fetchzip; }))
+
+  dontStrip = true;
+} // srcs_map)
 
 /*
 let

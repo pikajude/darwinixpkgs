@@ -22,7 +22,7 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" "man" ]; # TODO: above
 
   buildInputs = [ pkgconfig zlib libjpeg libpng libtiff libusb gnutls libpaper ]
-    ++ optionals stdenv.isLinux [ avahi pam dbus.libs acl ];
+    ++ optionals stdenv.isLinux [ avahi pam dbus acl ];
 
   propagatedBuildInputs = [ gmp ];
 

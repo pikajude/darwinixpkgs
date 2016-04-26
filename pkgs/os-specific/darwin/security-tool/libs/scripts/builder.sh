@@ -1,11 +1,19 @@
 source $stdenv/setup
 
+for file in "$(dirname "$0")"/*.sh; do
+  if [ "$0" != "$file" ]; then
+    echo "sourcing $file"
+    source "$file"
+  fi
+done
+
 postUnpack() {
   for libdir in Security-*/libs*; do
     libbase="$(basename "$libdir")"
     mkdir -p "$TMPDIR/$libbase/fake-include"
-    ln -sv "$PWD/$libdir/lib" "$TMPDIR/${libbase#lib}"
-    ln -sv "$PWD/$libdir/lib" "$TMPDIR/$libbase/fake-include/Security"
+    srcdir="$PWD/$libdir/lib"
+    ln -sv "$srcdir" "$TMPDIR/${libbase#lib}"
+    ln -sv "$srcdir" "$TMPDIR/$libbase/fake-include/Security"
     NIX_CFLAGS_COMPILE+=" -isystem $TMPDIR/$libbase/fake-include"
   done
   ln -sv "$TMPDIR/securityd" "$TMPDIR/securityd_client"
@@ -17,8 +25,15 @@ buildPhase() {
   runHook preBuild
 
   for lib in $LIBS; do
-    pushd "lib$lib/lib"
+    if [ -d "lib$lib/lib" ]; then
+      pushd "lib$lib/lib"
+    else
+      pushd "$lib"
+    fi
 
+    OLD_CFLAGS="$NIX_CFLAGS_COMPILE"
+
+    echo "preBuild_$lib"
     if [ "$(type -t "preBuild_$lib")" ]; then
       runHook "preBuild_$lib"
     fi
@@ -31,13 +46,15 @@ buildPhase() {
 
     make -f $maker "OBJS=$OBJS" -j$NIX_BUILD_CORES
 
+    NIX_CFLAGS_COMPILE="$OLD_CFLAGS"
+
     popd
   done
 
   ld -macosx_version_min 10.7 -arch x86_64 -dylib -o libsecurity.dylib \
     -lSystem -lOpenScriptingUtil -lantlr -lauto -lbsm -lc++ -lobjc -lsqlite3 -lxar \
     -framework CoreFoundation -framework IOKit -framework PCSC -framework Security -framework System \
-    **/lib/*.o
+    $(find . -name '*.o')
 
   runHook postBuild
 }
@@ -48,13 +65,22 @@ installPhase() {
   mkdir -p $out/lib
   install -m 0644 libsecurity.dylib $out/lib/libsecurity.dylib
 
-  for lib in "$LIBS"; do
+  for lib in $LIBS; do
     mkdir -p "$out/include/$lib"
-    install -m 0755 "lib$lib"/lib/*.h "$out/include/$lib/"
+    if [ -d "lib$lib" ]; then
+      install -m 0755 "lib$lib"/lib/*.h "$out/include/$lib/"
+    else
+      install -m 0755 "$lib"/*.h "$out/include/$lib/"
+    fi
   done
 
-  # mkdir -p "$out/include/Security"
-  # ln -sfv "$out/include"/*/*.h "$out/include/Security/"
+  mkdir -p "$out/include/Security"
+  ln -sfv "$out/include"/*/*.h "$out/include/Security/"
+
+  cp "libsecurity_keychain/lib"/Sec*Priv.h "$out/include/Security/"
+  cp "libsecurity_keychain/lib"/SecKeychainItemExtendedAttributes.h "$out/include/Security/"
+  cp "libsecurity_keychain/lib"/TrustSettingsSchema.h "$out/include/Security/"
+  cp "libsecurity_mds/lib/mdspriv.h" "$out/include/Security/"
 
   runHook postInstall
 }
@@ -65,66 +91,6 @@ preBuild_security_authorization() {
 
 preBuild_security_cdsa_utilities() {
   echo hi
-}
-
-preBuild_security_utilities() {
-  cat >utilities_dtrace.h <<EOF
-#define SECURITY_DEBUG_DELAY(...)
-#define SECURITY_DEBUG_LOG(...)
-#define SECURITY_DEBUG_LOG_ENABLED(...) 0
-#define SECURITY_DEBUG_REFCOUNT_CREATE(...)
-#define SECURITY_DEBUG_REFCOUNT_DOWN(...)
-#define SECURITY_DEBUG_REFCOUNT_UP(...)
-#define SECURITY_DEBUG_SEC_CREATE(...)
-#define SECURITY_DEBUG_SEC_CREATE_ENABLED(...) 0
-#define SECURITY_DEBUG_SEC_DESTROY(...)
-#define SECURITY_EXCEPTION_COPY(...)
-#define SECURITY_EXCEPTION_HANDLED(...)
-#define SECURITY_EXCEPTION_THROW_CSSM(...)
-#define SECURITY_EXCEPTION_THROW_CF(...)
-#define SECURITY_EXCEPTION_THROW_MACH(...)
-#define SECURITY_EXCEPTION_THROW_OSSTATUS(...)
-#define SECURITY_EXCEPTION_THROW_OTHER(...)
-#define SECURITY_EXCEPTION_THROW_PCSC(...)
-#define SECURITY_EXCEPTION_THROW_SQLITE(...)
-#define SECURITY_EXCEPTION_THROW_UNIX(...)
-#define SECURITY_MACHSERVER_ALLOC_REGISTER(...)
-#define SECURITY_MACHSERVER_ALLOC_RELEASE(...)
-#define SECURITY_MACHSERVER_BEGIN(...)
-#define SECURITY_MACHSERVER_END(...)
-#define SECURITY_MACHSERVER_END_THREAD(...)
-#define SECURITY_MACHSERVER_PORT_ADD(...)
-#define SECURITY_MACHSERVER_PORT_REMOVE(...)
-#define SECURITY_MACHSERVER_REAP(...)
-#define SECURITY_MACHSERVER_RECEIVE(...)
-#define SECURITY_MACHSERVER_RECEIVE_ENABLED(...) 0
-#define SECURITY_MACHSERVER_RECEIVE_ERROR(...)
-#define SECURITY_MACHSERVER_SEND_ERROR(...)
-#define SECURITY_MACHSERVER_START_THREAD(...)
-#define SECURITY_MACHSERVER_TIMER_END(...)
-#define SECURITY_MACHSERVER_TIMER_START(...)
-EOF
-
-  substituteInPlace cfclass.h \
-    --replace CoreFoundation/CFRuntime.h "$srcs_CF/CFRuntime.h"
-  substituteInPlace seccfobject.h \
-    --replace CoreFoundation/CFRuntime.h "$srcs_CF/CFRuntime.h"
-  substituteInPlace cfclass.cpp \
-    --replace auto_zone.h "$srcs_libauto/auto_zone.h"
-  substituteInPlace seccfobject.cpp \
-    --replace auto_zone.h "$srcs_libauto/auto_zone.h"
-  substituteInPlace hashing.h \
-    --replace CommonCrypto/CommonDigestSPI.h "$srcs_CommonCrypto/include/CommonDigestSPI.h"
-  substituteInPlace mach++.cpp \
-    --replace bootstrap_priv.h "$srcs_launchd/liblaunch/bootstrap_priv.h"
-  substituteInPlace osxcode.cpp \
-    --replace CoreFoundation/CFBundlePriv.h "$srcs_CF/CFBundlePriv.h"
-  substituteInPlace powerwatch.h \
-    --replace IOKit/pwr_mgt/IOPMLibPrivate.h "$srcs_IOKitUser/pwr_mgt.subproj/IOPMLibPrivate.h"
-  substituteInPlace unix++.cpp \
-    --replace vproc_priv.h "$srcs_launchd/liblaunch/vproc_priv.h"
-  substituteInPlace vproc++.cpp \
-    --replace vproc_priv.h "$srcs_launchd/liblaunch/vproc_priv.h"
 }
 
 preBuild_security_codesigning() {
@@ -293,12 +259,6 @@ EOF
     --replace '<OpenScriptingUtilPriv.h>' '"OpenScriptingUtilPriv.h"'
 
   NIX_CFLAGS_COMPILE+=" -I$(dirname "$PWD")/antlr2"
-}
-
-preBuild_securityd() {
-  pushd ..
-  make -f mig/mig.mk SRCROOT=. BUILT_PRODUCTS_DIR=. PROJECT_DIR=. DERIVED_SRC=lib
-  popd
 }
 
 genericBuild

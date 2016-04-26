@@ -34,10 +34,25 @@ in stdenv.mkDerivation rec {
     runHook preBuild
 
     for file in *.c; do
-      cc -c $file -o "$(basename "$file" .c).o"
+      cc -c $file -o "$file.o"
+    done
+
+    for file in *.cpp; do
+      c++ -c $file -o "$file.o"
     done
 
     runHook postBuild
+  '';
+
+  installPhase = ''
+    runHook preInstall
+
+    ld -macosx_version_min 10.7 -lSystem ${libs}/lib/libsecurity.dylib -lc++ \
+      -framework Security -framework CoreFoundation \
+      -o security_tool \
+      *.o
+
+    runHook postInstall
   '';
 
   NIX_CFLAGS_COMPILE = [
