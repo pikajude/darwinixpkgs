@@ -11,6 +11,8 @@ stdenv.mkDerivation rec {
 
   configureflags= "--with-introspection";
 
+  NIX_LDFLAGS = stdenv.lib.optionalString stdenv.isDarwin "-lintl";
+
   propagatedBuildInputs = [ glib gobjectIntrospection ];
   nativeBuildInputs = [ pkgconfig ];
   buildInputs = libintlOrEmpty;
