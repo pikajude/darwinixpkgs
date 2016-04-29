@@ -38,6 +38,7 @@
   (literal (sdk-path "/usr/include/bsm/audit_kevents.h"))
   (literal (sdk-path "/usr/include/bsm/audit_record.h"))
   (literal (sdk-path "/usr/include/bsm/audit_session.h"))
+  (literal (sdk-path "/usr/include/bsm/audit_uevents.h"))
   (literal (sdk-path "/usr/include/bsm/libbsm.h"))
   (literal (sdk-path "/usr/include/cache.h"))
   (literal (sdk-path "/usr/include/cache_callbacks.h"))
