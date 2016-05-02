@@ -16,6 +16,8 @@ stdenv.mkDerivation rec {
   buildInputs = [ automake autoconf libtool pkgconfig ]
     ++ stdenv.lib.optionals stdenv.isDarwin [ ApplicationServices CoreServices ];
 
+  frameworks = [ "ApplicationServices" "CoreServices" ];
+
   preConfigure = ''
     LIBTOOLIZE=libtoolize ./autogen.sh
   '';
