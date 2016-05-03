@@ -1,5 +1,5 @@
 { stdenv, lib, fetchurl, tzdata, iana_etc, libcCross
-, pkgconfig
+, pkgconfig, writeScriptBin, darwin
 , pcre
  }:
 
@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ pkgconfig ];
-  buildInputs = [ pcre ];
+  buildInputs = [ pcre darwin.security_tool ];
 
   sandboxProfile = ''
     (allow network*)

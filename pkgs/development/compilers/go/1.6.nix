@@ -22,9 +22,11 @@ stdenv.mkDerivation rec {
     sha256 = "1plakydixx0xrp0z3n8ahnwg66psn31791dh56yl4ry41phq0axm";
   };
 
+  frameworks = [ "Foundation" ];
+
   # perl is used for testing go vet
   nativeBuildInputs = [ perl which pkgconfig patch ];
-  buildInputs = [ pcre ];
+  buildInputs = [ pcre darwin.security_tool ];
   propagatedBuildInputs = lib.optionals stdenv.isDarwin [
     darwin.apple_sdk.frameworks.AppKit
   ];
