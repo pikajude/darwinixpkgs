@@ -1,5 +1,5 @@
 { lib, stdenv, fetchurl, perl, curl, bzip2, sqlite, openssl ? null, xz
-, pkgconfig, boehmgc, perlPackages, libsodium
+, pkgconfig, boehmgc, perlPackages, libsodium, aws-sdk-cpp
 , storeDir ? "/nix/store"
 , stateDir ? "/nix/var"
 }:
@@ -14,7 +14,11 @@ let
     nativeBuildInputs = [ perl pkgconfig ];
 
     buildInputs = [ curl openssl sqlite xz ]
-      ++ lib.optional (stdenv.isLinux || stdenv.isDarwin) libsodium;
+      ++ lib.optional (stdenv.isLinux || stdenv.isDarwin) libsodium
+      ++ [(aws-sdk-cpp.override {
+            apis = ["s3"];
+            customMemoryManagement = false;
+         })];
 
     propagatedBuildInputs = [ boehmgc ];
 
@@ -97,10 +101,10 @@ in rec {
   };
 
   nixUnstable = lib.lowPrio (common rec {
-    name = "nix-1.12pre4523_3b81b26";
+    name = "nix-1.12pre4591_c879a20";
     src = fetchurl {
-      url = "http://hydra.nixos.org/build/33598573/download/4/${name}.tar.xz";
-      sha256 = "0469zv09m85824w4vqj2ag0nciq51xvrvsys7bd5v4nrxihk9991";
+      url = "http://hydra.nixos.org/build/34883299/download/3/${name}.tar.xz";
+      sha256 = "0wf8pp5wlvx7095sxpzpnlc6c43150hf056mj14sillc5087nvih";
     };
   });
 
