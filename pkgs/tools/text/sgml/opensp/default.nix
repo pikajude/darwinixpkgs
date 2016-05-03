@@ -13,6 +13,8 @@ stdenv.mkDerivation {
       docsrc/*.xml
   '';
 
+  NIX_CFLAGS_COMPILE = "-I${builtins.xcodeSDKRoot}/System/Library/Frameworks/CoreFoundation.framework/Headers";
+
   configureFlags = lib.optional stdenv.isDarwin [
     "--with-libintl-prefix=/usr"
     "--with-libiconv-prefix=/usr"
