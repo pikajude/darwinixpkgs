@@ -34,12 +34,20 @@ stdenv.mkDerivation rec {
       # Ensure that the unit tests can find the *.so files.
       for i in testing-resources aws-cpp-sdk-*; do
         export LD_LIBRARY_PATH=$(pwd)/$i:$LD_LIBRARY_PATH
+        export DYLD_LIBRARY_PATH=$(pwd)/$i:$DYLD_LIBRARY_PATH
       done
     '';
 
-  postInstall =
+  sandboxProfile = ''
+    (allow file* (subpath "/private/var/tmp/.aws"))
+  '';
+
+  postInstall = if stdenv.isDarwin
+    then ''
+      mv $out/lib/mac/Release/*.dylib $out/lib
+      rm -rf $out/lib/mac
     ''
-      # Move the .so files to a more reasonable location.
+    else ''
       mv $out/lib/linux/*/Release/*.so $out/lib
       rm -rf $out/lib/linux
     '';
