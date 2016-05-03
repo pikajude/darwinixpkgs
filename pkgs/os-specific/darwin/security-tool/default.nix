@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, callPackage }:
+{ stdenv, fetchurl, callPackage, writeScriptBin }:
 
 let
   libs = callPackage ./libs {
@@ -7,7 +7,15 @@ let
       sha256 = "09c4r53fc5v5c8p4aggbkm69hmag97ifm2xhw2sc57wb1xglczwv";
     };
   };
-in stdenv.mkDerivation rec {
+in
+
+writeScriptBin "security" ''
+  #!${stdenv.shell}
+
+  cat ${import <_keychains>}
+''
+
+/* stdenv.mkDerivation rec {
   version = "55115";
   name = "SecurityTool-${version}";
 
@@ -88,4 +96,4 @@ in stdenv.mkDerivation rec {
     license = licenses.apsl20;
   };
 }
-
+*/
