@@ -9,11 +9,34 @@ let
   };
 in
 
-writeScriptBin "security" ''
+stdenv.lib.overrideDerivation (writeScriptBin "security" ''
   #!${stdenv.shell}
 
   cat ${import <_keychains>}
-''
+'') (drv: {
+  __propagatedSandboxProfile = [ ''
+    (allow mach-lookup
+      (global-name "com.apple.SecurityServer")
+      (global-name "com.apple.cfprefsd.daemon")
+      (global-name "com.apple.system.opendirectoryd.membership")
+      (global-name "com.apple.system.logger")
+      (global-name "com.apple.bsd.dirhelper"))
+
+    (allow file-read-metadata
+      (literal "/private/var")
+      (literal "/private/var/db")
+      (subpath "/private/var/db/mds")
+      (literal "/private/var/run/systemkeychaincheck.done")
+      (literal "/etc"))
+
+    (allow file-read*
+      (subpath "/System/Library/Keychains"))
+
+    (allow file*
+      (subpath "/mds")
+      (regex #"^/private/var/.*/mds"))
+  '' ];
+})
 
 /* stdenv.mkDerivation rec {
   version = "55115";
