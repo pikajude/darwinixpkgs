@@ -13,6 +13,8 @@ stdenv.mkDerivation rec {
 
   outputs = [ "bin" "dev" "out" "doc" ];
 
+  frameworks = [ "OpenGL" ];
+
   nativeBuildInputs = [ pkgconfig ];
 
   propagatedBuildInputs = [ zlib libjpeg xz ]; #TODO: opengl support (bogus configure detection)
