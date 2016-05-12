@@ -19,6 +19,8 @@ stdenv.mkDerivation rec {
     cp build/xhyve $out/bin
   '';
 
+  frameworks = [ "Hypervisor" "vmnet" ];
+
   meta = {
     description = "Lightweight Virtualization on OS X Based on bhyve";
     homepage = "https://github.com/mist64/xhyve";
