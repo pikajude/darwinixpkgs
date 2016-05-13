@@ -203,9 +203,10 @@ let
               (extraBuildInputs ++ buildInputs' ++ nativeBuildInputs')
             ++ lib.concatMap (fw: [
               "${builtins.xcodeSDKRoot}/System/Library/Frameworks/${fw}.framework"
+            ] ++ lib.optionals (fw != "Kernel") [
               "${builtins.xcodeSDKRoot}/System/Library/Frameworks/${fw}.framework/${fw}.tbd"
               "/System/Library/Frameworks/${fw}.framework/${fw}"
-              ]) (frameworks' ++ propagatedFrameworks' ++ baseFrameworks));
+            ]) (frameworks' ++ propagatedFrameworks' ++ baseFrameworks));
           computedPropagatedImpureHostDeps =
             lib.unique (lib.concatMap (input: input.__propagatedImpureHostDeps or []) (propagatedBuildInputs' ++ propagatedNativeBuildInputs')
               ++ lib.concatMap (fw: [
