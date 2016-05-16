@@ -464,6 +464,7 @@
   (literal (sdk-path "/usr/include/sys/cdefs.h"))
   (literal (sdk-path "/usr/include/sys/dir.h"))
   (literal (sdk-path "/usr/include/sys/dirent.h"))
+  (literal (sdk-path "/usr/include/sys/disk.h"))
   (literal (sdk-path "/usr/include/sys/errno.h"))
   (literal (sdk-path "/usr/include/sys/event.h"))
   (literal (sdk-path "/usr/include/sys/fcntl.h"))
