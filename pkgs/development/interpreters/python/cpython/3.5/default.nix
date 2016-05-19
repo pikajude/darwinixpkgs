@@ -39,7 +39,7 @@ let
     tk
     libX11
     xproto
-  ] ++ optionals stdenv.isDarwin [ CF configd ];
+  ];
 in
 stdenv.mkDerivation {
   name = "python3-${fullVersion}";
@@ -60,6 +60,8 @@ stdenv.mkDerivation {
     substituteInPlace configure --replace '-Wl,-stack_size,1000000' ' '
   '';
 
+  frameworks = [ "Carbon" "SystemConfiguration" ];
+
   preConfigure = ''
     for i in /usr /sw /opt /pkg; do	# improve purity
       substituteInPlace ./setup.py --replace $i /no-such-path
@@ -67,6 +69,9 @@ stdenv.mkDerivation {
     ${optionalString stdenv.isDarwin ''
        export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -msse2"
        export MACOSX_DEPLOYMENT_TARGET=10.6
+       substituteInPlace Lib/platform.py --replace \
+         /System/Library/CoreServices/SystemVersion.plist \
+         "$SDKROOT"/System/Library/CoreServices/SystemVersion.plist
      ''}
 
     configureFlagsArray=( --enable-shared --with-threads
