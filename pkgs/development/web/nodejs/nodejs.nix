@@ -53,6 +53,14 @@ in stdenv.mkDerivation {
     ++ optionals stdenv.isDarwin [ pkgconfig libtool ];
   setupHook = ./setup-hook.sh;
 
+  # assertion failure if resolv.conf is not readable
+  propagatedSandboxProfile = ''
+    (allow file-read-metadata
+      (literal "/etc")
+      (literal "/private/etc/resolv.conf"))
+    (allow file-read* (literal "/private/var/run/resolv.conf"))
+  '';
+
   enableParallelBuilding = true;
 
   passthru.interpreterName = "nodejs";
