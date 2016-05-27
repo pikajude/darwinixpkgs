@@ -27,7 +27,7 @@ stdenv.mkDerivation rec {
     # RUNPATH for that, leading to undefined references for its users.
     ++ lib.optional stdenv.isFreeBSD xz;
 
-  propagatedBuildInputs = [ zlib findXMLCatalogs ];
+  propagatedBuildInputs = [ zlib findXMLCatalogs libiconv ];
 
   configureFlags = lib.optional supportPython "--with-python=${python}"
     ++ [ "--exec_prefix=$dev" ];
