@@ -18,6 +18,13 @@ stdenv.mkDerivation rec {
 
   frameworks = [ "ApplicationServices" "CoreServices" ];
 
+  NIX_CFLAGS_COMPILE = [
+    "-Wno-deprecated-declarations" "-Wno-nullability-extension" "-Wno-four-char-constants"
+    "-Wno-c99-extensions" "-Wno-long-long" "-Wno-pedantic"
+  ];
+
+  enableParallelBuilding = true;
+
   preConfigure = ''
     LIBTOOLIZE=libtoolize ./autogen.sh
   '';
