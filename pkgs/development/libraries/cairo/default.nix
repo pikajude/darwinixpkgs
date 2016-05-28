@@ -33,6 +33,11 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" "devdoc" ];
   outputBin = "dev"; # very small
 
+  NIX_CFLAGS_COMPILE = [
+    "-Wno-enum-conversion" "-Wno-deprecated-declarations"
+    "-Wno-tautological-constant-out-of-range-compare"
+  ];
+
   nativeBuildInputs = [
     pkgconfig
     libiconv
