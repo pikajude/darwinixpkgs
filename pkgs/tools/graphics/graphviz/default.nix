@@ -28,6 +28,8 @@ stdenv.mkDerivation rec {
       (with xorg; [ xlibsWrapper libXrender libXaw libXpm ])
     ++ stdenv.lib.optional (stdenv.system == "x86_64-darwin") gettext;
 
+  frameworks = [ "ApplicationServices" ];
+
   CPPFLAGS = stdenv.lib.optionalString (xorg != null && stdenv.system == "x86_64-darwin")
     "-I${cairo.dev}/include/cairo";
 
