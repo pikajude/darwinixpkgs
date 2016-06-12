@@ -405,6 +405,7 @@ let
     sourceRoot = "libmpack-${libmpack.rev}-src/binding/lua";
     buildInputs = [ libmpack ]; #libtool lua pkgconfig ];
     dontBuild = true;
+    NIX_CFLAGS_COMPILE = "-std=c99";
     preInstall = ''
       mkdir -p $out/lib/lua/${lua.luaversion}
     '';

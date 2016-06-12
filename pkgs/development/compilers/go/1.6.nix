@@ -33,6 +33,8 @@ stdenv.mkDerivation rec {
 
   hardeningDisable = [ "all" ];
 
+  frameworks = [ "Security" "Foundation" ];
+
   # I'm not sure what go wants from its 'src', but the go installation manual
   # describes an installation keeping the src.
   preUnpack = ''
@@ -76,6 +78,7 @@ stdenv.mkDerivation rec {
     sed -i '/src\/cmd\/api\/run.go/ireturn nil' src/cmd/dist/test.go
     # Remove the coverage test as we have removed this utility
     sed -i '/TestCoverageWithCgo/areturn' src/cmd/go/go_test.go
+    sed -i '/TestLookupPort/areturn' src/net/lookup_test.go
 
     sed -i 's,/etc/protocols,${iana_etc}/etc/protocols,' src/net/lookup_unix.go
     sed -i 's,/etc/services,${iana_etc}/etc/services,' src/net/port_unix.go

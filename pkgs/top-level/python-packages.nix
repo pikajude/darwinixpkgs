@@ -10030,17 +10030,17 @@ in modules // {
 
   dulwich = buildPythonPackage rec {
     name = "dulwich-${version}";
-    version = "0.12.0";
+    version = "0.10.1a";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/d/dulwich/${name}.tar.gz";
-      sha256 = "1ihc1bdgxj7i068mhhmkzar56r2vdcj68w0dnsm7aqgcgvrp144g";
+      sha256 = "02rknqarwy7p50693cqswbibqwgxzrfzdq4yhwqxbdmhbsmh0rk6";
     };
 
-    LC_ALL = "en_US.UTF-8";
+    # LC_ALL = "en_US.UTF-8";
 
     # Only test dependencies
-    buildInputs = with self; [ pkgs.git gevent geventhttpclient pkgs.glibcLocales mock fastimport ];
+    buildInputs = with self; [ pkgs.git gevent geventhttpclient mock fastimport ];
 
     doCheck = !stdenv.isDarwin;
 

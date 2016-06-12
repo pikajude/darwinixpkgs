@@ -11,6 +11,7 @@ stdenv.mkDerivation rec {
     sha256 = "1whnbgxd5580h59kvc2xgx6ymw7nk9kz6r4ajgsfv6c6h2xbwbl3";
   };
   LIBTOOL = "libtool";
+  NIX_CFLAGS_COMPILE = "-std=c99";
   buildInputs = [ libtool ];
   installPhase = ''
     mkdir -p $out/lib/libmpack

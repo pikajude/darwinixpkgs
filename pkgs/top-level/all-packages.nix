@@ -15401,7 +15401,10 @@ in
 
   vimpc = callPackage ../applications/audio/vimpc { };
 
-  neovim = callPackage ../applications/editors/neovim { };
+  neovim = callPackage ../applications/editors/neovim {
+    luaPackages = lua51Packages;
+    lua = lua5_1;
+  };
 
   neovim-qt = callPackage ../applications/editors/neovim/qt.nix {
     qt5 = qt55;
