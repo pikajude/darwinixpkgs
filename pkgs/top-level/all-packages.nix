@@ -4751,11 +4751,14 @@ in
 
   # Haskell and GHC
 
-  haskell = callPackage ./haskell-packages.nix { };
+  haskell = let haskell' = callPackage ./haskell-packages.nix { };
+    in haskell' // {
+      packages = lib.mapAttrs (compiler: hps: hps.override {
+        overrides = config.haskellPackageOverrides or (self: super: {});
+      }) haskell'.packages;
+    };
 
-  haskellPackages = haskell.packages.ghc801.override {
-    overrides = config.haskellPackageOverrides or (self: super: {});
-  };
+  haskellPackages = haskell.packages.ghc801;
 
   inherit (haskellPackages) ghc;
 
@@ -15403,7 +15406,6 @@ in
 
   neovim = callPackage ../applications/editors/neovim {
     luaPackages = lua51Packages;
-    lua = lua5_1;
   };
 
   neovim-qt = callPackage ../applications/editors/neovim/qt.nix {
