@@ -36,6 +36,8 @@ stdenv.mkDerivation rec {
   postInstall = ''
     mkdir -p $out/share/bash-completion/completions
     cp -v ${bashCompletion}/completions/tmux $out/share/bash-completion/completions/tmux
+  '' + stdenv.lib.optionalString stdenv.isDarwin ''
+    install_name_tool -delete_rpath $out/lib $bin/bin/tmux
   '';
 
   meta = {
