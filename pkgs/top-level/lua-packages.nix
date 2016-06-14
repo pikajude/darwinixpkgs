@@ -409,7 +409,6 @@ let
     preInstall = ''
       mkdir -p $out/lib/lua/${lua.luaversion}
     '';
-    NIX_CFLAGS_COMPILE = "-Wno-error -fpic";
     installFlags = [
       "USE_SYSTEM_LUA=yes"
       "LUA_VERSION_MAJ_MIN="
