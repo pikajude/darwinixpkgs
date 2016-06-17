@@ -42,7 +42,11 @@ in rec {
     export gl_cv_func_getcwd_abort_bug=no
   '';
 
-  __stdenvImpureHostDeps = [
+  __stdenvImpureHostDeps = if builtins.xcodeSDKRoot == ""
+    then builtins.abort ''
+      You have the OSX command line tools installed. To use darwinixpkgs, you need
+      to install Xcode!
+    '' else [
     "${builtins.xcodeSDKRoot}/usr/lib/libSystem.tbd"
     "${builtins.xcodeSDKRoot}/usr/lib/libgcc_s.10.5.tbd"
     "${builtins.xcodeSDKRoot}/usr/lib/libgcc_s.10.4.tbd"
