@@ -8,6 +8,8 @@ stdenv.mkDerivation rec {
   buildInputs = (stdenv.lib.optional stdenv.isDarwin CoreServices) ++
                 (stdenv.lib.optional stdenv.isDarwin AudioUnit);
 
+  frameworks = [ "AudioUnit" ];
+
   src = fetchurl {
     url = "http://audiofile.68k.org/${name}.tar.gz";
     sha256 = "0rb927zknk9kmhprd8rdr4azql4gn2dp75a36iazx2xhkbqhvind";

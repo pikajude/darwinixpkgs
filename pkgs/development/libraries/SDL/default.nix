@@ -36,6 +36,9 @@ stdenv.mkDerivation rec {
     optional pulseaudioSupport libpulseaudio ++
     optional stdenv.isDarwin Cocoa;
 
+  frameworks = [ "AudioToolbox" "AudioUnit" "Carbon" "CoreAudio" "Kernel" "OpenGL" ];
+  propagatedFrameworks = [ "Cocoa" ];
+
   buildInputs = let
     notMingw = !(stdenv ? cross) || stdenv.cross.libc != "msvcrt";
   in optional notMingw audiofile
