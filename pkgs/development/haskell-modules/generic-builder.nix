@@ -49,6 +49,7 @@
 , useCpphs ? false
 , frameworks ? []
 , propagatedFrameworks ? []
+, NIX_LDFLAGS ? ""
 , hardeningDisable ? []
 } @ args:
 
@@ -332,11 +333,9 @@ stdenv.mkDerivation ({
 // optionalAttrs (preFixup != "")       { inherit preFixup; }
 // optionalAttrs (postFixup != "")      { inherit postFixup; }
 // optionalAttrs (dontStrip)            { inherit dontStrip; }
-<<<<<<< HEAD
 // optionalAttrs (hardeningDisable != []) { inherit hardeningDisable; }
-=======
 // optionalAttrs (frameworks != [])           { inherit frameworks; }
 // optionalAttrs (propagatedFrameworks != []) { inherit propagatedFrameworks; }
->>>>>>> add loads of frameworks
 // optionalAttrs (stdenv.isLinux)       { LOCALE_ARCHIVE = "${glibcLocales}/lib/locale/locale-archive"; }
+// optionalAttrs (NIX_LDFLAGS != "")    { inherit NIX_LDFLAGS; }
 )

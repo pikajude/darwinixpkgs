@@ -36,6 +36,10 @@ self: super: {
   unix = null;
   xhtml = null;
 
+  hscolour = overrideCabal super.hscolour (drv: pkgs.stdenv.lib.optionalAttrs pkgs.stdenv.isDarwin {
+    NIX_LDFLAGS = "-no_dtrace_dof";
+  });
+
   # Enable latest version of cabal-install.
   cabal-install = (doDistribute (dontJailbreak (dontCheck (super.cabal-install)))).overrideScope (self: super: { Cabal = self.Cabal_1_24_0_0; });
 

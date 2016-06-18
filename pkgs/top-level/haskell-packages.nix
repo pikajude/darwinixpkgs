@@ -13,6 +13,9 @@ rec {
     ghc742Binary = callPackage ../development/compilers/ghc/7.4.2-binary.nix {
       gmp = pkgs.gmp4;
     };
+    ghc7103Binary = callPackage ../development/compilers/ghc/7.10.3-binary.nix {
+      gmp = pkgs.gmp4;
+    };
 
     ghc6104 = callPackage ../development/compilers/ghc/6.10.4.nix { ghc = compiler.ghc6102Binary; };
     ghc6123 = callPackage ../development/compilers/ghc/6.12.3.nix { ghc = compiler.ghc6102Binary; };
@@ -43,7 +46,9 @@ rec {
       inherit (bootPkgs) hscolour;
     };
     ghc801 = callPackage ../development/compilers/ghc/8.0.1.nix rec {
-      bootPkgs = packages.ghc7103;
+      bootPkgs = if stdenv.isDarwin
+        then packages.ghc7103Binary
+        else packages.ghc7103;
       inherit (bootPkgs) hscolour;
     };
     ghcHEAD = callPackage ../development/compilers/ghc/head.nix rec {
@@ -108,6 +113,10 @@ rec {
     };
     ghc7103 = callPackage ../development/haskell-modules {
       ghc = compiler.ghc7103;
+      compilerConfig = callPackage ../development/haskell-modules/configuration-ghc-7.10.x.nix { };
+    };
+    ghc7103Binary = callPackage ../development/haskell-modules {
+      ghc = compiler.ghc7103Binary;
       compilerConfig = callPackage ../development/haskell-modules/configuration-ghc-7.10.x.nix { };
     };
     ghc801 = callPackage ../development/haskell-modules {
