@@ -4,6 +4,10 @@
 
 let
   inherit (bootPkgs) ghc;
+  haddockPatch = fetchpatch {
+    url = "https://patch-diff.githubusercontent.com/raw/haskell/haddock/pull/512.patch";
+    sha256 = "17srxgbmsa786hv62kkm09g22clxyngs8vw4xq5vkr5wicpi3w5a";
+  };
 
   fetchFilteredPatch = args: fetchurl (args // {
     downloadToTemp = true;
@@ -37,6 +41,10 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "doc" ];
 
   preConfigure = ''
+    pushd utils/haddock
+    patch -p1 < ${haddockPatch}
+    popd
+
     sed -i -e 's|-isysroot /Developer/SDKs/MacOSX10.5.sdk||' configure
   '' + stdenv.lib.optionalString (!stdenv.isDarwin) ''
     export NIX_LDFLAGS="$NIX_LDFLAGS -rpath $out/lib/ghc-${version}"
