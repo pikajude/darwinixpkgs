@@ -5,7 +5,7 @@
 , enableGtk2 ? false, pygtk ? null, gobjectIntrospection
 , enableGtk3 ? false, cairo
 , enableTk ? false, tcl ? null, tk ? null, tkinter ? null, libX11 ? null
-, Cocoa, Foundation, CoreData, cf-private, libobjc, libcxx
+, Cocoa, Foundation, CoreData, libcxx
 }:
 
 assert enableGhostscript -> ghostscript != null;
