@@ -40,8 +40,8 @@ stdenv.mkDerivation {
   # systemkey-args.h.
   enableParallelBuilding = false;
 
-  buildInputs = [ lzo lzip nettle libtasn1 libidn p11_kit zlib gmp autogen ]
-    ++ lib.optional doCheck nettools
+  buildInputs = [ lzo lzip nettle libtasn1 libidn p11_kit zlib gmp autogen bash ]
+    ++ lib.optional (doCheck && stdenv.isLinux) nettools
     ++ lib.optional (stdenv.isFreeBSD || stdenv.isDarwin) libiconv
     ++ lib.optional (tpmSupport && stdenv.isLinux) trousers
     ++ [ unbound ]

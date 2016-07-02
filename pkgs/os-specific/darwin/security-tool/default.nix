@@ -1,5 +1,7 @@
-{ stdenv, fetchurl, callPackage, writeScriptBin }:
+{ stdenv, fetchurl, callPackage, writeScriptBin, runCommand }:
 
+# security-tool is an absolute clusterf*k and we need a full-time paid nixos employee to
+# make it work
 let
   libs = callPackage ./libs {
     src = fetchurl {
@@ -7,12 +9,18 @@ let
       sha256 = "09c4r53fc5v5c8p4aggbkm69hmag97ifm2xhw2sc57wb1xglczwv";
     };
   };
+
+  keychains_src = runCommand "keychains.txt" {
+    __noChroot = true;
+  } ''
+    /usr/bin/security find-certificate -pa /System/Library/Keychains/SystemRootCertificates.keychain > $out
+  '';
 in
 
 stdenv.lib.overrideDerivation (writeScriptBin "security" ''
   #!${stdenv.shell}
 
-  cat ${import <_keychains>}
+  cat ${keychains_src}
 '') (drv: {
   __propagatedSandboxProfile = [ ''
     (allow mach-lookup

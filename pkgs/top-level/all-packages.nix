@@ -1227,6 +1227,7 @@ in
 
   coreutils = callPackage ../tools/misc/coreutils {
     aclSupport = stdenv.isLinux;
+    singleBinary = if stdenv.isDarwin then "symlinks" else true;
   };
 
   coreutils-prefixed = coreutils.override { withPrefix = true; };
