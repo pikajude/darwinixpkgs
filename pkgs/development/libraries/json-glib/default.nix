@@ -17,8 +17,6 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ pkgconfig ];
   buildInputs = libintlOrEmpty;
 
-  NIX_LDFLAGS = stdenv.lib.optionalString stdenv.isDarwin "-lintl";
-
   meta = with stdenv.lib; {
     homepage = http://live.gnome.org/JsonGlib;
     description = "A library providing (de)serialization support for the JavaScript Object Notation (JSON) format";
