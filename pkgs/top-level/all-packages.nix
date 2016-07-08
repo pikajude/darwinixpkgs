@@ -825,6 +825,8 @@ in
 
   filebench = callPackage ../tools/misc/filebench { };
 
+  filebot = callPackage ../tools/misc/filebot { };
+
   fop = callPackage ../tools/typesetting/fop { };
 
   fondu = callPackage ../tools/misc/fondu { };
