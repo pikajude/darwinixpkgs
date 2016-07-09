@@ -1,4 +1,5 @@
-{ stdenv, fetchurl
+{ stdenv
+, fetchFromGitHub
 , pkgconfig
 , zlib
 , libpng
