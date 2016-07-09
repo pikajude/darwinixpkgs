@@ -35,7 +35,9 @@ let
       substituteInPlace bin/mklib --replace g++ clang++
     '';
 
-    frameworks = [ "OpenGL" ];
+    frameworks = [ "ApplicationServices" "OpenGL" ];
+
+    __impureHostDeps = [ "${builtins.xcodeSDKRoot}/usr/lib/libXplugin.tbd" ];
 
     patches = [
       ./patches/0003-mesa-fix-per-level-max-texture-size-error-checking.patch

@@ -102,8 +102,9 @@ in
   libAppleWM = attrs: attrs // {
     buildInputs = attrs.buildInputs ++ [ args.apple_sdk.frameworks.ApplicationServices ];
     preConfigure = ''
-      substituteInPlace src/Makefile.in --replace -F/System -F${args.apple_sdk.frameworks.ApplicationServices}
+      substituteInPlace src/Makefile.in --replace -F/System -F${builtins.xcodeSDKRoot}/System
     '';
+    frameworks = [ "ApplicationServices" ];
   };
 
   libXau = attrs: attrs // {
@@ -480,18 +481,20 @@ in
           args.apple_sdk.frameworks.Carbon
           args.apple_sdk.frameworks.Cocoa
         ];
+        frameworks = [ "Carbon" "Cocoa" "CoreAudio" ];
+        __impureHostDeps = [ "${builtins.xcodeSDKRoot}/usr/lib/libXplugin.tbd" ];
         propagatedBuildInputs = commonPropagatedBuildInputs ++ [
           libAppleWM applewmproto
         ];
         # Patches can be pulled from the server-*-apple branches of:
         # http://cgit.freedesktop.org/~jeremyhu/xserver/
-        patches = commonPatches ++ [
-          ./darwin/0002-sdksyms.sh-Use-CPPFLAGS-not-CFLAGS.patch
-          ./darwin/0004-Use-old-miTrapezoids-and-miTriangles-routines.patch
-          ./darwin/0006-fb-Revert-fb-changes-that-broke-XQuartz.patch
-          ./darwin/private-extern.patch
-          ./darwin/bundle_main.patch
-          ./darwin/stub.patch
+        patches = [
+          # ./darwin/0002-sdksyms.sh-Use-CPPFLAGS-not-CFLAGS.patch
+          # ./darwin/0004-Use-old-miTrapezoids-and-miTriangles-routines.patch
+          # ./darwin/0006-fb-Revert-fb-changes-that-broke-XQuartz.patch
+          # ./darwin/private-extern.patch
+          # ./darwin/bundle_main.patch
+          # ./darwin/stub.patch
         ];
         configureFlags = [
           # note: --enable-xquartz is auto
@@ -505,7 +508,6 @@ in
         preConfigure = ''
           ensureDir $out/Applications
           export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -Wno-error"
-          substituteInPlace hw/xquartz/pbproxy/Makefile.in --replace -F/System -F${args.apple_sdk.frameworks.ApplicationServices}
         '';
         postInstall = ''
           rm -fr $out/share/X11/xkb/compiled
