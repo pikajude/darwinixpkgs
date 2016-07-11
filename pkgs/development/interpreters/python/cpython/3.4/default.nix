@@ -79,6 +79,10 @@ stdenv.mkDerivation {
                         )
   '';
 
+  __impureHostDeps = [
+    "${builtins.xcodeSDKRoot}/System/Library/CoreServices/SystemVersion.plist"
+  ];
+
   frameworks = [ "Carbon" "SystemConfiguration" ];
 
   setupHook = ./setup-hook.sh;
