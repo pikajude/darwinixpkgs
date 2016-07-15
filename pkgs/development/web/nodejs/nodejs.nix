@@ -47,6 +47,8 @@ in stdenv.mkDerivation {
 
   patches = stdenv.lib.optionals stdenv.isDarwin [ ./no-xcode.patch ];
 
+  frameworks = [ "ApplicationServices" ];
+
   buildInputs = extraBuildInputs
     ++ [ python which zlib libuv openssl ]
     ++ optionals stdenv.isLinux [ utillinux http-parser ]
