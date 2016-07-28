@@ -60,4 +60,13 @@ self: super: {
     sha256 = "026vv2k3ks73jngwifszv8l59clg88pcdr4mz0wr0gamivkfa1zy";
   });
 
+  logging-effect = overrideCabal (doJailbreak super.logging-effect) (drv: {
+    prePatch = ''
+      sed -i '/GHC.SrcLoc/d' src/Control/Monad/Log.hs
+      sed -i 's/GHC.Stack/GHC.Stack hiding (prettyCallStack)/' src/Control/Monad/Log.hs
+      sed -i 's/showSrcLoc/prettySrcLoc/' src/Control/Monad/Log.hs
+      echo 'instance Eq CallStack where a == b = show a == show b' >> src/Control/Monad/Log.hs
+    '';
+  });
+
 }
