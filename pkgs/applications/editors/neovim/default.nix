@@ -1,6 +1,6 @@
 { stdenv, fetchFromGitHub, cmake, gettext, libmsgpack, libtermkey
 , libtool, libuv, luajit, luaPackages, man, ncurses, perl, pkgconfig
-, unibilium, makeWrapper, vimUtils, xsel
+, unibilium, makeWrapper, vimUtils, xsel, libiconv
 
 , withPython ? true, pythonPackages, extraPythonPackages ? []
 , withPython3 ? true, python3Packages, extraPython3Packages ? []
@@ -97,7 +97,8 @@ let
 
     cmakeFlags = [
       "-DLUA_PRG=${luaPackages.lua}/bin/lua"
-    ];
+    ]
+    ++ optional stdenv.isDarwin "-DICONV_LIBRARY=${libiconv}/lib/libiconv.dylib";
 
     # triggers on buffer overflow bug while running tests
     hardeningDisable = [ "fortify" ];
