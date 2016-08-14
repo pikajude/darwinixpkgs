@@ -43,6 +43,8 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = optional wantPS ps;
 
+  NIX_CFLAGS_COMPILE = stdenv.lib.optionalString stdenv.cc.isClang "-Wno-c++11-narrowing";
+
   preConfigure = with stdenv; optionalString (stdenv ? glibc)
     ''
       fixCmakeFiles .
