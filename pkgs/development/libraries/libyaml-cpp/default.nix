@@ -13,7 +13,9 @@ stdenv.mkDerivation rec {
 
   outputs = [ "out" "dev" ];
 
-  buildInputs = [ cmake boost ];
+  buildInputs = [ cmake ];
+
+  propagatedBuildInputs = [ boost ];
 
   cmakeFlags = "-DBUILD_SHARED_LIBS=ON";
 
