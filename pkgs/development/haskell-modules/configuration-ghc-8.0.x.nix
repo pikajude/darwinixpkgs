@@ -69,4 +69,6 @@ self: super: {
     '';
   });
 
+  Glob = dontCheck super.Glob;
+
 }
