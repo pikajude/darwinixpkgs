@@ -1,5 +1,5 @@
-{ stdenv, fetchurl, python, makeWrapper, docutils, unzip, hg-git, dulwich
-, guiSupport ? false, tk ? null, curses }:
+{ stdenv, fetchurl, pythonPackages, makeWrapper, docutils, unzip
+, guiSupport ? false, tk ? null }:
 
 let
   # if you bump version, update pkgs.tortoisehg too or ping maintainer
