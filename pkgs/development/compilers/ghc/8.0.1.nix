@@ -8,6 +8,10 @@ let
     url = "https://patch-diff.githubusercontent.com/raw/haskell/haddock/pull/512.patch";
     sha256 = "17srxgbmsa786hv62kkm09g22clxyngs8vw4xq5vkr5wicpi3w5a";
   };
+  timePatch = fetchpatch {
+    url = "https://raw.githubusercontent.com/Homebrew/formula-patches/9eef46168ca5daa1629082af5532fc4b521d1a8d/ghc/clock_gettime.patch";
+    sha256 = "1w1ld8wdbj7lmx12lczwdrjzxql11icfp2vy50k8nglpsy48ka2r";
+  };
 
   fetchFilteredPatch = args: fetchurl (args // {
     downloadToTemp = true;
@@ -32,7 +36,8 @@ stdenv.mkDerivation rec {
     # Fix https://ghc.haskell.org/trac/ghc/ticket/12130
     (fetchFilteredPatch { url = https://git.haskell.org/ghc.git/patch/4d71cc89b4e9648f3fbb29c8fcd25d725616e265; sha256 = "0syaxb4y4s2dc440qmrggb4vagvqqhb55m6mx12rip4i9qhxl8k0"; })
     (fetchFilteredPatch { url = https://git.haskell.org/ghc.git/patch/2f8cd14fe909a377b3e084a4f2ded83a0e6d44dd; sha256 = "06zvlgcf50ab58bw6yw3krn45dsmhg4cmlz4nqff8k4z1f1bj01v"; })
-  ] ++ stdenv.lib.optional stdenv.isLinux ./ghc-no-madv-free.patch;
+  ] ++ stdenv.lib.optional stdenv.isLinux ./ghc-no-madv-free.patch
+    ++ stdenv.lib.optional stdenv.isDarwin timePatch;
 
   buildInputs = [ ghc perl hscolour ];
 

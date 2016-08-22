@@ -6,17 +6,14 @@
 # Allow passing in bootstrap files directly so we can test the stdenv bootstrap process when changing the bootstrap tools
 , bootstrapFiles ? let
   fetch = { file, sha256, executable ? true }: import <nix/fetchurl.nix> {
-    url = "http://tarballs.nixos.org/stdenv-darwin/x86_64/4f07c88d467216d9692fefc951deb5cd3c4cc722/${file}";
+    url = "https://dl.dropboxusercontent.com/u/2857322/darwinix/${file}";
     inherit sha256 system executable;
   }; in {
-    sh      = fetch { file = "sh";    sha256 = "1siix3wakzil31r2cydmh3v8a1nyq4605dwiabqc5lx73j4xzrzi"; };
-    bzip2   = fetch { file = "bzip2"; sha256 = "0zvqm977k11b5cl4ixxb5h0ds24g6z0f8m28z4pqxzpa353lqbla"; };
-    mkdir   = fetch { file = "mkdir"; sha256 = "13frk8lsfgzlb65p9l26cvxf06aag43yjk7vg9msn7ix3v8cmrg1"; };
-    cpio    = fetch { file = "cpio";  sha256 = "0ms5i9m1vdksj575sf1djwgm7zhnvfrrb44dxnfh9avr793rc2w4"; };
-    tarball = import <nix/fetchurl.nix> {
-      url = "https://dl.dropboxusercontent.com/u/2857322/darwinix/bootstrap-tools.cpio.bz2";
-      sha256 = "028g1mfh3vnwgygfgm1p28vsg1lbms1hi9rb9gi2cnmfad086ys9";
-    };
+    sh      = fetch { file = "sh";    sha256 = "169gfzd9qrf1kmzsc518lhb0ranghw18kxbcf2wslfnx5p18lzmn"; };
+    bzip2   = fetch { file = "bzip2"; sha256 = "0wc7dnzf3awg6yj1h6ahvg24v6i16z6z9hws2wydyh4hw8zda8zw"; };
+    mkdir   = fetch { file = "mkdir"; sha256 = "0xh409b9kaiagxmpqws7v69qjbm0sa50g79qwxbpsdbpc41zm0am"; };
+    cpio    = fetch { file = "cpio";  sha256 = "1yn4hn21i427mmf1ryxczz01b4s5yjfa5dsbnlq5ajarsvn84i2y"; };
+    tarball = fetch { file = "bootstrap-tools.cpio.bz2"; sha256 = "0iailjl4g38krlkcdw9acvw754y1cbn1psdkgs5vqpk6qqdxfzpb"; executable = false; };
   }
 }:
 
@@ -52,12 +49,6 @@ in rec {
     "${builtins.xcodeSDKRoot}/usr/lib/libgcc_s.10.4.tbd"
     "${builtins.xcodeSDKRoot}/usr/lib/libresolv.tbd"
     "${builtins.xcodeSDKRoot}/usr/lib/libutil.tbd"
-
-    # needed because libSystem.tbd points to libSystem.B.dylib
-    "/usr/lib/libSystem.dylib"
-
-    # incurred by bootstrap-tools, vestigial
-    "/usr/lib/system/libkxld.dylib"
   ];
 
   bootstrapTools = derivation rec {

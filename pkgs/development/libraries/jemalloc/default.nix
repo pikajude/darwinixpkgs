@@ -1,4 +1,4 @@
-{ stdenv, fetchurl }:
+{ stdenv, fetchurl, fetchpatch }:
 
 stdenv.mkDerivation rec {
   name = "jemalloc-4.1.1";
@@ -12,6 +12,11 @@ stdenv.mkDerivation rec {
   # then stops downstream builds (mariadb in particular) from detecting it. This
   # option should remove the prefix and give us a working jemalloc.
   configureFlags = stdenv.lib.optional stdenv.isDarwin "--with-jemalloc-prefix=";
+
+  patches = stdenv.lib.optional stdenv.isDarwin (fetchpatch {
+    url = "https://patch-diff.githubusercontent.com/raw/jemalloc/jemalloc/pull/427.patch";
+    sha256 = "0b3gzv4yz5s016gwqrvhpr5xw31zanja6y83qm6v91qjz6w196as";
+  });
 
   meta = with stdenv.lib; {
     homepage = http://www.canonware.com/jemalloc/index.html;

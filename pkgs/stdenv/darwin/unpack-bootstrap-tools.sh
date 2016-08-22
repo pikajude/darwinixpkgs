@@ -17,7 +17,7 @@ for i in $out/bin/*; do
   fi
 done
 
-for i in $out/lib/*.dylib $out/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation; do
+for i in $out/lib/*.dylib; do
   if ! test -L $i; then
     echo patching $i
 

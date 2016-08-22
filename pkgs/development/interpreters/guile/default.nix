@@ -42,6 +42,10 @@
 
   configureFlags = [ "--with-libreadline-prefix" ];
 
+  postConfigure = ''
+    substituteInPlace libguile/stime.c --replace CLOCK_PROCESS_CPUTIME_ID NONEXISTENT
+  '';
+
   postInstall = ''
     wrapProgram $out/bin/guile-snarf --prefix PATH : "${gawk}/bin"
 

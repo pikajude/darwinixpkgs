@@ -37,6 +37,7 @@ stdenv.mkDerivation {
       substituteInPlace "$x" \
         --subst-var-by ssh "${openssh}/bin/ssh"
     done
+    substituteInPlace Makefile --replace "EXTLIBS += -lrt" ""
   '';
 
   buildInputs = [curl openssl zlib expat gettext cpio makeWrapper libiconv perl]
