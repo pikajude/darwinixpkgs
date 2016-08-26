@@ -30,10 +30,6 @@ stdenv.mkDerivation rec {
     substituteInPlace src/text.c --replace "__time_t" "time_t"
   '';
 
-  patches = [
-    ./0001-input-try-looking-at-the-keyboard-state-only-when-co.patch
-  ];
-
   meta = {
     homepage = http://www.nano-editor.org/;
     description = "A small, user-friendly console text editor";
