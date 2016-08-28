@@ -64,6 +64,7 @@ in stdenv.mkDerivation rec {
     sed -i 88d src/qt/qtwebkit/Tools/qmake/mkspecs/features/features.prf
     echo 'CONFIG -= create_cmake' >> src/qt/qtwebkit/Source/api.pri
     echo 'CONFIG -= create_cmake' >> src/qt/qtwebkit/Source/widgetsapi.pri
+    substituteInPlace build.py --replace 'raise RuntimeError("Could not find OpenSSL")' pass
     pushd src/qt
 
       substituteInPlace qtbase/configure \
@@ -93,7 +94,10 @@ in stdenv.mkDerivation rec {
     cp -a ChangeLog examples LICENSE.BSD README.md third-party.txt $out/share/doc/phantomjs
   '';
 
-  NIX_CFLAGS_COMPILE = "-Wno-deprecated-declarations";
+  NIX_CFLAGS_COMPILE = [
+    "-Wno-deprecated-declarations" "-Wno-availability" "-Wno-nullability-completeness"
+    "-Wno-unknown-attributes"
+  ];
 
   meta = with stdenv.lib; {
     description = "Headless WebKit with JavaScript API";

@@ -17,30 +17,14 @@
 , enableSharedLibraries ? true
 }:
 
-let
-  src = fetch "llvm" "10iz9qjxgd05qfzi1zppabn1gb2w1f4ryrydi2mk0z4v18wxhbmm";
-in stdenv.mkDerivation rec {
+stdenv.mkDerivation rec {
   name = "llvm-${version}";
-
-  unpackPhase = ''
-    unpackFile ${src}
-    mv llvm-${version}.src llvm
-    sourceRoot=$PWD/llvm
-    unpackFile ${compiler-rt_src}
-    mv compiler-rt-* $sourceRoot/projects/compiler-rt
-  '';
+  src = fetch "llvm" "10iz9qjxgd05qfzi1zppabn1gb2w1f4ryrydi2mk0z4v18wxhbmm";
 
   buildInputs = [ perl groff cmake libxml2 python libffi ]
     ++ stdenv.lib.optional stdenv.isDarwin libcxxabi;
 
   propagatedBuildInputs = [ ncurses zlib ];
-
-  # hacky fix: New LLVM releases require a newer OS X SDK than
-  # 10.9. This is a temporary measure until nixpkgs darwin support is
-  # updated.
-  patchPhase = stdenv.lib.optionalString stdenv.isDarwin ''
-        sed -i 's/os_trace(\(.*\)");$/printf(\1\\n");/g' ./projects/compiler-rt/lib/sanitizer_common/sanitizer_mac.cc
-  '';
 
   # hacky fix: created binaries need to be run before installation
   preBuild = ''
@@ -61,7 +45,8 @@ in stdenv.mkDerivation rec {
     "-DLLVM_BINUTILS_INCDIR=${binutils.dev}/include"
     ++ stdenv.lib.optionals ( isDarwin) [
     "-DLLVM_ENABLE_LIBCXX=ON"
-    "-DCAN_TARGET_i386=false"
+    "-DDARWIN_osx_ARCHS=x86_64;x86_64h"
+    "-DDARWIN_10.4_ARCHS=x86_64"
   ];
 
   postBuild = ''

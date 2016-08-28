@@ -45,6 +45,7 @@ stdenv.mkDerivation {
 
   inherit cc shell libc_bin libc_dev libc_lib binutils_bin coreutils_bin;
   gnugrep_bin = if nativeTools then "" else gnugrep;
+  inherit (builtins) xcodeSDKRoot;
 
   passthru = { inherit libc nativeTools nativeLibc nativePrefix isGNU isClang; };
 
@@ -257,7 +258,7 @@ stdenv.mkDerivation {
 
       substituteAll ${./add-flags.sh} $out/nix-support/add-flags.sh
       substituteAll ${./add-hardening.sh} $out/nix-support/add-hardening.sh
-      cp -p ${./utils.sh} $out/nix-support/utils.sh
+      substituteAll ${./utils.sh} $out/nix-support/utils.sh
     ''
     + extraBuildCommands;
 

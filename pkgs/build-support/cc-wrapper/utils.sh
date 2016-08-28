@@ -4,6 +4,8 @@ skip () {
     fi
 }
 
+_DARWIN_SDKROOT="@xcodeSDKRoot@"
+
 
 # Checks whether a path is impure.  E.g., `/lib/foo.so' is impure, but
 # `/nix/store/.../lib/foo.so' isn't.
@@ -20,5 +22,6 @@ badPath() {
         "$p" != "/dev/null" -a \
         "${p:0:${#NIX_STORE}}" != "$NIX_STORE" -a \
         "${p:0:4}" != "/tmp" -a \
-        "${p:0:${#NIX_BUILD_TOP}}" != "$NIX_BUILD_TOP"
+        "${p:0:${#NIX_BUILD_TOP}}" != "$NIX_BUILD_TOP" -a \
+        "${p:0:${#_DARWIN_SDKROOT}}" != "$_DARWIN_SDKROOT"
 }

@@ -4962,7 +4962,9 @@ in
   llvm_35 = llvmPackages_35.llvm;
   llvm_34 = llvmPackages_34.llvm;
 
-  llvmPackages = recurseIntoAttrs llvmPackages_37;
+  llvmPackages = if stdenv.isDarwin
+    then recurseIntoAttrs self.llvmPackages_39
+    else recurseIntoAttrs self.llvmPackages_37;
 
   llvmPackagesSelf = llvmPackages_34.override {
     stdenv = libcxxStdenv;
@@ -4990,6 +4992,7 @@ in
 
   llvmPackages_39 = callPackage ../development/compilers/llvm/3.9 {
     inherit (stdenvAdapters) overrideCC;
+    inherit (darwin) cctools;
   };
 
   manticore = callPackage ../development/compilers/manticore { };

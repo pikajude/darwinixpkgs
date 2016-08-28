@@ -36,7 +36,12 @@ let
       ln -sv ${llvm}/lib/LLVMgold.so $out/lib
       ln -sv ${llvm}/lib/clang/${version}/lib $out/lib/clang/${version}/
       ln -sv $out/bin/clang $out/bin/cpp
+
+      # has a libxml2 reference
+      rm $out/bin/c-index-test
     '';
+
+    dontPatchShebangs = true;
 
     enableParallelBuilding = true;
 
