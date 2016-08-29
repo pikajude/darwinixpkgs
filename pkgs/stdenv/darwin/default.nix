@@ -9,11 +9,11 @@
     url = "https://dl.dropboxusercontent.com/u/2857322/darwinix/${file}";
     inherit sha256 system executable;
   }; in {
-    sh      = fetch { file = "sh";    sha256 = "169gfzd9qrf1kmzsc518lhb0ranghw18kxbcf2wslfnx5p18lzmn"; };
-    bzip2   = fetch { file = "bzip2"; sha256 = "0wc7dnzf3awg6yj1h6ahvg24v6i16z6z9hws2wydyh4hw8zda8zw"; };
-    mkdir   = fetch { file = "mkdir"; sha256 = "0xh409b9kaiagxmpqws7v69qjbm0sa50g79qwxbpsdbpc41zm0am"; };
-    cpio    = fetch { file = "cpio";  sha256 = "1yn4hn21i427mmf1ryxczz01b4s5yjfa5dsbnlq5ajarsvn84i2y"; };
-    tarball = fetch { file = "bootstrap-tools.cpio.bz2"; sha256 = "0iailjl4g38krlkcdw9acvw754y1cbn1psdkgs5vqpk6qqdxfzpb"; executable = false; };
+    sh      = fetch { file = "sh";    sha256 = "0qf4hwjpxkvk6x6q0pbm466y878zpac77fczwa44fm7sdf9573ax"; };
+    bzip2   = fetch { file = "bzip2"; sha256 = "1l976sr1wl85m7sgr4kqxkgf2w9gfzhw8nadx7ily0c36zl5mnja"; };
+    mkdir   = fetch { file = "mkdir"; sha256 = "17gvkiajdh057bcgy66dfxmxp0nszdbnz1sjbzlbggrs5gk6klhv"; };
+    cpio    = fetch { file = "cpio";  sha256 = "1lksws48qqg3vf8p97h9azf56smv7gwgfhmkv4513zcz6vzpqqwb"; };
+    tarball = fetch { file = "bootstrap-tools.cpio.bz2"; sha256 = "1dfcjk5v16nwqjgivv4rljzg0vc8fa9ypa6ms4fjv9ikzb067rrz"; executable = false; };
   }
 }:
 
