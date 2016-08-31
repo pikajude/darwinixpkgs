@@ -1,0 +1,24 @@
+diff --git a/src/runtime/sys_darwin_386.s b/src/runtime/sys_darwin_386.s
+index a961c71..428abea 100644
+--- a/src/runtime/sys_darwin_386.s
++++ b/src/runtime/sys_darwin_386.s
+@@ -185,6 +185,7 @@ systime:
+ 	LEAL	12(SP), AX	// must be non-nil, unused
+ 	MOVL	AX, 4(SP)
+ 	MOVL	$0, 8(SP)	// time zone pointer
++	MOVL    $0, DX	// required as of Sierra
+ 	MOVL	$116, AX
+ 	INT	$0x80
+ 	// sec is in AX, usec in DX
+diff --git a/src/runtime/sys_darwin_amd64.s b/src/runtime/sys_darwin_amd64.s
+index bd397d7..e260234 100644
+--- a/src/runtime/sys_darwin_amd64.s
++++ b/src/runtime/sys_darwin_amd64.s
+@@ -143,6 +143,7 @@ systime:
+ 	// Fall back to system call (usually first call in this thread).
+ 	MOVQ	SP, DI	// must be non-nil, unused
+ 	MOVQ	$0, SI
++	MOVQ	$0, DX // required as of Sierra
+ 	MOVL	$(0x2000000+116), AX
+ 	SYSCALL
+ 	// sec is in AX, usec in DX

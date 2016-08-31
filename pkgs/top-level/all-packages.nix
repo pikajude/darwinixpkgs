@@ -4794,9 +4794,7 @@ in
 
   dotnetPackages = recurseIntoAttrs (callPackage ./dotnet-packages.nix {});
 
-  go_bootstrap = callPackage ../development/compilers/go/1.4.nix {
-    inherit (darwin) security_tool;
-  };
+  go_bootstrap = callPackage ../development/compilers/go/1.4.nix { };
 
   go_1_6 = callPackage ../development/compilers/go/1.6.nix {
     inherit (darwin.apple_sdk.frameworks) Security Foundation;
@@ -4804,8 +4802,6 @@ in
 
   go_1_7 = callPackage ../development/compilers/go/1.7.nix ({
     inherit (darwin.apple_sdk.frameworks) Security Foundation;
-  } // stdenv.lib.optionalAttrs stdenv.isDarwin {
-    stdenv = stdenvAdapters.overrideCC pkgs.stdenv pkgs.clang_38;
   });
 
   go = go_1_7;

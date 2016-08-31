@@ -36,7 +36,8 @@ stdenv.mkDerivation rec {
   # perl is used for testing go vet
   nativeBuildInputs = [ perl which pkgconfig patch ];
   buildInputs = [ pcre ];
-  propagatedBuildInputs = optionals stdenv.isDarwin [ Security Foundation ];
+
+  frameworks = [ "Security" "Foundation" ];
 
   hardeningDisable = [ "all" ];
 
@@ -66,6 +67,8 @@ stdenv.mkDerivation rec {
     sed -i '/src\/cmd\/api\/run.go/ireturn nil' src/cmd/dist/test.go
     # Remove the coverage test as we have removed this utility
     sed -i '/TestCoverageWithCgo/areturn' src/cmd/go/go_test.go
+
+    sed -i '/TestLookupPort/areturn' src/net/lookup_test.go
 
     sed -i 's,/etc/protocols,${iana_etc}/etc/protocols,' src/net/lookup_unix.go
     sed -i 's,/etc/services,${iana_etc}/etc/services,' src/net/port_unix.go
