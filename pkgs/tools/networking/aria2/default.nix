@@ -21,6 +21,10 @@ stdenv.mkDerivation rec {
 
   configureFlags = [ "--with-ca-bundle=/etc/ssl/certs/ca-certificates.crt" ];
 
+  NIX_CFLAGS_COMPILE = "-Wno-c++11-narrowing";
+
+  NIX_LDFLAGS = stdenv.lib.optional stdenv.isDarwin "-lintl";
+
   enableParallelBuilding = true;
 
   meta = with stdenv.lib; {
