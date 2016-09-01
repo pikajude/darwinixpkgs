@@ -11191,6 +11191,8 @@ in
     python = pythonFull;
   };
 
+  dumpcerts = callPackage ../os-specific/darwin/dumpcerts {};
+
   libossp_uuid = callPackage ../development/libraries/libossp-uuid { };
 
   libuuid =
