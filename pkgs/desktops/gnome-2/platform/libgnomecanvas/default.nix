@@ -11,6 +11,8 @@ stdenv.mkDerivation rec {
 
   outputs = [ "out" "dev" ];
 
+  frameworks = [ "ApplicationServices" ];
+
   buildInputs = [ libglade ];
   nativeBuildInputs = [ pkgconfig intltool ];
   propagatedBuildInputs = [ libart_lgpl gtk ];
