@@ -38,6 +38,8 @@ stdenv.mkDerivation rec {
     ++ lib.optional withGTK "--enable-gtk2-use"
     ++ lib.optional (!withGTK) "--without-x";
 
+  propagatedFrameworks = [ "Carbon" "Cocoa" ];
+
   preConfigure = ''
     cp -r "${gnulib}" ./gnulib
     chmod +w -R ./gnulib
