@@ -31,6 +31,8 @@ stdenv.mkDerivation rec {
     sed -i '/RESTRICT_KEYWORD/d' include/IL/config.h
   '';
 
+  frameworks = [ "OpenGL" ];
+
   patches =
     [ ( fetchurl {
         url = http://patch-tracker.debian.org/patch/series/dl/devil/1.7.8-6.1/03_CVE-2009-3994.diff;

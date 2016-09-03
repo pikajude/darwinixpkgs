@@ -9123,7 +9123,7 @@ in modules // {
     propagatedBuildInputs = with self; [ argh pathtools pyyaml ];
 
     buildInputs = stdenv.lib.optionals stdenv.isDarwin
-      [ pkgs.darwin.apple_sdk.frameworks.CoreServices pkgs.darwin.cf-private ];
+      [ pkgs.darwin.apple_sdk.frameworks.CoreServices ];
 
     doCheck = false;
 

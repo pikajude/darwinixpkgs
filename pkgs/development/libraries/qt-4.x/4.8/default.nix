@@ -58,7 +58,7 @@ stdenv.mkDerivation rec {
         cups = if cups != null then cups.out else null;
         icu = icu.out;
         libXfixes = libXfixes.out;
-        glibc = stdenv.cc.libc.out;
+        # glibc = stdenv.cc.libc.out;
         openglDriver = if mesaSupported then mesa.driverLink else "/no-such-path";
       })
     ] ++ stdenv.lib.optional gtkStyle (substituteAll {
@@ -132,7 +132,9 @@ stdenv.mkDerivation rec {
       postgresql sqlite libjpeg libmng libtiff icu ]
     ++ optionals (mysql != null) [ mysql.lib ]
     ++ optionals gtkStyle [ gtk2 gdk_pixbuf ]
-    ++ optionals stdenv.isDarwin [ cf-private ApplicationServices OpenGL Cocoa AGL libcxx libobjc ];
+    ++ optionals stdenv.isDarwin [ ApplicationServices OpenGL Cocoa AGL libcxx libobjc ];
+
+  frameworks = [ "ApplicationServices" "Foundation" ];
 
   nativeBuildInputs = [ perl pkgconfig which ];
 
@@ -143,7 +145,7 @@ stdenv.mkDerivation rec {
     + optionalString stdenv.isDarwin " -I${libcxx}/include/c++/v1";
 
   NIX_LDFLAGS = optionalString (stdenv.isFreeBSD || stdenv.isDarwin)
-    "-lglib-2.0";
+    "-lglib-2.0 -framework CoreFoundation -framework CoreServices";
 
   preBuild = optionalString stdenv.isDarwin ''
     # resolve "extra qualification on member" error

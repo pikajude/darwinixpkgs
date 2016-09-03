@@ -1,8 +1,8 @@
 rec {
   AppKit = [ "CoreData" "Foundation" "QuartzCore" ];
   ApplicationServices = [ "CoreGraphics" "CoreText" "ImageIO" ];
-  AudioUnit = [ "CoreAudio" ];
-  AudioToolbox = [ "CoreMIDI" ];
+  AudioUnit = [ "AudioToolbox" ];
+  AudioToolbox = [ "CoreAudio" "CoreMIDI" ];
   Carbon = [ "ApplicationServices" ];
   Cocoa = [ "AppKit" ];
   CoreGraphics = [ "IOSurface" ];

@@ -8,7 +8,7 @@ stdenv.mkDerivation rec {
   buildInputs = (stdenv.lib.optional stdenv.isDarwin CoreServices) ++
                 (stdenv.lib.optional stdenv.isDarwin AudioUnit);
 
-  frameworks = [ "AudioUnit" ];
+  frameworks = [ "AudioUnit" "AudioToolbox" ];
 
   src = fetchurl {
     url = "http://audiofile.68k.org/${name}.tar.gz";

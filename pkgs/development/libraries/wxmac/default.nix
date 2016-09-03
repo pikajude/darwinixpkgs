@@ -15,17 +15,20 @@ stdenv.mkDerivation rec {
     sha256 = "346879dc554f3ab8d6da2704f651ecb504a22e9d31c17ef5449b129ed711585d";
   };
 
-  patches = [ ./wx.patch ];
+  patches = [ ./abs.patch ];
 
   buildInputs = [
     expat libiconv libjpeg libpng libtiff zlib
     Cocoa Kernel QuickTime setfile rez derez
   ];
 
+  frameworks = [ "AGL" "Foundation" "Carbon" "Cocoa" "Kernel" "QuickTime" "AudioToolbox" "System" ];
+
   propagatedBuildInputs = [ AGL ];
 
   postPatch = ''
-    substituteInPlace configure --replace "-framework System" -lSystem
+    sed -i '/QuickTime.h/d' src/osx/core/bitmap.cpp
+    sed -i '/QuickTime.h/d' src/osx/carbon/dataobj.cpp
   '';
 
   configureFlags = [

@@ -1,7 +1,7 @@
 { stdenv, fetchurl, bzip2, gfortran, libX11, libXmu, libXt, libjpeg, libpng
 , libtiff, ncurses, pango, pcre, perl, readline, tcl, texLive, tk, xz, zlib
 , less, texinfo, graphviz, icu, pkgconfig, bison, imake, which, jdk, openblas
-, curl, Cocoa, Foundation, cf-private, libobjc, tzdata
+, curl, Cocoa, Foundation, tzdata
 , withRecommendedPackages ? true
 , enableStrictBarrier ? false
 }:
@@ -19,7 +19,7 @@ stdenv.mkDerivation rec {
     texLive xz zlib less texinfo graphviz icu pkgconfig bison imake
     which jdk openblas curl ]
     ++ stdenv.lib.optionals (!stdenv.isDarwin) [ tcl tk ]
-    ++ stdenv.lib.optionals stdenv.isDarwin [ Cocoa Foundation cf-private libobjc ];
+    ++ stdenv.lib.optionals stdenv.isDarwin [ Cocoa Foundation ];
 
   patches = [ ./no-usr-local-search-paths.patch ];
 

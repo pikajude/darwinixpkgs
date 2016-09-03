@@ -40,6 +40,10 @@ stdenv.mkDerivation rec {
       ++ optional javacSupport openjdk
       ++ stdenv.lib.optionals stdenv.isDarwin [ Carbon Cocoa ];
 
+  frameworks = [ "AudioToolbox" "System" "AGL" ];
+
+  propagatedFrameworks = [ "Carbon" "Cocoa" ];
+
   debugInfo = enableDebugInfo;
 
   rmAndPwdPatch = fetchurl {
