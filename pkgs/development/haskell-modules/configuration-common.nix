@@ -962,6 +962,13 @@ self: super: {
     '';
   });
 
+  x509-system = overrideCabal super.x509-system (drv: {
+    postPatch = (drv.postPatch or "") + ''
+      substituteInPlace System/X509/MacOS.hs \
+        --replace 'proc "security"' 'proc "${pkgs.dumpcerts}/bin/dump-certs"'
+    '';
+  });
+
   # https://github.com/commercialhaskell/stack/issues/2263
   stack = appendPatch super.stack (pkgs.fetchpatch {
     url = "https://github.com/commercialhaskell/stack/commit/7f7f1a5f67f4ecdd1f3009495f1ff101dd38047e.patch";
