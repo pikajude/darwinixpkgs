@@ -13,7 +13,7 @@
     bzip2   = fetch { file = "bzip2"; sha256 = "1l976sr1wl85m7sgr4kqxkgf2w9gfzhw8nadx7ily0c36zl5mnja"; };
     mkdir   = fetch { file = "mkdir"; sha256 = "17gvkiajdh057bcgy66dfxmxp0nszdbnz1sjbzlbggrs5gk6klhv"; };
     cpio    = fetch { file = "cpio";  sha256 = "1lksws48qqg3vf8p97h9azf56smv7gwgfhmkv4513zcz6vzpqqwb"; };
-    tarball = fetch { file = "bootstrap-tools.cpio.bz2"; sha256 = "1dfcjk5v16nwqjgivv4rljzg0vc8fa9ypa6ms4fjv9ikzb067rrz"; executable = false; };
+    tarball = fetch { file = "bootstrap-tools.cpio.bz2"; sha256 = "087blr6mnmnc9hkirl17ianjnw3g8ciczac9z0x7ja7srbpslg9v"; executable = false; };
   }
 }:
 

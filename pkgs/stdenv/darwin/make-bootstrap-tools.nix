@@ -3,7 +3,7 @@
 with import ../../.. { inherit system; };
 
 let
-  llvmPackages = llvmPackages_38;
+  llvmPackages = llvmPackages_39;
 in rec {
   coreutils_ = coreutils.override (args: {
     # We want coreutils without ACL support.
