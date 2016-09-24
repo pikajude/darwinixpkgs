@@ -45,7 +45,7 @@ stdenv.mkDerivation {
 
   inherit cc shell libc_bin libc_dev libc_lib binutils_bin coreutils_bin;
   gnugrep_bin = if nativeTools then "" else gnugrep;
-  inherit (builtins) xcodeSDKRoot;
+  xcodeSDKRoot = if builtins ? xcodeSDKRoot then builtins.xcodeSDKRoot else "/nonexistent-path";
 
   passthru = { inherit libc nativeTools nativeLibc nativePrefix isGNU isClang; };
 
