@@ -13,7 +13,8 @@ stdenv.mkDerivation {
       docsrc/*.xml
   '';
 
-  NIX_CFLAGS_COMPILE = "-I${builtins.xcodeSDKRoot}/System/Library/Frameworks/CoreFoundation.framework/Headers";
+  NIX_CFLAGS_COMPILE = stdenv.lib.optional stdenv.isDarwin
+    "-I${builtins.xcodeSDKRoot}/System/Library/Frameworks/CoreFoundation.framework/Headers";
 
   setupHook = ./setup-hook.sh;
 
