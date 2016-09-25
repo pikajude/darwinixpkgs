@@ -1113,7 +1113,6 @@ in
   convertlit = callPackage ../tools/text/convertlit { };
 
   collectd = callPackage ../tools/system/collectd {
-    rabbitmq-c = rabbitmq-c_0_4;
     libmysql = mysql.lib;
     libsigrok = libsigrok-0-3-0; # not compatible with >= 0.4.0 yet
   };
@@ -1184,6 +1183,7 @@ in
       ibus-table = ibus-engines.table;
     };
 
+    uniemoji = callPackage ../tools/inputmethods/ibus-engines/ibus-uniemoji { };
   };
 
   ibus-with-plugins = callPackage ../tools/inputmethods/ibus/wrapper.nix {
@@ -1902,6 +1902,7 @@ in
   graphviz_2_32 = callPackage ../tools/graphics/graphviz/2.32.nix { };
 
   grin = callPackage ../tools/text/grin { };
+  ripgrep = callPackage ../tools/text/ripgrep { };
 
   grive = callPackage ../tools/filesystems/grive {
     json_c = json-c-0-11; # won't configure with 0.12; others are vulnerable
@@ -2808,6 +2809,8 @@ in
 
   newsbeuter-dev = callPackage ../applications/networking/feedreaders/newsbeuter/dev.nix { };
 
+  nextcloud = callPackage ../servers/nextcloud { };
+
   ngrep = callPackage ../tools/networking/ngrep { };
 
   ngrok = callPackage ../tools/networking/ngrok { };
@@ -3003,7 +3006,8 @@ in
     owncloud80
     owncloud81
     owncloud82
-    owncloud90;
+    owncloud90
+    owncloud91;
 
   owncloud-client = callPackage ../applications/networking/owncloud-client { };
 
@@ -4718,7 +4722,13 @@ in
     profiledCompiler = false;
   });
 
-  ghdl_mcode = callPackage_i686 ../development/compilers/ghdl { };
+  ghdl_mcode = callPackage_i686 ../development/compilers/ghdl {
+    flavour = "mcode";
+  };
+
+  ghdl_llvm = callPackage ../development/compilers/ghdl {
+    flavour = "llvm";
+  };
 
   gcl = callPackage ../development/compilers/gcl {
     gmp = gmp4;
@@ -5361,6 +5371,7 @@ in
     ocamlnet = callPackage ../development/ocaml-modules/ocamlnet { };
 
     ocaml_oasis = callPackage ../development/tools/ocaml/oasis { };
+    ocaml_oasis_46 = callPackage ../development/tools/ocaml/oasis/0.4.6.nix { };
 
     ocaml_optcomp = callPackage ../development/ocaml-modules/optcomp { };
 
@@ -7234,31 +7245,16 @@ in
 
   clutter = callPackage ../development/libraries/clutter { };
 
-  clutter_1_22 = callPackage ../development/libraries/clutter/1.22.nix {
-    cogl = cogl_1_20;
-  };
-
-  clutter_1_24 = callPackage ../development/libraries/clutter/1.24.nix {
-    cogl = cogl_1_22;
-  };
-
   clutter_1_26 = callPackage ../development/libraries/clutter/1.26.nix {
     cogl = cogl_1_22;
   };
 
-  clutter-gst = callPackage ../development/libraries/clutter-gst { };
-
-  clutter-gst_3_0 = callPackage ../development/libraries/clutter-gst/3.0.nix {
-    clutter = clutter_1_22;
+  clutter-gst = callPackage ../development/libraries/clutter-gst {
+    inherit (gnome3) cogl clutter;
   };
 
-  clutter_gtk = callPackage ../development/libraries/clutter-gtk { };
-  clutter_gtk_0_10 = callPackage ../development/libraries/clutter-gtk/0.10.8.nix { };
-  clutter_gtk_1_6 = callPackage ../development/libraries/clutter-gtk/1.6.nix {
-    clutter = clutter_1_22;
-  };
-  clutter_gtk_1_8 = callPackage ../development/libraries/clutter-gtk/1.8.nix {
-    clutter = clutter_1_26;
+  clutter_gtk = callPackage ../development/libraries/clutter-gtk {
+    inherit (gnome3) clutter;
   };
 
   cminpack = callPackage ../development/libraries/cminpack { };
@@ -7266,8 +7262,6 @@ in
   cmocka = callPackage ../development/libraries/cmocka { };
 
   cogl = callPackage ../development/libraries/cogl { };
-
-  cogl_1_20 = callPackage ../development/libraries/cogl/1.20.nix { };
 
   cogl_1_22 = callPackage ../development/libraries/cogl/1.22.nix { };
 
@@ -9513,8 +9507,6 @@ in
 
   rabbitmq-c = callPackage ../development/libraries/rabbitmq-c {};
 
-  rabbitmq-c_0_4 = callPackage ../development/libraries/rabbitmq-c/0.4.nix {};
-
   rabbitmq-java-client = callPackage ../development/libraries/rabbitmq-java-client {};
 
   raul = callPackage ../development/libraries/audio/raul { };
@@ -9953,6 +9945,10 @@ in
   };
 
   wayland = callPackage ../development/libraries/wayland {
+    graphviz = graphviz-nox;
+  };
+
+  wayland_1_9 = callPackage ../development/libraries/wayland/1.9.nix {
     graphviz = graphviz-nox;
   };
 
@@ -10955,6 +10951,8 @@ in
 
   tt-rss = callPackage ../servers/tt-rss { };
 
+  selfoss = callPackage ../servers/web-apps/selfoss { };
+
   axis2 = callPackage ../servers/http/tomcat/axis2 { };
 
   unifi = callPackage ../servers/unifi { };
@@ -11399,7 +11397,7 @@ in
   };
 
   linux_3_10 = callPackage ../os-specific/linux/kernel/linux-3.10.nix {
-    kernelPatches = with kernelPatches; [ bridge_stp_helper link_lguest link_apm ]
+    kernelPatches = with kernelPatches; [ bridge_stp_helper ]
       ++ lib.optionals ((platform.kernelArch or null) == "mips")
       [ kernelPatches.mips_fpureg_emu
         kernelPatches.mips_fpu_sigill
@@ -11408,7 +11406,7 @@ in
   };
 
   linux_3_12 = callPackage ../os-specific/linux/kernel/linux-3.12.nix {
-    kernelPatches = with kernelPatches; [ bridge_stp_helper crc_regression link_lguest ]
+    kernelPatches = with kernelPatches; [ bridge_stp_helper crc_regression ]
       ++ lib.optionals ((platform.kernelArch or null) == "mips")
       [ kernelPatches.mips_fpureg_emu
         kernelPatches.mips_fpu_sigill
@@ -11440,18 +11438,6 @@ in
     kernelPatches =
       [ kernelPatches.bridge_stp_helper
         kernelPatches.cpu-cgroup-v2."4.4"
-      ]
-      ++ lib.optionals ((platform.kernelArch or null) == "mips")
-      [ kernelPatches.mips_fpureg_emu
-        kernelPatches.mips_fpu_sigill
-        kernelPatches.mips_ext3_n32
-      ];
-  };
-
-  linux_4_6 = callPackage ../os-specific/linux/kernel/linux-4.6.nix {
-    kernelPatches =
-      [ kernelPatches.bridge_stp_helper
-        kernelPatches.cpu-cgroup-v2."4.6"
       ]
       ++ lib.optionals ((platform.kernelArch or null) == "mips")
       [ kernelPatches.mips_fpureg_emu
@@ -11641,7 +11627,6 @@ in
   linuxPackages_3_18 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_18 linuxPackages_3_18);
   linuxPackages_4_1 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_1 linuxPackages_4_1);
   linuxPackages_4_4 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_4 linuxPackages_4_4);
-  linuxPackages_4_6 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_6 linuxPackages_4_6);
   linuxPackages_4_7 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_7 linuxPackages_4_7);
   # Don't forget to update linuxPackages_latest!
 
@@ -13317,6 +13302,8 @@ in
 
   keepass-keefox = callPackage ../applications/misc/keepass-plugins/keefox { };
 
+  keepass-keepasshttp = callPackage ../applications/misc/keepass-plugins/keepasshttp { };
+
   exrdisplay = callPackage ../applications/graphics/exrdisplay { };
 
   exrtools = callPackage ../applications/graphics/exrtools { };
@@ -14667,8 +14654,7 @@ in
   pinfo = callPackage ../applications/misc/pinfo { };
 
   pinpoint = callPackage ../applications/office/pinpoint {
-    clutter = clutter_1_24;
-    clutter_gtk = clutter_gtk_1_6;
+    inherit (gnome3) clutter clutter_gtk;
   };
 
   pinta = callPackage ../applications/graphics/pinta {
@@ -15819,7 +15805,9 @@ in
   xterm = callPackage ../applications/misc/xterm { };
 
   mlterm = callPackage ../applications/misc/mlterm {
-    vte = gnome3.vte_290;
+    vte = gnome3.vte;
+    libssh2 = null;
+    openssl = null;
   };
 
   finalterm = callPackage ../applications/misc/finalterm { };
@@ -17635,6 +17623,8 @@ in
   fsuae = callPackage ../misc/emulators/fs-uae { };
 
   putty = callPackage ../applications/networking/remote/putty { };
+
+  redprl = callPackage ../applications/science/logic/redprl { };
 
   retroarchBare = callPackage ../misc/emulators/retroarch { };
 
