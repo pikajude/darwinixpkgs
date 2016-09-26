@@ -1138,8 +1138,6 @@ in
 
   libpinyin = callPackage ../development/libraries/libpinyin { };
 
-  ibus-libpinyin = callPackage ../tools/inputmethods/ibus-engines/ibus-libpinyin { };
-
   m17n_db = callPackage ../tools/inputmethods/m17n-db { };
 
   m17n_lib = callPackage ../tools/inputmethods/m17n-lib { };
@@ -3276,8 +3274,6 @@ in
   pydb = callPackage ../development/tools/pydb { };
 
   pygmentex = callPackage ../tools/typesetting/pygmentex { };
-
-  pystringtemplate = callPackage ../development/python-modules/stringtemplate { };
 
   pythonIRClib = pythonPackages.pythonIRClib;
 
@@ -6540,9 +6536,7 @@ in
 
   dejagnu = callPackage ../development/tools/misc/dejagnu { };
 
-  dfeet = callPackage ../development/tools/misc/d-feet {
-    inherit (pythonPackages) pep8;
-  };
+  dfeet = callPackage ../development/tools/misc/d-feet { };
 
   dfu-programmer = callPackage ../development/tools/misc/dfu-programmer { };
 
@@ -10364,8 +10358,6 @@ in
 
   pysideTools = pythonPackages.pysideTools;
 
-  pysideShiboken = pythonPackages.pysideShiboken;
-
   pyxml = pythonPackages.pyxml;
 
   rbtools = pythonPackages.rbtools;
@@ -13350,7 +13342,7 @@ in
   gksu = callPackage ../applications/misc/gksu { };
 
   gnuradio = callPackage ../applications/misc/gnuradio {
-    inherit (pythonPackages) lxml matplotlib numpy python pyopengl pyqt4 scipy wxPython;
+    inherit (pythonPackages) lxml matplotlib numpy python pyopengl pyqt4 scipy wxPython pygtk;
     fftw = fftwFloat;
   };
 
@@ -13486,7 +13478,6 @@ in
   freecad = callPackage ../applications/graphics/freecad {
     boost = boost155;
     opencascade = opencascade_oce;
-    inherit (pythonPackages) matplotlib pycollada pivy;
   };
 
   freemind = callPackage ../applications/misc/freemind { };
@@ -13521,7 +13512,6 @@ in
     inherit (gnome2) libart_lgpl;
     webkit = null;
     lcms = lcms2;
-    wrapPython = pythonPackages.wrapPython;
   };
 
   gimp = gimp_2_8;
@@ -13864,7 +13854,6 @@ in
   inginious = callPackage ../servers/inginious {};
 
   inkscape = callPackage ../applications/graphics/inkscape {
-    inherit (pythonPackages) python pyxml lxml numpy;
     lcms = lcms2;
   };
 
@@ -13950,9 +13939,7 @@ in
 
   kdevplatform = kde5.callPackage ../applications/editors/kdevelop5/kdevplatform.nix {};
 
-  keepnote = callPackage ../applications/office/keepnote {
-    pygtk = pyGtkGlade;
-  };
+  keepnote = callPackage ../applications/office/keepnote { };
 
   kermit = callPackage ../tools/misc/kermit { };
 
