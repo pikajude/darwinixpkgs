@@ -197,6 +197,7 @@ in
 
   libXi = attrs: attrs // {
     outputs = [ "out" "dev" "doc" ];
+    propagatedBuildInputs = [ xorg.libXfixes ];
   };
 
   libXinerama = attrs: attrs // {
@@ -536,10 +537,6 @@ in
   xcursorthemes = attrs: attrs // {
     buildInputs = attrs.buildInputs ++ [xorg.xcursorgen];
     configureFlags = "--with-cursordir=$(out)/share/icons";
-  };
-
-  xinput = attrs: attrs // {
-    propagatedBuildInputs = [xorg.libXfixes];
   };
 
   xinit = attrs: attrs // {

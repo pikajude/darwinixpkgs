@@ -7412,6 +7412,9 @@ in modules // {
     };
   };
 
+  libsexy = callPackage ../development/python-modules/libsexy {
+    libsexy = pkgs.libsexy;
+  };
 
   libthumbor = buildPythonPackage rec {
     name = "libthumbor-${version}";
@@ -19228,6 +19231,24 @@ in modules // {
       description = "A simple program which checks Python source files for errors";
       license = licenses.mit;
       maintainers = with maintainers; [ garbas ];
+    };
+  };
+
+  pyftgl = buildPythonPackage rec {
+    name = "pyftgl-0.4b";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "umlaeute";
+      repo = "pyftgl";
+      rev = "0.4b";
+      sha256 = "12zcjv4cwwjihiaf74kslrdmmk4bs47h7006gyqfwdfchfjdgg4r";
+    };
+
+    buildInputs = with self; [ pkgs.boost pkgs.freetype pkgs.ftgl pkgs.mesa ];
+
+    meta = {
+      description = "Python bindings for FTGL (FreeType for OpenGL)";
+      license = licenses.gpl2Plus;
     };
   };
 
