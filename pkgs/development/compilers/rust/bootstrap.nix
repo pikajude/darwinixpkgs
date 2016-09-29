@@ -73,6 +73,11 @@ rec {
     buildInputs = [ makeWrapper zlib rustc ];
     phases = ["unpackPhase" "installPhase"];
 
+    __propagatedImpureHostDeps = [
+      "/usr/lib/libssl.dylib"
+      "/usr/lib/libcurl.dylib"
+    ];
+
     installPhase = ''
       ./install.sh --prefix=$out \
         --components=cargo
