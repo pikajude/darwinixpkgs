@@ -24,6 +24,7 @@ doNotDisplayTwice rec {
   asciidocFull = asciidoc-full;  # added 2014-06-22
   bar = lemonbar;  # added 2015-01-16
   bar-xft = lemonbar-xft;  # added 2015-01-16
+  bashCompletion = bash-completion; # Added 2016-09-28
   bridge_utils = bridge-utils;  # added 2015-02-20
   btrfsProgs = btrfs-progs; # added 2016-01-03
   bundler_HEAD = bundler; # added 2015-11-15
@@ -114,4 +115,20 @@ doNotDisplayTwice rec {
   xlibs = xorg; # added 2015-09
   youtubeDL = youtube-dl;  # added 2014-10-26
   m3d-linux = m33-linux; # added 2016-08-13
-}
+
+  inherit (ocaml-ng) # added 2016-09-14
+    ocamlPackages_3_10_0 ocamlPackages_3_11_2 ocamlPackages_3_12_1
+    ocamlPackages_4_00_1 ocamlPackages_4_01_0 ocamlPackages_4_02
+    ocamlPackages_4_03
+    ocamlPackages_latest;
+} // (with ocaml-ng; { # added 2016-09-14
+  ocaml_3_08_0 = ocamlPackages_3_08_0.ocaml;
+  ocaml_3_10_0 = ocamlPackages_3_10_0.ocaml;
+  ocaml_3_11_2 = ocamlPackages_3_11_2.ocaml;
+  ocaml_3_12_1 = ocamlPackages_3_12_1.ocaml;
+  ocaml_4_00_1 = ocamlPackages_4_00_1.ocaml;
+  ocaml_4_01_0 = ocamlPackages_4_01_0.ocaml;
+  ocaml_4_02   = ocamlPackages_4_02.ocaml;
+  ocaml_4_03   = ocamlPackages_4_03.ocaml;
+  ocaml        = ocamlPackages.ocaml;
+})
