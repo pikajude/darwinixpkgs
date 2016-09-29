@@ -1024,4 +1024,7 @@ self: super: {
     stripLen = 1;
   });
 
+  # requires phantomjs
+  wai-cors = dontCheck super.wai-cors;
+
 }
