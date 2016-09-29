@@ -76,7 +76,8 @@
 (allow file-read*
        (literal "/usr/lib/libncurses.5.4.dylib")
        (literal "/usr/lib/libgcc_s.1.dylib")
-       (literal "/usr/lib/libutil.dylib"))
+       (literal "/usr/lib/libutil.dylib")
+       (literal "/usr/lib/dyld"))
 
 (define extra-libs '(
   ; libc aliases
