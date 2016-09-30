@@ -9970,6 +9970,8 @@ in
   pfixtools = callPackage ../servers/mail/postfix/pfixtools.nix { };
   pflogsumm = callPackage ../servers/mail/postfix/pflogsumm.nix { };
 
+  postgrey = callPackage ../servers/mail/postgrey { };
+
   pshs = callPackage ../servers/http/pshs { };
 
   libpulseaudio = callPackage ../servers/pulseaudio { libOnly = true; };
@@ -12784,14 +12786,14 @@ in
   xfontsel = callPackage ../applications/misc/xfontsel { };
   inherit (xorg) xlsfonts;
 
-  freerdp = callPackage ../applications/networking/remote/freerdp {
+  freerdpStable = callPackage ../applications/networking/remote/freerdp {
     ffmpeg = ffmpeg_1;
   };
-
   freerdpUnstable = callPackage ../applications/networking/remote/freerdp/unstable.nix {
     ffmpeg = ffmpeg_2;
     cmake = cmake_2_8;
   };
+  freerdp = freerdpUnstable; # freerdpStable is marked broken, please switch back to it once fixed
 
   freicoin = callPackage ../applications/misc/freicoin {
     boost = boost155;
@@ -15598,7 +15600,7 @@ in
     };
   };
 
-  superTux = callPackage ../games/super-tux { };
+  superTux = callPackage ../games/supertux { };
 
   superTuxKart = callPackage ../games/super-tux-kart { };
 

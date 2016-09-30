@@ -4,7 +4,7 @@
          version="5.0"
          xml:id="sec-release-16.09">
 
-<title>Release 16.09 (“Flounder”, 2016/09/31)</title>
+<title>Release 16.09 (“Flounder”, 2016/09/30)</title>
 
 <para>In addition to numerous new and upgraded packages, this release
 has the following highlights: </para>
@@ -70,6 +70,25 @@ following incompatible changes:</para>
   </listitem>
 
   <listitem>
+    <para>Previous versions of Nixpkgs had support for all versions of the LTS
+    Haskell package set. That support has been dropped. The previously provided
+    <literal>haskell.packages.lts-x_y</literal> package sets still exist in
+    name to aviod breaking user code, but these package sets don't actually
+    contain the versions mandated by the corresponding LTS release. Instead,
+    our package set it loosely based on the latest available LTS release, i.e.
+    LTS 7.x at the time of this writing. New releases of NixOS and Nixpkgs will
+    drop those old names entirely. <link
+    xlink:href="http://lists.science.uu.nl/pipermail/nix-dev/2016-June/020585.html">The
+    motivation for this change</link> has been discussed at length on the
+    <literal>nix-dev</literal> mailing list and in <link
+    xlink:href="https://github.com/NixOS/nixpkgs/issues/14897">Github issue
+    #14897</link>. Development strategies for Haskell hackers who want to rely
+    on Nix and NixOS have been described in <link
+    xlink:href="http://lists.science.uu.nl/pipermail/nix-dev/2016-June/020642.html">another
+    nix-dev article</link>.</para>
+  </listitem>
+
+  <listitem>
     <para>Shell aliases for systemd sub-commands
     <link xlink:href="https://github.com/NixOS/nixpkgs/pull/15598">were dropped</link>:
     <command>start</command>, <command>stop</command>,
@@ -79,6 +98,14 @@ following incompatible changes:</para>
   <listitem>
     <para>Redis now binds to 127.0.0.1 only instead of listening to all network interfaces. This is the default
     behavior of Redis 3.2</para>
+  </listitem>
+
+  <listitem>
+    <para>
+      <literal>/var/empty</literal> is now immutable. Activation script runs <command>chattr +i</command>
+      to forbid any modifications inside the folder. See <link xlink:href="https://github.com/NixOS/nixpkgs/pull/18365">
+      the pull request</link> for what bugs this caused.
+    </para>
   </listitem>
 
   <listitem>
@@ -132,6 +159,12 @@ following incompatible changes:</para>
     was changed to YAML.</para>
   </listitem>
 
+  <listitem>
+    <para>
+      PHP has been upgraded to 7.0
+    </para>
+  </listitem>
+
 </itemizedlist>
 
 
@@ -175,6 +208,31 @@ following incompatible changes:</para>
     updated atomically to prevent failures if the switch to a new
     configuration is interrupted.</link></para>
   </listitem>
+
+  <listitem>
+    <para><literal>services.xserver.startGnuPGAgent</literal>
+      has been removed due to GnuPG 2.1.x bump. See <link
+        xlink:href="https://github.com/NixOS/nixpkgs/commit/5391882ebd781149e213e8817fba6ac3c503740c">
+        how to achieve similar behavior</link>. You might need to
+      <literal>pkill gpg-agent</literal> after the upgrade
+      to prevent a stale agent being in the way.
+    </para>
+  </listitem>
+
+  <listitem><para>
+    <link xlink:href="https://github.com/NixOS/nixpkgs/commit/e561edc322d275c3687fec431935095cfc717147">
+    Declarative users could share the uid due to the bug in
+    the script handling conflict resolution.
+    </link>
+  </para></listitem>
+
+  <listitem><para>
+    Gummi boot has been replaced using systemd-boot.
+  </para></listitem>
+
+  <listitem><para>
+    Hydra package and NixOS module were added for convenience.
+  </para></listitem>
 
 </itemizedlist>
 
