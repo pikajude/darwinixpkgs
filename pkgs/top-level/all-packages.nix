@@ -666,6 +666,8 @@ in
 
   btfs = callPackage ../os-specific/linux/btfs { };
 
+  burpsuite = callPackage ../tools/networking/burpsuite {};
+
   cabal2nix = haskell.lib.overrideCabal haskellPackages.cabal2nix (drv: {
     isLibrary = false;
     enableSharedExecutables = false;
@@ -2245,6 +2247,8 @@ in
 
   kalibrate-rtl = callPackage ../tools/misc/kalibrate-rtl { };
 
+  kalibrate-hackrf = callPackage ../tools/misc/kalibrate-hackrf { };
+
   kakoune = callPackage ../applications/editors/kakoune { };
 
   kbdd = callPackage ../applications/window-managers/kbdd { };
@@ -3625,6 +3629,8 @@ in
 
   storebrowse = callPackage ../tools/system/storebrowse { };
 
+  syntex = callPackage ../tools/graphics/syntex {};
+
   fusesmb = callPackage ../tools/filesystems/fusesmb { samba = samba3; };
 
   sl = callPackage ../tools/misc/sl { };
@@ -3989,6 +3995,8 @@ in
   wal_e = callPackage ../tools/backup/wal-e { };
 
   watchman = callPackage ../development/tools/watchman { };
+
+  wavefunctioncollapse = callPackage ../tools/graphics/wavefunctioncollapse {};
 
   wbox = callPackage ../tools/networking/wbox {};
 
@@ -5348,6 +5356,7 @@ in
 
   lua51Packages = recurseIntoAttrs (callPackage ./lua-packages.nix { lua = lua5_1; });
   lua52Packages = recurseIntoAttrs (callPackage ./lua-packages.nix { lua = lua5_2; });
+  luajitPackages = recurseIntoAttrs (callPackage ./lua-packages.nix { lua = luajit; });
 
   luaPackages = lua52Packages;
 
@@ -6565,25 +6574,16 @@ in
 
   clutter = callPackage ../development/libraries/clutter { };
 
-  clutter_1_26 = callPackage ../development/libraries/clutter/1.26.nix {
-    cogl = cogl_1_22;
-  };
-
   clutter-gst = callPackage ../development/libraries/clutter-gst {
-    inherit (gnome3) cogl clutter;
   };
 
-  clutter_gtk = callPackage ../development/libraries/clutter-gtk {
-    inherit (gnome3) clutter;
-  };
+  clutter_gtk = callPackage ../development/libraries/clutter-gtk { };
 
   cminpack = callPackage ../development/libraries/cminpack { };
 
   cmocka = callPackage ../development/libraries/cmocka { };
 
   cogl = callPackage ../development/libraries/cogl { };
-
-  cogl_1_22 = callPackage ../development/libraries/cogl/1.22.nix { };
 
   coin3d = callPackage ../development/libraries/coin3d { };
 
@@ -7369,6 +7369,9 @@ in
 
   libaccounts-glib = callPackage ../development/libraries/libaccounts-glib { };
 
+  libagar = callPackage ../development/libraries/libagar { };
+  libagar_test = callPackage ../development/libraries/libagar/libagar_test.nix { };
+
   libao = callPackage ../development/libraries/libao {
     usePulseAudio = config.pulseaudio or true;
     inherit (darwin.apple_sdk.frameworks) CoreAudio CoreServices AudioUnit;
@@ -7970,6 +7973,8 @@ in
   libosip = callPackage ../development/libraries/osip {};
 
   libosip_3 = callPackage ../development/libraries/osip/3.nix {};
+
+  libosmocore = callPackage ../applications/misc/libosmocore { };
 
   libosmpbf = callPackage ../development/libraries/libosmpbf {};
 
@@ -9255,7 +9260,13 @@ in
 
   vsqlite = callPackage ../development/libraries/vsqlite { };
 
-  vtk = callPackage ../development/libraries/vtk { };
+  vtk = callPackage ../development/libraries/vtk {
+    inherit (darwin) cf-private libobjc;
+    inherit (darwin.apple_sdk.libs) xpc;
+    inherit (darwin.apple_sdk.frameworks) Cocoa CoreServices DiskArbitration
+                                          IOKit CFNetwork Security ApplicationServices
+                                          CoreText IOSurface ImageIO GLUT;
+  };
 
   vtkWithQt4 = vtk.override { qtLib = qt4; };
 
@@ -11600,6 +11611,8 @@ in
   # lohit-fonts.kashmiri lohit-fonts.konkani lohit-fonts.maithili lohit-fonts.sindhi
   lohit-fonts = recurseIntoAttrs ( callPackages ../data/fonts/lohit-fonts { } );
 
+  maia-icon-theme = callPackage ../data/icons/maia-icon-theme { };
+
   marathi-cursive = callPackage ../data/fonts/marathi-cursive { };
 
   man-pages = callPackage ../data/documentation/man-pages { };
@@ -12167,6 +12180,8 @@ in
 
   containerd = callPackage ../applications/virtualization/containerd { };
 
+  convchain = callPackage ../tools/graphics/convchain {};
+
   cpp_ethereum = callPackage ../applications/misc/webthree-umbrella {
     withOpenCL = true;
 
@@ -12644,10 +12659,16 @@ in
   };
 
   gnuradio-with-packages = callPackage ../applications/misc/gnuradio/wrapper.nix {
-    extraPackages = [ gnuradio-nacl gnuradio-osmosdr ];
+    extraPackages = [ gnuradio-nacl gnuradio-osmosdr gnuradio-gsm gnuradio-ais gnuradio-rds ];
   };
 
   gnuradio-nacl = callPackage ../applications/misc/gnuradio-nacl { };
+
+  gnuradio-gsm = callPackage ../applications/misc/gnuradio-gsm { };
+
+  gnuradio-ais = callPackage ../applications/misc/gnuradio-ais { };
+
+  gnuradio-rds = callPackage ../applications/misc/gnuradio-rds { };
 
   gnuradio-osmosdr = callPackage ../applications/misc/gnuradio-osmosdr { };
 
@@ -14250,6 +14271,8 @@ in
   squishyball = callPackage ../applications/audio/squishyball { };
 
   ssvnc = callPackage ../applications/networking/remote/ssvnc { };
+
+  tecoc = callPackage ../applications/editors/tecoc { };
 
   viber = callPackage ../applications/networking/instant-messengers/viber { };
 

@@ -8292,6 +8292,37 @@ in modules // {
     inherit pythonOlder;
   };
 
+  pypoppler = buildPythonPackage rec {
+    name = "pypoppler-${version}";
+    version = "0.12.2";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/p/pypoppler/${name}.tar.gz";
+      sha256 = "47e6ac99e5b114b9abf2d1dd1bca06f22c028d025432512989f659142470810f";
+    };
+
+    NIX_CFLAGS_COMPILE="-I${pkgs.poppler.dev}/include/poppler/";
+    buildInputs = [ pkgs.pkgconfig pkgs.poppler.dev ];
+    propagatedBuildInputs = with self; [ pycairo pygobject2 ];
+
+    patches = [
+      ../development/python-modules/pypoppler-0.39.0.patch
+      ../development/python-modules/pypoppler-poppler.c.patch
+    ];
+
+    # Not supported.
+    disabled = isPy3k;
+
+    # No tests in archive
+    doCheck = false;
+
+    meta = {
+      homepage = https://code.launchpad.net/~mriedesel/poppler-python/main;
+      description = "Python bindings for poppler-glib, unofficial branch including bug fixes, and removal of gtk dependencies";
+      license = licenses.gpl2;
+    };
+  };
+
   python-axolotl = buildPythonPackage rec {
     name = "python-axolotl-${version}";
     version = "0.1.7";
@@ -10512,9 +10543,27 @@ in modules // {
     };
   };
 
-  pep8 = self.pycodestyle;
-
   flake8 = buildPythonPackage rec {
+    name = "flake8-${version}";
+    version = "2.5.4";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/f/flake8/${name}.tar.gz";
+      sha256 = "0bs9cz4fr99r2rwig1b8jwaadl1nan7kgpdzqwj0bwbckwbmh7nc";
+    };
+
+    buildInputs = with self; [ nose mock ];
+    propagatedBuildInputs = with self; [ pyflakes pep8 mccabe ];
+
+    meta = {
+      description = "Code checking using pep8 and pyflakes";
+      homepage = http://pypi.python.org/pypi/flake8;
+      license = licenses.mit;
+      maintainers = with maintainers; [ garbas ];
+    };
+  };
+
+  flake8_3 = buildPythonPackage rec {
     name = "flake8-${version}";
     version = "3.0.4";
 
@@ -10524,7 +10573,7 @@ in modules // {
     };
 
     buildInputs = with self; [ nose mock pytestrunner pytest ];
-    propagatedBuildInputs = with self; [ pyflakes pep8 mccabe enum34 configparser pycodestyle ];
+    propagatedBuildInputs = with self; [ pyflakes mccabe enum34 configparser pycodestyle ];
 
     patches = [
       ../development/python-modules/flake8/move-pytest-config-to-pytest-ini.patch
@@ -10539,7 +10588,7 @@ in modules // {
       description = "Code checking using pep8 and pyflakes";
       homepage = http://pypi.python.org/pypi/flake8;
       license = licenses.mit;
-      maintainers = with maintainers; [ garbas ];
+      maintainers = with maintainers; [ ];
     };
   };
 
@@ -17575,6 +17624,23 @@ in modules // {
     };
   };
 
+  pep8 = buildPythonPackage rec {
+    name = "pep8-${version}";
+    version = "1.7.0";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/p/pep8/${name}.tar.gz";
+      sha256 = "a113d5f5ad7a7abacef9df5ec3f2af23a20a28005921577b15dd584d099d5900";
+    };
+
+    meta = {
+      homepage = "http://pep8.readthedocs.org/";
+      description = "Python style guide checker";
+      license = licenses.mit;
+      maintainers = with maintainers; [ garbas ];
+    };
+  };
+
   pep257 = buildPythonPackage rec {
     name = "pep257-${version}";
     version = "0.3.2";
@@ -22519,6 +22585,24 @@ in modules // {
       description = "Object Relational Manager for providing an object interface to your database";
       homepage = "http://www.sqlobject.org/";
       license = licenses.lgpl21;
+    };
+  };
+
+  sqlmap = buildPythonPackage {
+    name = "sqlmap-1.0.9.post5";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/s/sqlmap/sqlmap-1.0.9.post5.tar.gz";
+      sha256 = "0g8sjky8anrmcisc697b5qndp88qmay35kng9sz9x46wd3agm9pa";
+    };
+
+		propagatedBuildInputs = with self; [ modules.sqlite3 ];
+
+    meta = with pkgs.stdenv.lib; {
+      homepage = "http://sqlmap.org";
+      license = licenses.gpl2;
+      description = "Automatic SQL injection and database takeover tool";
+			maintainers = with stdenv.lib.maintainers; [ bennofs ];
     };
   };
 
