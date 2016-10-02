@@ -19,7 +19,7 @@
 
 stdenv.mkDerivation rec {
   name = "llvm-${version}";
-  src = fetch "llvm" "10iz9qjxgd05qfzi1zppabn1gb2w1f4ryrydi2mk0z4v18wxhbmm";
+  src = fetch "llvm" "0j49lkd5d7nnpdqzaybs2472bvcxyx0i4r3iccwf3kj2v9wk3iv6";
 
   buildInputs = [ perl groff cmake libxml2 python libffi ]
     ++ stdenv.lib.optional stdenv.isDarwin libcxxabi;
