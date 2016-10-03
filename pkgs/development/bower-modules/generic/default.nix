@@ -45,5 +45,9 @@ in pkgs.stdenv.mkDerivation (
       pkgs.git
       pkgs.nodePackages.bower
     ];
+
+    sandboxProfile = ''
+      (allow file-read* (literal "/private/etc/resolv.conf") (literal "/private/var/run/resolv.conf"))
+    '';
   }
 )
