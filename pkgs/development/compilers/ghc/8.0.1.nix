@@ -6,7 +6,7 @@ let
   inherit (bootPkgs) ghc;
   haddockPatch = fetchpatch {
     url = "https://patch-diff.githubusercontent.com/raw/haskell/haddock/pull/512.patch";
-    sha256 = "17srxgbmsa786hv62kkm09g22clxyngs8vw4xq5vkr5wicpi3w5a";
+    sha256 = "1hp5r2cfz1qpj464qcm926v2aqvnaiikaylz8mm1r7fn2rcnh8sz";
   };
   timePatch = fetchpatch {
     url = "https://raw.githubusercontent.com/Homebrew/formula-patches/9eef46168ca5daa1629082af5532fc4b521d1a8d/ghc/clock_gettime.patch";
