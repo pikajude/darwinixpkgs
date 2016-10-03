@@ -70,6 +70,7 @@
   ./programs/fish.nix
   ./programs/freetds.nix
   ./programs/info.nix
+  ./programs/java.nix
   ./programs/kbdlight.nix
   ./programs/light.nix
   ./programs/man.nix
@@ -472,6 +473,7 @@
   ./services/system/uptimed.nix
   ./services/torrent/deluge.nix
   ./services/torrent/flexget.nix
+  ./services/torrent/opentracker.nix
   ./services/torrent/peerflix.nix
   ./services/torrent/transmission.nix
   ./services/ttys/agetty.nix
