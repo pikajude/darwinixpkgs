@@ -51,6 +51,8 @@ stdenv.mkDerivation rec {
 
   NIX_CFLAGS_COMPILE = "-I${python}/include/${python.libPrefix}";
 
+  NIX_LDFLAGS = stdenv.lib.optionalString stdenv.isDarwin "-lresolv";
+
   postInstall = with stdenv.lib; ''
     NIX_PYTHONPATH="$out/lib/${python.libPrefix}/site-packages"
     wrapProgram "$out/bin/weechat" \
