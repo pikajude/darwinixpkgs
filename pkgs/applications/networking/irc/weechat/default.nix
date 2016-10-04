@@ -49,7 +49,9 @@ stdenv.mkDerivation rec {
     ++ optional  tclSupport      tcl
     ++ extraBuildInputs;
 
-  NIX_CFLAGS_COMPILE = "-I${python}/include/${python.libPrefix}";
+  NIX_CFLAGS_COMPILE = "-I${python}/include/${python.libPrefix}"
+    # Fix '_res_9_init: undefined symbol' error
+    + (stdenv.lib.optionalString stdenv.isDarwin "-DBIND_8_COMPAT=1");
 
   NIX_LDFLAGS = stdenv.lib.optionalString stdenv.isDarwin "-lresolv";
 
