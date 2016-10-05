@@ -3793,6 +3793,8 @@ in
 
   thc-hydra = callPackage ../tools/security/thc-hydra { };
 
+  thin-provisioning-tools = callPackage ../tools/misc/thin-provisioning-tools {  };
+
   tiled = qt5.callPackage ../applications/editors/tiled { };
 
   timemachine = callPackage ../applications/audio/timemachine { };
