@@ -871,6 +871,8 @@ in
 
   kapacitor = callPackage ../servers/monitoring/kapacitor { };
 
+  languagetool = callPackage ../tools/text/languagetool {  };
+
   long-shebang = callPackage ../misc/long-shebang {};
 
   mathics = pythonPackages.mathics;
@@ -10041,6 +10043,7 @@ in
 
   mongodb = callPackage ../servers/nosql/mongodb {
     sasl = cyrus_sasl;
+    inherit (darwin.apple_sdk.frameworks) Security;
   };
 
   mongodb248 = callPackage ../servers/nosql/mongodb/2.4.8.nix { };
