@@ -21,7 +21,7 @@ let
       ++ optional (versionOlder version "1.1.0") ./use-etc-ssl-certs.patch
       ++ optional stdenv.isCygwin ./1.0.1-cygwin64.patch
       ++ optional
-           (versionOlder version "1.0.2" && (stdenv.isDarwin || (stdenv ? cross && stdenv.cross.libc == "libSystem")))
+           (versionOlder version "1.0.2" && (stdenv.isDarwin || (stdenv ? cross && stdenv.cross.libc == "libSystem")) && versionOlder "0.9.9" version)
            ./darwin-arch.patch;
 
   outputs = [ "bin" "dev" "out" "man" ];
@@ -104,6 +104,11 @@ let
   };
 
 in {
+
+  openssl_0_9_8 = common {
+    version = "0.9.8zh";
+    sha256 = "1migbqd1w8xzml3vz86vljlzr8zxw64x7qnhh37jxa453gnz7ngi";
+  };
 
   openssl_1_0_1 = common {
     version = "1.0.1u";
