@@ -1,5 +1,5 @@
 { stdenv, fetchFromGitHub, fetchpatch, lib
-, autoconf, automake, gnum4, libtool, git, perl, gnulib, uthash, pkgconfig, gettext
+, autoconf, automake, gnum4, libtool, perl, gnulib, uthash, pkgconfig, gettext
 , python, freetype, zlib, glib, libungif, libpng, libjpeg, libtiff, libxml2, pango
 , withGTK ? false, gtk2
 , withPython ? true
@@ -25,9 +25,8 @@ stdenv.mkDerivation rec {
   })];
   patchFlags = "-p0";
 
-  # FIXME: git isn't really used, but configuration fails without it
   buildInputs = [
-    git autoconf automake gnum4 libtool perl pkgconfig gettext uthash
+    autoconf automake gnum4 libtool perl pkgconfig gettext uthash
     python freetype zlib glib libungif libpng libjpeg libtiff libxml2
   ]
     ++ lib.optionals withGTK [ gtk2 pango ]
@@ -40,7 +39,9 @@ stdenv.mkDerivation rec {
 
   propagatedFrameworks = [ "Carbon" "Cocoa" ];
 
+  # work-around: git isn't really used, but configuration fails without it
   preConfigure = ''
+    export GIT="$(type -P true)"
     cp -r "${gnulib}" ./gnulib
     chmod +w -R ./gnulib
     ./bootstrap --skip-git --gnulib-srcdir=./gnulib

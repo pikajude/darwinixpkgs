@@ -21,6 +21,8 @@ stdenv.mkDerivation rec {
   name = "llvm-${version}";
   src = fetch "llvm" "0j49lkd5d7nnpdqzaybs2472bvcxyx0i4r3iccwf3kj2v9wk3iv6";
 
+  outputs = [ "out" ] ++ stdenv.lib.optional enableSharedLibraries "lib";
+
   buildInputs = [ perl groff cmake libxml2 python libffi ]
     ++ stdenv.lib.optional stdenv.isDarwin libcxxabi;
 
@@ -43,7 +45,7 @@ stdenv.mkDerivation rec {
     "-DLLVM_LINK_LLVM_DYLIB=ON"
   ] ++ stdenv.lib.optional (!isDarwin)
     "-DLLVM_BINUTILS_INCDIR=${binutils.dev}/include"
-    ++ stdenv.lib.optionals ( isDarwin) [
+    ++ stdenv.lib.optionals (isDarwin) [
     "-DLLVM_ENABLE_LIBCXX=ON"
     "-DDARWIN_osx_ARCHS=x86_64;x86_64h"
     "-DDARWIN_10.4_ARCHS=x86_64"
@@ -55,7 +57,14 @@ stdenv.mkDerivation rec {
     paxmark m bin/{lli,llvm-rtdyld}
   '';
 
-  postInstall = stdenv.lib.optionalString (stdenv.isDarwin && enableSharedLibraries) ''
+  postInstall = ""
+  + stdenv.lib.optionalString (enableSharedLibraries) ''
+    moveToOutput "lib/libLLVM-*" "$lib"
+    moveToOutput "lib/libLLVM.so" "$lib"
+    substituteInPlace "$out/lib/cmake/llvm/LLVMExports-release.cmake" \
+      --replace "\''${_IMPORT_PREFIX}/lib/libLLVM-" "$lib/lib/libLLVM-"
+  ''
+  + stdenv.lib.optionalString (stdenv.isDarwin && enableSharedLibraries) ''
     install_name_tool -id $out/lib/libLLVM.dylib $out/lib/libLLVM.dylib
     ln -s $out/lib/libLLVM.dylib $out/lib/libLLVM-${version}.dylib
   '';

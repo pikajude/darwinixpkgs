@@ -135,7 +135,7 @@ in rec {
           ln -s ${bootstrapTools}/include/c++      $out/include/c++
         '';
         linkCxxAbi = false;
-        setupHook = ../../development/compilers/llvm/3.6/libc++/setup-hook.sh;
+        setupHook = ../../development/compilers/llvm/3.9/libc++/setup-hook.sh;
       };
 
       libcxxabi = stdenv.mkDerivation {
