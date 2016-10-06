@@ -1033,9 +1033,6 @@ self: super: {
     stripLen = 1;
   });
 
-  # requires phantomjs
-  wai-cors = dontCheck super.wai-cors;
-
   digestive-functors = doJailbreak super.digestive-functors;
 
   # https://github.com/fpco/store/issues/77
