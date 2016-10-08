@@ -47,7 +47,20 @@ stdenv.mkDerivation {
   gnugrep_bin = if nativeTools then "" else gnugrep;
   xcodeSDKRoot = if builtins ? xcodeSDKRoot then builtins.xcodeSDKRoot else "/nonexistent-path";
 
-  passthru = { inherit libc nativeTools nativeLibc nativePrefix isGNU isClang; };
+  passthru = {
+    inherit libc nativeTools nativeLibc nativePrefix isGNU isClang;
+
+    emacsBufferSetup = pkgs: ''
+      ; We should handle propagation here too
+      (mapc (lambda (arg)
+        (when (file-directory-p (concat arg "/include"))
+          (setenv "NIX_CFLAGS_COMPILE" (concat (getenv "NIX_CFLAGS_COMPILE") " -isystem " arg "/include")))
+        (when (file-directory-p (concat arg "/lib"))
+          (setenv "NIX_LDFLAGS" (concat (getenv "NIX_LDFLAGS") " -L" arg "/lib")))
+        (when (file-directory-p (concat arg "/lib64"))
+          (setenv "NIX_LDFLAGS" (concat (getenv "NIX_LDFLAGS") " -L" arg "/lib64")))) '(${concatStringsSep " " (map (pkg: "\"${pkg}\"") pkgs)}))
+    '';
+  };
 
   buildCommand =
     ''
