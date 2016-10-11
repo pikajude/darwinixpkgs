@@ -1,5 +1,5 @@
 { fetchurl, stdenv, libtool, readline, gmp, pkgconfig, boehmgc, libunistring
-, libffi, gawk, makeWrapper, coverageAnalysis ? null, gnu ? null }:
+, libffi, gawk, libiconv, makeWrapper, coverageAnalysis ? null, gnu ? null }:
 
 # Do either a coverage analysis build or a standard build.
 (if coverageAnalysis != null
@@ -15,7 +15,7 @@
   };
 
   nativeBuildInputs = [ makeWrapper gawk pkgconfig ];
-  buildInputs = [ readline libtool libunistring libffi ];
+  buildInputs = [ readline libtool libunistring libffi libiconv ];
   propagatedBuildInputs = [ gmp boehmgc ]
 
     # XXX: These ones aren't normally needed here, but since
