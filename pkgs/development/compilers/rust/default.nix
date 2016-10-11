@@ -11,8 +11,8 @@ rec {
     isRelease = true;
     forceBundledLLVM = false;
     configureFlags = [ "--release-channel=stable" ];
-    srcRev = "8e1f792ccf600ab523b3d52515ffb7ae86d156a7";
-    srcSha = "1zkv7hyjvcj7kvbngf309skgllk6rd7727a6hkvhd3hg8jlz0d00";
+    srcRev = "3191fbae9da539442351f883bdabcad0d72efcb6";
+    srcSha = "1mpw6c5jfxy60g786wl8g0ncwikqfbcj67jrdpj3jacywxsxzlby";
 
     patches = [
       ./patches/disable-lockfile-check.patch
@@ -25,10 +25,10 @@ rec {
   };
 
   cargo = callPackage ./cargo.nix rec {
-    version = "0.12.0";
-    srcRev = "6b98d1f8abf5b33c1ca2771d3f5f3bafc3407b93";
-    srcSha = "0pq6l3yzmh2il6320f6501hvp9iikdxzl34i5b52v93ncpim36bk";
-    depsSha256 = "1jrwzm9fd15kf2d5zb17q901hx32h711ivcwdpxpmzwq08sjlcvl";
+    version = "0.13.0";
+    srcRev = "109cb7c33d426044d141457049bd0fffaca1327c";
+    srcSha = "0p79m7hpzjh36l4fc6a59h6r8yz6qafjcdg5v1yb7bac9m2wi7vs";
+    depsSha256 = "1cwp4p8b985fj8j2qmgsi2mpp51rdpwzm9qa60760nrry1fy624z";
 
     inherit rustc; # the rustc that will be wrapped by cargo
     inherit rustPlatform; # used to build cargo

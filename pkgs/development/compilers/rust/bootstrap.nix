@@ -17,13 +17,13 @@ let
   # fetch hashes by running `print-hashes.sh 1.9.0`
   bootstrapHash =
     if stdenv.system == "i686-linux"
-    then "1hjs3dy2g83kpzbhkq13xs3lnfanlvks1ca72jkjgs7g7pazb8zm"
+    then "f5a3f5d53defe827a71447b1a0e7a656394b87ee23e009d7bf73a0277c1b5ac2"
     else if stdenv.system == "x86_64-linux"
-    then "0gyq8wamj964xgx672fa5dn584qr9samijqhqjk8zjwljinvvszl"
+    then "f4ebbd6d9494cb8fa6c410cb58954e1913546c2bca8963faebc424591547d83f"
     else if stdenv.system == "i686-darwin"
-    then "40d4782a58dd5bef22dbbaa7a363f3b42f844628db07205f6435ac934f350061"
+    then "bf07182bc362985fcdd48af905cdb559e20c68518cd71dabec3c30b78ca8a94a"
     else if stdenv.system == "x86_64-darwin"
-    then "0dfcdrjxm87xs3vf6qh82vmmcnbkgnvig0r96npyr1nw71sc9nrc"
+    then "2cdbc47438dc86ecaf35298317b77d735956eb160862e3f6d0fda0da656ecc35"
     else throw "missing boostrap hash for platform ${stdenv.system}";
 
   needsPatchelf = stdenv.isLinux;
