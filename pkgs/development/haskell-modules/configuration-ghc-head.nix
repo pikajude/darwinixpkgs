@@ -18,7 +18,10 @@ self: super: {
   deepseq = null;
   directory = null;
   filepath = null;
+  ghc-boot = null;
+  ghc-boot-th = null;
   ghc-prim = null;
+  ghci = null;
   haskeline = null;
   hoopl = null;
   hpc = null;
@@ -84,5 +87,16 @@ self: super: {
 
   # Won't work with LLVM 3.5.
   llvm-general = markBrokenVersion "3.4.5.3" super.llvm-general;
+
+  extra = overrideCabal super.extra (drv: {
+    postPatch = ''
+      sed -i -e '20,21d;29,30d' src/Data/Either/Extra.hs
+    '';
+    doCheck = false;
+  });
+
+  cryptohash-sha256 = dontCheck super.cryptohash-sha256;
+
+  haddock-api = null;
 
 }
