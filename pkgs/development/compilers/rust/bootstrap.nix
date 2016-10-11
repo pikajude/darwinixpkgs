@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, makeWrapper, cacert, zlib }:
+{ stdenv, fetchurl, makeWrapper, cacert, zlib, jemalloc, openssl }:
 
 let
   inherit (stdenv.lib) optionalString;
@@ -17,13 +17,13 @@ let
   # fetch hashes by running `print-hashes.sh 1.9.0`
   bootstrapHash =
     if stdenv.system == "i686-linux"
-    then "be93dd2b80a97f2877679950d56990628c6547b953294f16bf6d69c18a39edc0"
+    then "1hjs3dy2g83kpzbhkq13xs3lnfanlvks1ca72jkjgs7g7pazb8zm"
     else if stdenv.system == "x86_64-linux"
-    then "f189303d52b37c8bb694b9d9739ae73ffa926cbdeffde1d5d6a5c6e811940293"
+    then "0gyq8wamj964xgx672fa5dn584qr9samijqhqjk8zjwljinvvszl"
     else if stdenv.system == "i686-darwin"
     then "40d4782a58dd5bef22dbbaa7a363f3b42f844628db07205f6435ac934f350061"
     else if stdenv.system == "x86_64-darwin"
-    then "4bb71249f4afd7cee07f63d681f9fcb1b525ee3dfd49722adab7a40024e45af7"
+    then "0dfcdrjxm87xs3vf6qh82vmmcnbkgnvig0r96npyr1nw71sc9nrc"
     else throw "missing boostrap hash for platform ${stdenv.system}";
 
   needsPatchelf = stdenv.isLinux;
@@ -33,7 +33,7 @@ let
      sha256 = bootstrapHash;
   };
 
-  version = "1.10.0";
+  version = "1.11.0";
 in
 
 rec {

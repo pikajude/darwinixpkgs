@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, fetchgit, fetchzip, file, python2, tzdata, procps
+{ stdenv, fetchurl, fetchgit, fetchzip, file, python2, tzdata, procps, libffi
 , llvm, jemalloc, ncurses, darwin, binutils, rustPlatform, git, cmake, curl
 
 , isRelease ? false
@@ -44,7 +44,7 @@ stdenv.mkDerivation {
 
   __impureHostDeps = [ "/usr/lib/libedit.3.dylib" ];
 
-  NIX_LDFLAGS = optionalString stdenv.isDarwin "-rpath ${llvmShared}/lib";
+  NIX_LDFLAGS = optionalString stdenv.isDarwin "-rpath ${llvmShared}/lib -lffi";
 
   src = fetchgit {
     url = https://github.com/rust-lang/rust;
@@ -64,6 +64,11 @@ stdenv.mkDerivation {
   patches = patches ++ targetPatches;
 
   passthru.target = target;
+
+  cmakeFlags = stdenv.lib.optionals stdenv.isDarwin [
+    "-DDARWIN_osx_ARCHS=x86_64;x86_64h"
+    "-DDARWIN_10.4_ARCHS=x86_64"
+  ];
 
   postPatch = ''
     substituteInPlace src/rust-installer/gen-install-script.sh \
@@ -99,6 +104,12 @@ stdenv.mkDerivation {
   # built library name to have an "_osx" suffix on darwin.
   optionalString stdenv.isDarwin ''
     substituteInPlace mk/rt.mk --replace "_osx" "_10.4"
+    substituteInPlace configure --replace 7-8 7-9
+    substituteInPlace src/compiler-rt/CMakeLists.txt \
+      --replace 'share/llvm/cmake' 'lib/cmake/llvm'
+    substituteInPlace mk/rt.mk --replace \
+      "-DCOMPILER_RT_BUILD_EMUTLS=OFF" \
+      "-DDARWIN_osx_ARCHS=x86_64 -DDARWIN_10.4_ARCHS=x86_64"
   '';
 
   preConfigure = ''
@@ -115,7 +126,7 @@ stdenv.mkDerivation {
   nativeBuildInputs = [ file python2 procps rustPlatform.rust.rustc git cmake ];
 
   buildInputs = [ ncurses ] ++ targetToolchains
-    ++ optional (!forceBundledLLVM) llvmShared;
+    ++ stdenv.lib.optionals (!forceBundledLLVM) [ llvmShared libffi ];
 
   # https://github.com/rust-lang/rust/issues/30181
   # enableParallelBuilding = false; # missing files during linking, occasionally
