@@ -377,6 +377,8 @@ in
 
   afl = callPackage ../tools/security/afl { };
 
+  afpfs-ng = callPackage ../tools/filesystems/afpfs-ng/default.nix { };
+
   aha = callPackage ../tools/text/aha { };
 
   ahcpd = callPackage ../tools/networking/ahcpd { };
@@ -498,6 +500,8 @@ in
   djmount = callPackage ../tools/filesystems/djmount { };
 
   elvish = callPackage ../shells/elvish { };
+
+  enpass = callPackage ../tools/security/enpass { };
 
   genymotion = callPackage ../development/mobile/genymotion { };
 
@@ -868,6 +872,8 @@ in
   gti = callPackage ../tools/misc/gti { };
 
   heatseeker = callPackage ../tools/misc/heatseeker { };
+
+  hexio = callPackage ../development/tools/hexio { };
 
   interlock = callPackage ../servers/interlock {};
 
@@ -2098,6 +2104,8 @@ in
 
   httpfs2 = callPackage ../tools/filesystems/httpfs { };
 
+  httpstat = callPackage ../tools/networking/httpstat { };
+
   httptunnel = callPackage ../tools/networking/httptunnel { };
 
   hubicfuse = callPackage ../tools/filesystems/hubicfuse { };
@@ -2300,6 +2308,8 @@ in
   less = callPackage ../tools/misc/less { };
 
   lf = callPackage ../tools/misc/lf {};
+  
+  lhasa = callPackage ../tools/compression/lhasa {};
 
   libcpuid = callPackage ../tools/misc/libcpuid { };
 
@@ -2867,6 +2877,8 @@ in
   nilfs_utils = nilfs-utils;
 
   nitrogen = callPackage ../tools/X11/nitrogen {};
+
+  nixbot = callPackage ../tools/misc/nixbot {};
 
   nkf = callPackage ../tools/text/nkf {};
 
@@ -3693,7 +3705,9 @@ in
 
   sshpass = callPackage ../tools/networking/sshpass { };
 
-  sslscan = callPackage ../tools/security/sslscan { };
+  sslscan = callPackage ../tools/security/sslscan {
+    openssl = openssl_1_0_1;
+  };
 
   sslmate = callPackage ../development/tools/sslmate { };
 
@@ -5198,6 +5212,8 @@ in
 
   vala_0_32 = callPackage ../development/compilers/vala/0.32.nix { };
 
+  valadoc = callPackage ../development/tools/valadoc { };
+
   vs90wrapper = callPackage ../development/compilers/vs90wrapper { };
 
   wla-dx = callPackage ../development/compilers/wla-dx { };
@@ -5709,6 +5725,8 @@ in
   apacheKafka_0_8 = callPackage ../servers/apache-kafka { majorVersion = "0.8"; };
   apacheKafka_0_9 = callPackage ../servers/apache-kafka { majorVersion = "0.9"; };
   apacheKafka_0_10 = callPackage ../servers/apache-kafka { majorVersion = "0.10"; };
+
+  asn2quickder = callPackage ../development/tools/asn2quickder {};
 
   astyle = callPackage ../development/tools/misc/astyle { };
 
@@ -7463,7 +7481,7 @@ in
   libburn = callPackage ../development/libraries/libburn { };
 
   libcaca = callPackage ../development/libraries/libcaca {
-    inherit (xlibs) libX11;
+    inherit (xlibs) libX11 libXext;
   };
 
   libcanberra_gtk3 = callPackage ../development/libraries/libcanberra {
@@ -7641,6 +7659,8 @@ in
   libgdata = gnome3.libgdata;
 
   libgee_0_6 = callPackage ../development/libraries/libgee/0.6.nix { };
+
+  libgee_0_8 = callPackage ../development/libraries/libgee/0.8.nix { };
 
   libgig = callPackage ../development/libraries/libgig { };
 
@@ -8874,6 +8894,8 @@ in
   qtscriptgenerator = callPackage ../development/libraries/qtscriptgenerator { };
 
   quesoglc = callPackage ../development/libraries/quesoglc { };
+
+  quickder = callPackage ../development/libraries/quickder {};
 
   quicksynergy = callPackage ../applications/misc/quicksynergy { };
 
@@ -13906,6 +13928,8 @@ in
 
   vivaldi = callPackage ../applications/networking/browsers/vivaldi {};
 
+  openmpt123 = callPackage ../applications/audio/openmpt123 {};
+
   opusfile = callPackage ../applications/audio/opusfile { };
 
   opusTools = callPackage ../applications/audio/opus-tools { };
@@ -14264,6 +14288,8 @@ in
   urxvt_tabbedex = callPackage ../applications/misc/rxvt_unicode-plugins/urxvt-tabbedex { };
   urxvt_font_size = callPackage ../applications/misc/rxvt_unicode-plugins/urxvt-font-size { };
   urxvt_theme_switch = callPackage ../applications/misc/rxvt_unicode-plugins/urxvt-theme-switch { };
+
+  uade123 = callPackage ../applications/audio/uade123 {};
 
   udevil = callPackage ../applications/misc/udevil {};
 
@@ -15550,6 +15576,8 @@ in
   opendungeons = callPackage ../games/opendungeons { };
 
   openlierox = callPackage ../games/openlierox { };
+
+  openclonk = callPackage ../games/openclonk { };
 
   openmw = callPackage ../games/openmw { };
 
@@ -16840,6 +16868,8 @@ in
   libjack2-git = callPackage ../misc/jackaudio/git.nix { };
 
   keynav = callPackage ../tools/X11/keynav { };
+
+  kops = callPackage ../applications/networking/cluster/kops { };
 
   lilypond = callPackage ../misc/lilypond { guile = guile_1_8; };
 

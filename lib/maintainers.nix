@@ -240,7 +240,7 @@
   lucas8 = "Luc Chabassier <luc.linux@mailoo.org>";
   ludo = "Ludovic Courtès <ludo@gnu.org>";
   luispedro = "Luis Pedro Coelho <luis@luispedro.org>";
-  lukasepple = "Lukas Epple <post@lukasepple.de>";
+  sternenseemann = "Lukas Epple <post@lukasepple.de>";
   lukego = "Luke Gorrie <luke@snabb.co>";
   lw = "Sergey Sofeychuk <lw@fmap.me>";
   madjar = "Georges Dubus <georges.dubus@compiletoi.net>";
@@ -368,6 +368,7 @@
   roblabla = "Robin Lambertz <robinlambertz+dev@gmail.com>";
   roconnor = "Russell O'Connor <roconnor@theorem.ca>";
   romildo = "José Romildo Malaquias <malaquias@gmail.com>";
+  ronny = "Ronny Pfannschmidt <nixos@ronnypfannschmidt.de>";
   rszibele = "Richard Szibele <richard_szibele@hotmail.com>";
   rushmorem = "Rushmore Mushambi <rushmore@webenchanter.com>";
   rvl = "Rodney Lorrimar <dev+nix@rodney.id.au>";

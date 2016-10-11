@@ -270,6 +270,7 @@ self: super: {
   snowball = dontCheck super.snowball;
   sophia = dontCheck super.sophia;
   test-sandbox = dontCheck super.test-sandbox;
+  texrunner = dontCheck super.texrunner;
   users-postgresql-simple = dontCheck super.users-postgresql-simple;
   wai-middleware-hmac = dontCheck super.wai-middleware-hmac;
   xkbcommon = dontCheck super.xkbcommon;
@@ -642,6 +643,11 @@ self: super: {
       done
     '';
   }));
+
+  # Requires optparse-applicative 0.13.0.0
+  diagrams-pgf = super.diagrams-pgf.overrideScope (self: super: {
+    optparse-applicative = self.optparse-applicative_0_13_0_0;
+  });
 
   # Patch to consider NIX_GHC just like xmonad does
   dyre = appendPatch super.dyre ./patches/dyre-nix.patch;

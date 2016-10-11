@@ -1160,6 +1160,28 @@ in modules // {
     };
   };
 
+ asn1ate = buildPythonPackage rec {
+  pname = "asn1ate";
+  date = "20160810";
+  name = "${pname}-unstable-${date}";
+
+  src = pkgs.fetchFromGitHub {
+    sha256 = "04pddr1mh2v9qq8fg60czwvjny5qwh4nyxszr3qc4bipiiv2xk9w";
+    rev = "c56104e8912400135509b584d84423ee05a5af6b";
+    owner = "kimgr";
+    repo = pname;
+  };
+
+  propagatedBuildInputs = with self; [ pyparsing ];
+
+  meta = with stdenv.lib; {
+    description = "Python library for translating ASN.1 into other forms";
+    license = licenses.bsd3;
+    platforms = platforms.linux;
+    maintainers = with maintainers; [ leenaars ];
+  };
+};
+
   atomiclong = buildPythonPackage rec {
     version = "0.1.1";
     name = "atomiclong-${version}";
@@ -6695,7 +6717,7 @@ in modules // {
       description = "High-level FTP client library (virtual file system and more)";
       homepage    = https://pypi.python.org/pypi/ftputil;
       platforms   = platforms.linux;
-      license     = licenses.bsd2; # "Modified BSD licence, says pypi"
+      license     = licenses.bsd2; # "Modified BSD license, says pypi"
     };
   };
 
@@ -7481,7 +7503,7 @@ in modules // {
     meta = {
       description = "Library to apply JSON Patches according to RFC 6902";
       homepage = "https://github.com/stefankoegl/python-json-patch";
-      license = stdenv.lib.licenses.bsd2; # "Modified BSD licence, says pypi"
+      license = stdenv.lib.licenses.bsd2; # "Modified BSD license, says pypi"
     };
   };
 
@@ -7496,7 +7518,28 @@ in modules // {
     meta = {
       description = "Resolve JSON Pointers in Python";
       homepage = "https://github.com/stefankoegl/python-json-pointer";
-      license = stdenv.lib.licenses.bsd2; # "Modified BSD licence, says pypi"
+      license = stdenv.lib.licenses.bsd2; # "Modified BSD license, says pypi"
+    };
+  };
+
+  jsonrpclib = buildPythonPackage rec {
+    name = "jsonrpclib-${version}";
+    version = "0.1.7";
+
+    disabled = !isPy27;
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/j/jsonrpclib/${name}.tar.gz";
+      sha256 = "02vgirw2bcgvpcxhv5hf3yvvb4h5wzd1lpjx8na5psdmaffj6l3z";
+    };
+
+    propagatedBuildInputs = with self; [ cjson ];
+
+    meta = {
+      description = "JSON RPC client library";
+      homepage = https://pypi.python.org/pypi/jsonrpclib/;
+      license = stdenv.lib.licenses.asl20;
+      maintainers = [ stdenv.lib.maintainers.joachifm ];
     };
   };
 
@@ -11695,11 +11738,11 @@ in modules // {
 
   github3_py = buildPythonPackage rec {
     name = "github3.py-${version}";
-    version = "1.0.0a2";
+    version = "1.0.0a4";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/g/github3.py/${name}.tar.gz";
-      sha256 = "11xvwbzfy04vwbjnpc8wcrjjzghbrbdzffrdfk70v0zdnxqg8hc5";
+      sha256 = "0rhnrhb7qc60h82hkd4wnj1jh544yzrf4pjmn4rqacdi59p7f3jp";
     };
 
     buildInputs = with self; [ unittest2 pytest mock betamax betamax-matchers ];
@@ -18003,7 +18046,7 @@ in modules // {
     meta = {
       description = "Meta-commands handler for Postgres Database";
       homepage = https://pypi.python.org/pypi/pgspecial;
-      licence = licenses.bsd3;
+      license = licenses.bsd3;
       maintainers = with maintainers; [ nckx ];
     };
   };
@@ -29699,7 +29742,7 @@ in modules // {
     meta = {
       description = "Python test runner";
       homepage = "https://github.com/CleanCut/green";
-      licence = licenses.mit;
+      license = licenses.mit;
     };
   };
 
