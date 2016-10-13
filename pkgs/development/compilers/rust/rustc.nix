@@ -149,6 +149,6 @@ stdenv.mkDerivation {
   '';
 
   # Disable doCheck on Darwin to work around upstream issue
-  doCheck = true;
+  doCheck = !stdenv.isDarwin;
   dontSetConfigureCross = true;
 }
