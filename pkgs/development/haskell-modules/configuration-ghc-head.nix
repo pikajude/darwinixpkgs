@@ -36,6 +36,18 @@ self: super: {
   unix = null;
   xhtml = null;
 
+  cabal-install = overrideCabal (super.cabal-install.overrideScope (_: _: { Cabal = null; })) (drv: {
+    version = "1.25.0.0";
+    src = pkgs.fetchFromGitHub {
+      owner = "haskell";
+      repo = "cabal";
+      rev = "4efe8c22cc0e12b41adac47870115a4619a1c763";
+      sha256 = "1fad2759cxj2cmxga8vrgsrbbwmvxva7gxdfvz4glfrmfb02w66l";
+    };
+    postUnpack = "sourceRoot+=/cabal-install";
+    editedCabalFile = null;
+  });
+
   # jailbreak-cabal can use the native Cabal library.
   jailbreak-cabal = super.jailbreak-cabal.override { Cabal = null; };
 
@@ -98,5 +110,23 @@ self: super: {
   cryptohash-sha256 = dontCheck super.cryptohash-sha256;
 
   haddock-api = null;
+
+  hackage-security = dontCheck (appendPatch super.hackage-security (builtins.toFile "unreachable.patch" ''
+      diff --git a/hackage-security/src/Hackage/Security/Client/Repository/Remote.hs b/hackage-security/src/Hackage/Security/Client/Repository/Remote.hs
+    index 558c982..25bbfc1 100644
+    --- a/src/Hackage/Security/Client/Repository/Remote.hs
+    +++ b/src/Hackage/Security/Client/Repository/Remote.hs
+    @@ -445,6 +445,12 @@ getFile cfg@RemoteConfig{..} attemptNr remoteFile method =
+                                     (mustCache remoteFile)
+             return (Some format, remoteTemp)
+
+    +    httpGetRange :: forall a. Throws SomeRemoteError
+    +                 => [HttpRequestHeader]
+    +                 -> URI
+    +                 -> (Int, Int)
+    +                 -> (HttpStatus -> [HttpResponseHeader] -> BodyReader -> IO a)
+    +                 -> IO a
+         HttpLib{..} = cfgHttpLib
+  ''));
 
 }
