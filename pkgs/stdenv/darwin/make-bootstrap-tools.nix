@@ -1,6 +1,6 @@
-{ system ? builtins.currentSystem }:
+{ pkgspath ? ../../.., test-pkgspath ? pkgspath, system ? builtins.currentSystem }:
 
-with import ../../.. { inherit system; };
+with import pkgspath { inherit system; };
 
 let
   llvmPackages = llvmPackages_39;
@@ -253,8 +253,8 @@ in rec {
 
   # The ultimate test: bootstrap a whole stdenv from the tools specified above and get a package set out of it
   test-pkgs = let
-    stdenv = import ./. { inherit system bootstrapFiles; };
-  in import ../../.. {
+    stdenv = import (test-pkgspath + "/pkgs/stdenv/darwin") { inherit system bootstrapFiles; };
+  in import test-pkgspath {
     inherit system;
     bootStdenv = stdenv.stdenvDarwin;
   };
