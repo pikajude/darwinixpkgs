@@ -4247,6 +4247,16 @@ in modules // {
     };
   };
 
+  contexter = buildPythonPackage rec {
+    name = "contexter-${version}";
+    version = "0.1.3";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/c/contexter/${name}.tar.gz";
+      sha256 = "0xrnkjya29ya0hkj8y4k9ni2mnr58i6r0xfqlj7wk07v4jfrkc8n";
+    };
+  };
+
   oslo-vmware = buildPythonPackage rec {
     name = "oslo.vmware-${version}";
     version = "1.22.0";
@@ -18145,6 +18155,20 @@ in modules // {
       homepage = https://pip.pypa.io/;
       priority = 10;
     };
+  };
+
+  pip2nix = buildPythonPackage rec {
+    name = "pip2nix-${version}";
+    version = "0.3.0";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/p/pip2nix/${name}.tar.gz";
+      sha256 = "1s76i8r4khq8y5r6g4218jg2c6qldmw5xhzymxad51ii8hafpwq6";
+    };
+
+    buildInputs = with self; [ contexter jinja2 pytest ];
+
+    propagatedBuildInputs = with self; [ click configobj ];
   };
 
   pika = buildPythonPackage rec {
