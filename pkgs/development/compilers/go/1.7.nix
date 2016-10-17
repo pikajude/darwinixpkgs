@@ -70,6 +70,8 @@ stdenv.mkDerivation rec {
 
     sed -i '/TestLookupPort/areturn' src/net/lookup_test.go
 
+    sed -i '/TestLoadFixed/areturn' src/time/time_test.go
+
     sed -i 's,/etc/protocols,${iana_etc}/etc/protocols,' src/net/lookup_unix.go
     sed -i 's,/etc/services,${iana_etc}/etc/services,' src/net/port_unix.go
 
