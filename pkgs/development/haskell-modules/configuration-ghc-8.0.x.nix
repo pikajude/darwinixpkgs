@@ -62,4 +62,7 @@ self: super: {
 
   Glob = dontCheck super.Glob;
 
+  # https://github.com/nkaretnikov/titlecase/issues/6
+  titlecase = doJailbreak super.titlecase;
+
 }
