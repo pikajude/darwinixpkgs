@@ -15,7 +15,7 @@ let
 
   self = {
     llvm = callPackage ./llvm.nix {
-      inherit compiler-rt_src stdenv;
+      inherit compiler-rt_src stdenv cctools;
     };
 
     clang-unwrapped = callPackage ./clang {

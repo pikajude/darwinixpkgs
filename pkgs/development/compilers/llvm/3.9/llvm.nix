@@ -15,7 +15,7 @@
 , libcxxabi
 , debugVersion ? false
 , enableSharedLibraries ? true
-, darwin
+, cctools
 }:
 
 let
@@ -31,7 +31,7 @@ in stdenv.mkDerivation rec {
 
   buildInputs = [ perl groff cmake libxml2 python libffi ]
     ++ stdenv.lib.optionals stdenv.isDarwin
-         [ libcxxabi darwin.cctools darwin.apple_sdk.libs.xpc ];
+         [ libcxxabi cctools ];
 
   propagatedBuildInputs = [ ncurses zlib ];
 
@@ -57,7 +57,7 @@ in stdenv.mkDerivation rec {
     # "-DDARWIN_osx_ARCHS=x86_64;x86_64h"
     # "-DDARWIN_10.4_ARCHS=x86_64"
     "-DCAN_TARGET_i386=false"
-    "-DCMAKE_LIBTOOL=${darwin.cctools}/bin/libtool"
+    "-DCMAKE_LIBTOOL=${cctools}/bin/libtool"
   ];
 
   postBuild = ''
@@ -85,6 +85,8 @@ in stdenv.mkDerivation rec {
   enableParallelBuilding = true;
 
   passthru.src = src;
+
+  outputs = [ "out" ] ++ stdenv.lib.optional enableSharedLibraries "lib";
 
   meta = {
     description = "Collection of modular and reusable compiler and toolchain technologies";
