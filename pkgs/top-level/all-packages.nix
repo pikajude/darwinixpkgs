@@ -15001,10 +15001,7 @@ in
     mouseSupport = false;
   };
 
-  weechat = callPackage ../applications/networking/irc/weechat {
-    inherit (darwin) libobjc;
-    inherit (darwin) libresolv;
-  };
+  weechat = callPackage ../applications/networking/irc/weechat { };
 
   westonLite = callPackage ../applications/window-managers/weston {
     pango = null;

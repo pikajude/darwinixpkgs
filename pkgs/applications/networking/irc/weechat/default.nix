@@ -1,6 +1,6 @@
 { stdenv, fetchurl, ncurses, openssl, aspell, gnutls
 , zlib, curl , pkgconfig, libgcrypt
-, cmake, makeWrapper, libobjc, libresolv, libiconv
+, cmake, makeWrapper, libiconv
 , asciidoctor # manpages
 , guileSupport ? true, guile
 , luaSupport ? true, lua5
@@ -49,12 +49,12 @@ stdenv.mkDerivation rec {
       cmake
       asciidoctor
     ]
-    ++ optionals stdenv.isDarwin [ pync libresolv ]
-    ++ optional  guileSupport    guile
-    ++ optional  luaSupport      lua5
-    ++ optional  perlSupport     perl
-    ++ optional  rubySupport     ruby
-    ++ optional  tclSupport      tcl
+    ++ optional stdenv.isDarwin pync
+    ++ optional guileSupport    guile
+    ++ optional luaSupport      lua5
+    ++ optional perlSupport     perl
+    ++ optional rubySupport     ruby
+    ++ optional tclSupport      tcl
     ++ extraBuildInputs;
 
   NIX_CFLAGS_COMPILE = "-I${python}/include/${python.libPrefix}"
