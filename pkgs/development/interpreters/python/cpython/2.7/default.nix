@@ -15,7 +15,7 @@
 , db
 , expat
 , libffi
-, CF, configd, coreutils
+, coreutils
 }:
 
 assert x11Support -> tcl != null
@@ -133,8 +133,7 @@ let
     [ bzip2 openssl zlib ]
     ++ optionals stdenv.isCygwin [ expat libffi ]
     ++ [ db gdbm ncurses sqlite readline ]
-    ++ optionals x11Support [ tcl tk xlibsWrapper libX11 ]
-    ++ optionals stdenv.isDarwin [ CF configd ];
+    ++ optionals x11Support [ tcl tk xlibsWrapper libX11 ];
 
   mkPaths = paths: {
     C_INCLUDE_PATH = makeSearchPathOutput "dev" "include" paths;
