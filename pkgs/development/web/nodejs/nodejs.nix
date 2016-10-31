@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, openssl, python, zlib, libuv, v8, utillinux, http-parser
+{ stdenv, fetchurl, openssl, python2, zlib, libuv, v8, utillinux, http-parser
 , pkgconfig, runCommand, which, libtool
 , version
 , sha256 ? null
@@ -51,7 +51,7 @@ in stdenv.mkDerivation {
   frameworks = [ "ApplicationServices" ];
 
   buildInputs = extraBuildInputs
-    ++ [ python which zlib libuv openssl ]
+    ++ [ python2 which zlib libuv openssl ]
     ++ optionals stdenv.isLinux [ utillinux http-parser ]
     ++ optionals stdenv.isDarwin [ pkgconfig libtool ];
   setupHook = ./setup-hook.sh;

@@ -5,7 +5,7 @@ let
   # if you bump version, update pkgs.tortoisehg too or ping maintainer
   version = "3.9.1";
   name = "mercurial-${version}";
-  inherit (python2Packages) curses docutils hg-git dulwich python;
+  inherit (python2Packages) docutils hg-git dulwich python;
 in
 
 stdenv.mkDerivation {
@@ -17,7 +17,6 @@ stdenv.mkDerivation {
   };
 
   inherit python; # pass it so that the same version can be used in hg2git
-  pythonPackages = [ curses ];
 
   buildInputs = [ python makeWrapper docutils unzip ];
 
@@ -39,7 +38,7 @@ stdenv.mkDerivation {
     ''
       for i in $(cd $out/bin && ls); do
         wrapProgram $out/bin/$i \
-          --prefix PYTHONPATH : "$(toPythonPath "$out ${curses}"):$(toPythonPath "$out ${hg-git}"):$(toPythonPath "$out ${dulwich}")" \
+          --prefix PYTHONPATH : "$(toPythonPath "$out ${hg-git}"):$(toPythonPath "$out ${dulwich}")" \
           $WRAP_TK
       done
 
