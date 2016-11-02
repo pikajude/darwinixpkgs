@@ -26,7 +26,7 @@ GEM
       thread_safe (~> 0.3.5)
       treetop (= 1.5.3)
     concurrent-ruby (1.0.2)
-    css_parser (1.4.5)
+    css_parser (1.4.6)
       addressable
     hashery (2.1.2)
     htmlentities (4.3.4)
@@ -84,4 +84,4 @@ DEPENDENCIES
   asciidoctor-pdf
 
 BUNDLED WITH
-   1.13.5
+   1.13.6

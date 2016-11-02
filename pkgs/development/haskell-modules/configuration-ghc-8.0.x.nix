@@ -65,4 +65,7 @@ self: super: {
   # https://github.com/nkaretnikov/titlecase/issues/6
   titlecase = doJailbreak super.titlecase;
 
+  # https://github.com/christian-marie/xxhash/issues/3
+  xxhash = doJailbreak super.xxhash;
+
 }

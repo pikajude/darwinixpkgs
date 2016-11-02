@@ -74,10 +74,10 @@
   css_parser = {
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "17gvn2i13jg5xqkmixihcgirxxgs3aqmmd2w5px327rf1qnrhpy1";
+      sha256 = "0zsldn0ihmzl7nqk4lww9h8ijv1zb3l8g92y7b4w0da2d6cnyjw8";
       type = "gem";
     };
-    version = "1.4.5";
+    version = "1.4.6";
   };
   hashery = {
     source = {
