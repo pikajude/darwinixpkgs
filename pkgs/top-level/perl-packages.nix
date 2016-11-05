@@ -394,14 +394,16 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
-  ArchiveCpio = buildPerlPackage {
-    name = "Archive-Cpio-0.09";
+  ArchiveCpio = buildPerlPackage rec {
+    name = "Archive-Cpio-0.10";
     src = fetchurl {
-      url = mirror://cpan/authors/id/P/PI/PIXEL/Archive-Cpio-0.09.tar.gz;
-      sha256 = "1cf8k5zjykdbc1mn8lixlkij6jklwn6divzyq2grycj3rpd36g5c";
+      url = "mirror://cpan/authors/id/P/PI/PIXEL/${name}.tar.gz";
+      sha256 = "246fb31669764e78336b2191134122e07c44f2d82dc4f37d552ab28f8668bed3";
     };
     meta = {
       description = "Module for manipulations of cpio archives";
+      # See https://rt.cpan.org/Public/Bug/Display.html?id=43597#txn-569710
+      license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
       platforms = stdenv.lib.platforms.linux;
     };
   };
@@ -8478,10 +8480,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   Moo = buildPerlPackage rec {
-    name = "Moo-2.002003";
+    name = "Moo-2.002005";
     src = fetchurl {
       url = "mirror://cpan/authors/id/H/HA/HAARG/${name}.tar.gz";
-      sha256 = "a18f287d7ddda1e9862bc31c44394f42db077e2d9b93ca71785ccfacbc2f2bcd";
+      sha256 = "8147f98a43f7beb808773202b05d3fba25d5fca018ad939d7e529f4d36d6dc68";
     };
     buildInputs = [ TestFatal ];
     propagatedBuildInputs = [ ClassMethodModifiers DevelGlobalDestruction ModuleRuntime RoleTiny ];
@@ -10978,10 +10980,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   RoleTiny = buildPerlPackage rec {
-    name = "Role-Tiny-2.000003";
+    name = "Role-Tiny-2.000005";
     src = fetchurl {
       url = "mirror://cpan/authors/id/H/HA/HAARG/${name}.tar.gz";
-      sha256 = "6e6c967e1154f290a40c9c60a762cc3b2ec5438107a4fbadddbe55a55b393434";
+      sha256 = "593a29b621e029bf0218d0154d5dfdf6ec502afc49adeeadae6afd0c70063115";
     };
     meta = {
       description = "Roles. Like a nouvelle cuisine portion size slice of Moose";

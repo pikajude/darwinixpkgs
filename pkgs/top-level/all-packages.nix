@@ -6,6 +6,7 @@
  * Hint: ### starts category names.
  */
 { system, bootStdenv, noSysDirs, config, crossSystem, platform, lib
+, nixpkgsFun
 , ... }:
 self: pkgs:
 
@@ -35,10 +36,9 @@ in
   newScope = extra: lib.callPackageWith (defaultScope // extra);
 
   # Override system. This is useful to build i686 packages on x86_64-linux.
-  forceSystem = system: kernel: (import ../..) {
+  forceSystem = system: kernel: nixpkgsFun {
     inherit system;
     platform = platform // { kernelArch = kernel; };
-    inherit bootStdenv noSysDirs config crossSystem;
   };
 
   # Used by wine, firefox with debugging version of Flash, ...
@@ -741,6 +741,8 @@ in
 
   corosync = callPackage ../servers/corosync { };
 
+  cowsay = callPackage ../tools/misc/cowsay { };
+
   cherrytree = callPackage ../applications/misc/cherrytree { };
 
   chntpw = callPackage ../tools/security/chntpw { };
@@ -770,6 +772,8 @@ in
   deis = callPackage ../development/tools/deis {};
 
   deisctl = callPackage ../development/tools/deisctl {};
+
+  devmem2 = callPackage ../os-specific/linux/devmem2 { };
 
   diagrams-builder = callPackage ../tools/graphics/diagrams-builder {
     inherit (haskellPackages) ghcWithPackages diagrams-builder;
@@ -866,7 +870,7 @@ in
 
   goa = callPackage ../development/tools/goa { };
 
-  gringo = callPackage ../tools/misc/gringo { };
+  clingo = callPackage ../tools/misc/clingo { };
 
   gti = callPackage ../tools/misc/gti { };
 
@@ -883,8 +887,6 @@ in
   long-shebang = callPackage ../misc/long-shebang {};
 
   mathics = pythonPackages.mathics;
-
-  mcrl = callPackage ../tools/misc/mcrl { };
 
   meson = callPackage ../development/tools/build-managers/meson { };
 
@@ -1133,8 +1135,6 @@ in
   };
 
   colormake = callPackage ../development/tools/build-managers/colormake { };
-
-  cowsay = callPackage ../tools/misc/cowsay { };
 
   cpuminer = callPackage ../tools/misc/cpuminer { };
 
@@ -1725,15 +1725,11 @@ in
 
   fuse-7z-ng = callPackage ../tools/filesystems/fuse-7z-ng { };
 
-  fuse-zip = callPackage ../tools/filesystems/fuse-zip { };
-
   exfat = callPackage ../tools/filesystems/exfat { };
 
   dos2unix = callPackage ../tools/text/dos2unix { };
 
   uni2ascii = callPackage ../tools/text/uni2ascii { };
-
-  g500-control = callPackage ../tools/misc/g500-control { };
 
   galculator = callPackage ../applications/misc/galculator {
     gtk = gtk3;
@@ -2243,7 +2239,8 @@ in
 
   jhead = callPackage ../tools/graphics/jhead { };
 
-  jing = callPackage ../tools/text/xml/jing { };
+  jing = self.jing-trang;
+  jing-trang = callPackage ../tools/text/xml/jing-trang { };
 
   jmespath = callPackage ../development/tools/jmespath { };
 
@@ -2433,15 +2430,36 @@ in
     libtool = darwin.cctools;
   };
 
+  nodejs = nodejs-6_x;
+
+  nodejs-slim = nodejs-slim-6_x;
+
   nodejs-4_x = callPackage ../development/web/nodejs/v4.nix {
     libtool = darwin.cctools;
+  };
+
+  nodejs-slim-4_x = callPackage ../development/web/nodejs/v4.nix {
+    libtool = darwin.cctools;
+    enableNpm = false;
   };
 
   nodejs-6_x = callPackage ../development/web/nodejs/v6.nix {
     libtool = darwin.cctools;
   };
 
-  nodejs = nodejs-6_x;
+  nodejs-slim-6_x = callPackage ../development/web/nodejs/v6.nix {
+    libtool = darwin.cctools;
+    enableNpm = false;
+  };
+
+  nodejs-7_x = callPackage ../development/web/nodejs/v7.nix {
+    libtool = darwin.cctools;
+  };
+
+  nodejs-slim-7_x = callPackage ../development/web/nodejs/v7.nix {
+    libtool = darwin.cctools;
+    enableNpm = false;
+  };
 
   nodePackages_6_x = callPackage ../development/node-packages/default-v6.nix {
     nodejs = pkgs.nodejs-6_x;
@@ -2451,7 +2469,7 @@ in
     nodejs = pkgs.nodejs-4_x;
   };
 
-  nodePackages = nodePackages_4_x;
+  nodePackages = nodePackages_6_x;
 
   # Can be used as a user shell
   nologin = shadow;
@@ -2811,7 +2829,9 @@ in
 
   netboot = callPackage ../tools/networking/netboot {};
 
-  netcat = callPackage ../tools/networking/netcat { };
+  netcat = netcat-openbsd;
+
+  netcat-gnu = callPackage ../tools/networking/netcat-gnu { };
 
   netcat-openbsd = callPackage ../tools/networking/netcat-openbsd { };
 
@@ -3207,6 +3227,8 @@ in
 
   pius = callPackage ../tools/security/pius { };
 
+  pixiewps = callPackage ../tools/networking/pixiewps {};
+
   pk2cmd = callPackage ../tools/misc/pk2cmd { };
 
   plantuml = callPackage ../tools/misc/plantuml { };
@@ -3400,6 +3422,8 @@ in
   rtmpdump_gnutls = rtmpdump.override { gnutlsSupport = true; opensslSupport = false; };
 
   reaverwps = callPackage ../tools/networking/reaver-wps {};
+
+  reaverwps-t6x = callPackage ../tools/networking/reaver-wps-t6x {};
 
   recordmydesktop = callPackage ../applications/video/recordmydesktop { };
 
@@ -3906,8 +3930,6 @@ in
 
   ttyrec = callPackage ../tools/misc/ttyrec { };
 
-  ttysnoop = callPackage ../os-specific/linux/ttysnoop {};
-
   ttylog = callPackage ../tools/misc/ttylog { };
 
   twitterBootstrap = callPackage ../development/web/twitter-bootstrap {};
@@ -4089,7 +4111,7 @@ in
 
   tradcpp = callPackage ../development/tools/tradcpp { };
 
-  trang = callPackage ../tools/text/xml/trang { };
+  trang = self.jing-trang;
 
   tre = callPackage ../development/libraries/tre { };
 
@@ -4249,9 +4271,7 @@ in
     # load into the Ben Nanonote
     gccCross =
       let
-        pkgsCross = (import ../..) {
-          inherit system;
-          inherit bootStdenv noSysDirs config;
+        pkgsCross = nixpkgsFun {
           # Ben Nanonote system
           crossSystem = {
             config = "mipsel-unknown-linux";
@@ -4428,8 +4448,6 @@ in
 
 
   ### DEVELOPMENT / COMPILERS
-
-  abc = callPackage ../development/compilers/abc/default.nix { };
 
   aldor = callPackage ../development/compilers/aldor { };
 
@@ -5473,7 +5491,7 @@ in
     glpk = null;
     suitesparse = null;
     jdk = null;
-    openblas = openblas;
+    openblas = if stdenv.isDarwin then openblasCompat else openblas;
   };
   octaveFull = (lowPrio (callPackage ../development/interpreters/octave {
     qt = qt4;
@@ -5672,8 +5690,6 @@ in
   sourceFromHead = callPackage ../build-support/source-from-head-fun.nix {};
 
   ecj = callPackage ../development/eclipse/ecj { };
-
-  jdtsdk = callPackage ../development/eclipse/jdt-sdk { };
 
   jruby = callPackage ../development/interpreters/jruby { };
 
@@ -6322,11 +6338,6 @@ in
 
   sauce-connect = callPackage ../development/tools/sauce-connect { };
 
-  # couldn't find the source yet
-  seleniumRCBin = callPackage ../development/tools/selenium/remote-control {
-    jre = jdk;
-  };
-
   selenium-server-standalone = callPackage ../development/tools/selenium/server { };
 
   selendroid = callPackage ../development/tools/selenium/selendroid { };
@@ -6637,8 +6648,6 @@ in
   };
 
   cl = callPackage ../development/libraries/cl { };
-
-  clanlib = callPackage ../development/libraries/clanlib { };
 
   classads = callPackage ../development/libraries/classads { };
 
@@ -7349,8 +7358,6 @@ in
 
   id3lib = callPackage ../development/libraries/id3lib { };
 
-  iksemel = callPackage ../development/libraries/iksemel { };
-
   ilbc = callPackage ../development/libraries/ilbc { };
 
   ilixi = callPackage ../development/libraries/ilixi { };
@@ -7408,10 +7415,6 @@ in
   jbigkit = callPackage ../development/libraries/jbigkit { };
 
   jemalloc = callPackage ../development/libraries/jemalloc { };
-
-  jetty_gwt = callPackage ../development/libraries/java/jetty-gwt { };
-
-  jetty_util = callPackage ../development/libraries/java/jetty-util { };
 
   jshon = callPackage ../development/tools/parsing/jshon { };
 
@@ -8470,8 +8473,6 @@ in
   ming = callPackage ../development/libraries/ming { };
 
   minizip = callPackage ../development/libraries/minizip { };
-
-  minmay = callPackage ../development/libraries/minmay { };
 
   miro = callPackage ../applications/video/miro {
     avahi = avahi.override {
@@ -10553,8 +10554,6 @@ in
   coredns = callPackage ../servers/dns/coredns { };
 
   cpufrequtils = callPackage ../os-specific/linux/cpufrequtils { };
-
-  cryopid = callPackage ../os-specific/linux/cryopid { };
 
   criu = callPackage ../os-specific/linux/criu { };
 
@@ -12679,8 +12678,6 @@ in
     scalaMode1 = callPackage ../applications/editors/emacs-modes/scala-mode/v1.nix { };
     scalaMode2 = callPackage ../applications/editors/emacs-modes/scala-mode/v2.nix { };
 
-    stratego = callPackage ../applications/editors/emacs-modes/stratego { };
-
     structuredHaskellMode = haskellPackages.structured-haskell-mode;
 
     sunriseCommander = callPackage ../applications/editors/emacs-modes/sunrise-commander { };
@@ -12758,6 +12755,8 @@ in
   };
 
   evopedia = callPackage ../applications/misc/evopedia { };
+
+  exercism = callPackage ../applications/misc/exercism { };
 
   gpg-mdp = callPackage ../applications/misc/gpg-mdp { };
 
@@ -13480,10 +13479,6 @@ in
   ladspaH = callPackage ../applications/audio/ladspa-sdk/ladspah.nix { };
 
   ladspaPlugins = callPackage ../applications/audio/ladspa-plugins {
-    fftw = fftwSinglePrec;
-  };
-
-  ladspaPlugins-git = callPackage ../applications/audio/ladspa-plugins/git.nix {
     fftw = fftwSinglePrec;
   };
 
@@ -15993,7 +15988,9 @@ in
 
   keen4 = callPackage ../games/keen4 { };
 
-  zeroad = callPackage ../games/0ad { };
+  zeroadPackages = callPackage ../games/0ad { };
+
+  zeroad = zeroadPackages.zeroad;
 
   ### DESKTOP ENVIRONMENTS
 
@@ -16338,8 +16335,6 @@ in
 
   paml = callPackage ../applications/science/biology/paml { };
 
-  pal2nal = callPackage ../applications/science/biology/pal2nal { };
-
   plink = callPackage ../applications/science/biology/plink/default.nix { };
 
   samtools = callPackage ../applications/science/biology/samtools/default.nix { };
@@ -16477,13 +16472,27 @@ in
 
   aspino = callPackage ../applications/science/logic/aspino {};
 
-  inherit (ocaml-ng.ocamlPackages_4_01_0) coq;
+  coq = callPackage ../applications/science/logic/coq {
+    inherit (ocamlPackages_4_01_0) ocaml findlib lablgtk;
+    camlp5 = ocamlPackages_4_01_0.camlp5_transitional;
+  };
 
-  inherit (ocamlPackages) coq_HEAD;
+  coq_HEAD = callPackage ../applications/science/logic/coq/HEAD.nix {
+    inherit (ocamlPackages) ocaml findlib lablgtk;
+    camlp5 = ocamlPackages.camlp5_transitional;
+  };
 
-  inherit (ocamlPackages) coq_8_5;
+  coq_8_5 = callPackage ../applications/science/logic/coq/8.5.nix {
+    inherit (ocamlPackages) ocaml findlib lablgtk;
+    camlp5 = ocamlPackages.camlp5_transitional;
+  };
 
-  inherit (ocaml-ng.ocamlPackages_3_12_1) coq_8_3;
+  coq_8_3 = callPackage ../applications/science/logic/coq/8.3.nix {
+    make = pkgs.gnumake3;
+    inherit (ocamlPackages_3_12_1) ocaml findlib;
+    camlp5 = ocamlPackages_3_12_1.camlp5_transitional;
+    lablgtk = ocamlPackages_3_12_1.lablgtk_2_14;
+  };
 
   mkCoqPackages_8_4 = self: let callPackage = newScope self; in {
 
