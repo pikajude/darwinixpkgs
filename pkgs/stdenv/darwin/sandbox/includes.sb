@@ -309,6 +309,7 @@
   (literal (sdk-path "/usr/include/odmodule/odtypes.h"))
   (literal (sdk-path "/usr/include/os/availability.h"))
   (literal (sdk-path "/usr/include/os/base.h"))
+  (literal (sdk-path "/usr/include/os/lock.h"))
   (literal (sdk-path "/usr/include/os/object.h"))
   (literal (sdk-path "/usr/include/os/trace.h"))
   (literal (sdk-path "/usr/include/paths.h"))

@@ -1,8 +1,5 @@
 { stdenv, lib, fetchurl, openssl, python2, zlib, v8, utillinux, http-parser, c-ares
 , pkgconfig, runCommand, which, libtool
-
-# apple frameworks
-, CoreServices, ApplicationServices, Carbon, Foundation
 }:
 
 let
@@ -52,8 +49,7 @@ in stdenv.mkDerivation {
 
   buildInputs = [ python2 which ]
     ++ (optional stdenv.isLinux utillinux)
-    ++ optionals stdenv.isDarwin [ pkgconfig openssl libtool CoreServices ApplicationServices Foundation zlib.out ];
-  propagatedBuildInputs = optionals stdenv.isDarwin [ Carbon ];
+    ++ optionals stdenv.isDarwin [ pkgconfig openssl libtool zlib.out ];
   setupHook = ./setup-hook.sh;
 
   frameworks = [ "ApplicationServices" "Foundation" ];

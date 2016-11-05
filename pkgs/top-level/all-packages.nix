@@ -2429,6 +2429,10 @@ in
 
   ninka = callPackage ../development/tools/misc/ninka { };
 
+  nodejs-0_10 = callPackage ../development/web/nodejs/v0_10.nix {
+    libtool = darwin.cctools;
+  };
+
   nodejs-4_x = callPackage ../development/web/nodejs/v4.nix {
     libtool = darwin.cctools;
   };
