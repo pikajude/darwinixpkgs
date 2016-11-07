@@ -1,4 +1,8 @@
-{ stdenv, fetchurl, unzip, curl, makeWrapper }:
+{ stdenv, fetchurl
+, makeWrapper, unzip, which
+
+# Versions 2.070.2 and up require a working dmd compiler to build:
+, bootstrapDmd }:
 
 stdenv.mkDerivation rec {
   name = "dmd-${version}";
@@ -9,7 +13,7 @@ stdenv.mkDerivation rec {
     sha256 = "1pbhxxf41v816j0aky3q2pcd8a6phy3363l7vr5r5pg8ps3gl701";
   };
 
-  buildInputs = [ unzip curl makeWrapper ];
+  nativeBuildInputs = [ bootstrapDmd makeWrapper unzip which ];
 
   postPatch = stdenv.lib.optionalString stdenv.isDarwin ''
       # Allow to use "clang++", commented in Makefile
@@ -25,7 +29,7 @@ stdenv.mkDerivation rec {
   # Buid and install are based on http://wiki.dlang.org/Building_DMD
   buildPhase = ''
       cd src/dmd
-      make -f posix.mak INSTALL_DIR=$out AUTO_BOOTSTRAP=1
+      make -f posix.mak INSTALL_DIR=$out
       export DMD=$PWD/dmd
       cd ../druntime
       make -f posix.mak INSTALL_DIR=$out DMD=$DMD
