@@ -1067,7 +1067,7 @@ in {
       license = licenses.free;
     };
   } else null;
-
+  
   funcsigs = buildPythonPackage rec {
     name = "funcsigs-1.0.2";
 
@@ -4091,12 +4091,14 @@ in {
 
     buildInputs = with self; [ requests2 six pytest ];
 
+    # No tests distributed. https://github.com/cablehead/python-consul/issues/133
+    doCheck = false;
+
     meta = {
       description = "Python client for Consul (http://www.consul.io/)";
       homepage = https://github.com/cablehead/python-consul;
       license = licenses.mit;
       maintainers = with maintainers; [ desiderius ];
-      broken = true;
     };
   });
 
@@ -6072,14 +6074,22 @@ in {
 
   docker = buildPythonPackage rec {
     name = "docker-py-${version}";
-    version = "1.9.0";
+    version = "1.10.6";
+    disabled = isPy3k;
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/d/docker-py/${name}.tar.gz";
-      sha256 = "0zkdgz6akzfdda29y4bwa444r0sr2py5pwvvh6bnsy25lwabkikd";
+      sha256 = "05f49f6hnl7npmi7kigg0ibqk8s3fhzx1ivvz1kqvlv4ay3paajc";
     };
 
-    propagatedBuildInputs = with self; [ six requests2 websocket_client ipaddress backports_ssl_match_hostname ];
+    propagatedBuildInputs = with self; [
+      six
+      requests2
+      websocket_client
+      ipaddress
+      backports_ssl_match_hostname
+      docker_pycreds
+    ];
 
     # Version conflict
     doCheck = false;
@@ -6104,6 +6114,28 @@ in {
     meta = {
       description = "Functionality needed to operate the pseudo-tty (PTY) allocated to a docker container";
       homepage = https://github.com/d11wtq/dockerpty;
+      license = licenses.asl20;
+    };
+  };
+
+  docker_pycreds = buildPythonPackage rec {
+    name = "docker-pycreds-${version}";
+    version = "0.2.1";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/d/docker-pycreds/${name}.tar.gz";
+      sha256 = "0j3k5wk3bww5y0f2rvgzsin0q98k0i9j308vpsmxidw0y8n3m0wk";
+    };
+
+    doCheck = false; # require docker-credential-helpers binaries
+
+    propagatedBuildInputs = with self; [
+      six
+    ];
+
+    meta = {
+      description = "Python bindings for the docker credentials store API.";
+      homepage = https://github.com/shin-/dockerpy-creds;
       license = licenses.asl20;
     };
   };
@@ -7136,16 +7168,16 @@ in {
   };
 
   git-up = buildPythonPackage rec {
-    version = "1.4.1";
+    version = "1.4.2";
     name = "git-up-${version}";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/g/git-up/${name}.zip";
-      sha256 = "1nsdzjnla0926fzfsqnwyzg3f7g253n8lk4wgw8nj2rv0awbdmas";
+      sha256 = "121ia5gyjy7js6fbsx9z98j2qpq7rzwpsj8gnfvsbz2d69g0vl7q";
     };
 
     buildInputs = with self; [ pkgs.git nose ];
-    propagatedBuildInputs = with self; [ colorama docopt GitPython six termcolor ];
+    propagatedBuildInputs = with self; [ click colorama docopt GitPython six termcolor ];
 
     # git fails to run as it cannot detect the email address, so we set it
     # $HOME is by default not a valid dir, so we have to set that too
@@ -7429,6 +7461,44 @@ in {
       maintainers = with maintainers; [ goibhniu ];
     };
   };
+
+  hsaudiotag = buildPythonPackage (rec {
+    name = "hsaudiotag-1.1.1";
+    disabled = isPy3k;
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/h/hsaudiotag/${name}.tar.gz";
+      sha256 = "15hgm128p8nysfi0jb127awga3vlj0iw82l50swjpvdh01m7rda8";
+    };
+
+    # no tests
+    doCheck = false;
+
+    meta = {
+      description = "A pure Python library that lets one to read metadata from media files";
+      homepage = http://hg.hardcoded.net/hsaudiotag/;
+      license = licenses.bsd3;
+    };
+  });
+
+  hsaudiotag3k = buildPythonPackage (rec {
+    name = "hsaudiotag3k-1.1.3";
+    disabled = !isPy3k;
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/h/hsaudiotag3k/${name}.tar.gz";
+      sha256 = "0bv5k5594byr2bmhh77xv10fkdpckcmxg3w380yp30aqf83rcsx3";
+    };
+
+    # no tests
+    doCheck = false;
+
+    meta = {
+      description = "A pure Python library that lets one to read metadata from media files";
+      homepage = http://hg.hardcoded.net/hsaudiotag/;
+      license = licenses.bsd3;
+    };
+  });
 
   httpauth = buildPythonPackage rec {
     version = "0.3";
@@ -12349,6 +12419,9 @@ in {
     buildInputs = with self; [ flake8 pytest flaky ];
     propagatedBuildInputs = with self; ([ uncompyle6 ] ++ optionals isPy27 [ enum34  ]);
 
+    # Fails randomly in tests/cover/test_conjecture_engine.py::test_interleaving_engines.
+    doCheck = false;
+
     # https://github.com/DRMacIver/hypothesis/issues/300
     checkPhase = ''
       ${python.interpreter} -m pytest tests/cover
@@ -14342,7 +14415,7 @@ in {
       broken = true;
     };
   };
-
+  
   mock = buildPythonPackage (rec {
     name = "mock-2.0.0";
 
@@ -16307,6 +16380,27 @@ in {
       license = licenses.bsd3;
 
       maintainers = [ ];
+    };
+  });
+
+  plyvel = buildPythonPackage (rec {
+    name = "plyvel-0.9";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/p/plyvel/${name}.tar.gz";
+      sha256 = "1scq75qyks9vmjd19bx57f2y60mkdr44ajvb12p3cjg439l96zaq";
+    };
+
+    buildInputs = with self; [ pkgs.leveldb ]
+                            ++ optional isPy3k pytest;
+
+    # no tests for python2
+    doCheck = isPy3k;
+
+    meta = {
+      description = "Fast and feature-rich Python interface to LevelDB";
+      homepage = https://github.com/wbolster/plyvel;
+      license = licenses.bsd3;
     };
   });
 
@@ -18288,10 +18382,10 @@ in {
 
   pgcli = buildPythonPackage rec {
     name = "pgcli-${version}";
-    version = "1.1.0";
+    version = "1.3.1";
 
     src = pkgs.fetchFromGitHub {
-      sha256 = "155avdckg93w3rmx0mz17wi6vcaba3lcppv9qwa6xlxfds9yzvlq";
+      sha256 = "18i5pwli36d5d0xh1d7dc80iq85w7vcalphg8hipjclhg2h72bp0";
       rev = "v${version}";
       repo = "pgcli";
       owner = "dbcli";
@@ -18326,10 +18420,10 @@ in {
 
   pgspecial = buildPythonPackage rec {
     name = "pgspecial-${version}";
-    version = "1.5.0";
+    version = "1.6.0";
 
     src = pkgs.fetchurl {
-      sha256 = "14bqlwcnbyn3ikzg5wr7iqrlfwbcy5vaa5n1mmgg305yal34lk6d";
+      sha256 = "09ilalpgcl86f79648qsjm87dqi97bc70y51nrf0b3i1py3mhs2m";
       url = "mirror://pypi/p/pgspecial/${name}.tar.gz";
     };
 
@@ -18633,11 +18727,12 @@ in {
   pystringtemplate = callPackage ../development/python-modules/stringtemplate { };
 
   pillow = buildPythonPackage rec {
-    name = "Pillow-3.3.1";
+    name = "Pillow-${version}";
+    version = "3.4.2";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/P/Pillow/${name}.tar.gz";
-      sha256 = "3491ca65d9fdba4db094ab3f8e17170425e7dd670e507921a665a1975d1b3df1";
+      sha256 = "0ee9975c05602e755ff5000232e0335ba30d507f6261922a658ee11b1cec36d1";
     };
 
     # Check is disabled because of assertion errors, see
@@ -18672,18 +18767,14 @@ in {
 
     meta = {
       homepage = "https://python-pillow.github.io/";
-
       description = "Fork of The Python Imaging Library (PIL)";
-
       longDescription = ''
         The Python Imaging Library (PIL) adds image processing
         capabilities to your Python interpreter.  This library
         supports many file formats, and provides powerful image
         processing and graphics capabilities.
       '';
-
       license = "http://www.pythonware.com/products/pil/license.htm";
-
       maintainers = with maintainers; [ goibhniu prikhi ];
     };
   };
@@ -23152,11 +23243,11 @@ in {
   };
 
   sqlmap = buildPythonPackage {
-    name = "sqlmap-1.0.9.post5";
+    name = "sqlmap-1.0.11";
 
     src = pkgs.fetchurl {
-      url = "mirror://pypi/s/sqlmap/sqlmap-1.0.9.post5.tar.gz";
-      sha256 = "0g8sjky8anrmcisc697b5qndp88qmay35kng9sz9x46wd3agm9pa";
+      url = "mirror://pypi/s/sqlmap/sqlmap-1.0.11.tar.gz";
+      sha256 = "1x4amyjqnd9j5g2kp9nvg8pr5sqzbhr8gd0m6d671bshvgj568vr";
     };
 
     meta = with pkgs.stdenv.lib; {
@@ -24320,11 +24411,11 @@ in {
 
   sqlparse = buildPythonPackage rec {
     name = "sqlparse-${version}";
-    version = "0.1.19";
+    version = "0.2.2";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/s/sqlparse/${name}.tar.gz";
-      sha256 = "1s2fvaxgh9kqzrd6iwy5h7i61ckn05plx9np13zby93z3hdbx5nq";
+      sha256 = "08dszglfhf1c4rwqinkbp4x55v0b90rgm1fxc1l4dy965imjjinl";
     };
 
     buildInputs = with self; [ pytest ];
@@ -30307,6 +30398,24 @@ in {
     };
   };
 
+  send2trash = buildPythonPackage (rec {
+    name = "Send2Trash-1.3.0";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/S/Send2Trash/${name}.tar.gz";
+      sha256 = "1zjq5ki02l0vl4f1xymsnqyxipx6q81a435p46db07l3mqg4dx1k";
+    };
+
+    # no tests
+    doCheck = false;
+
+    meta = {
+      description = "Send file to trash natively under Mac OS X, Windows and Linux";
+      homepage = https://github.com/hsoft/send2trash;
+      license = licenses.bsd3;
+    };
+  });
+
   sigtools = buildPythonPackage rec {
     name = "sigtools-${version}";
     version = "1.1a3";
@@ -30393,15 +30502,19 @@ in {
 
   tensorflowNoGpuSupport = buildPythonPackage rec {
     name = "tensorflow";
-    version = "0.9.0";
+    version = "0.10.0";
     format = "wheel";
 
     src = pkgs.fetchurl {
-      url = "https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-${version}-cp27-none-linux_x86_64.whl";
-      sha256 = "15v7iyry8bmp5wcc1rr4bkp80f3887rl99zqf8pys5bad4gldbkh";
+      url = if stdenv.isDarwin then
+        "https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-${version}-py2-none-any.whl" else
+        "https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-${version}-cp27-none-linux_x86_64.whl";
+      sha256 = if stdenv.isDarwin then
+        "1gjybh3j3rn34bzhsxsfdbqgsr4jh50qyx2wqywvcb24fkvy40j9" else
+        "0g05pa4z6kdy0giz7hjgjgwf4zzr5l8cf1zh247ymixlikn3fnpx";
     };
 
-    propagatedBuildInputs = with self; [ numpy six protobuf3_0_0b2 pkgs.swig ];
+    propagatedBuildInputs = with self; [ numpy six protobuf3_0_0b2 pkgs.swig mock];
 
     preFixup = ''
       RPATH="${stdenv.lib.makeLibraryPath [ pkgs.gcc.cc.lib pkgs.zlib ]}"
@@ -30414,6 +30527,7 @@ in {
       description = "TensorFlow helps the tensors flow (no gpu support)";
       homepage = http://tensorflow.org;
       license = licenses.asl20;
+      platforms = with platforms; linux ++ darwin;
     };
   };
 

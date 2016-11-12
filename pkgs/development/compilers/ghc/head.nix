@@ -6,9 +6,9 @@ let
   inherit (bootPkgs) ghc;
 
 in stdenv.mkDerivation rec {
-  version = "8.1.20161010";
+  version = "8.1.20161109";
   name = "ghc-${version}";
-  rev = "a6111b8cc14a5dc019e2613f6f634dec4eb57a8a";
+  rev = "2e8463b232054b788b73e6551947a9434aa76009";
 
   src = fetchgit {
     url = "git://git.haskell.org/ghc.git";
@@ -17,7 +17,7 @@ in stdenv.mkDerivation rec {
   };
 
   patches = [
-    ./ghc-8.x-dont-pass-linker-flags-via-response-files.patch   # https://github.com/NixOS/nixpkgs/issues/10752
+    ./ghc-HEAD-dont-pass-linker-flags-via-response-files.patch   # https://github.com/NixOS/nixpkgs/issues/10752
   ];
 
   postUnpack = ''
