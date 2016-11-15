@@ -46,10 +46,13 @@ in
 
   callPackage_i686 = lib.callPackageWith (pkgsi686Linux // pkgsi686Linux.xorg);
 
-  forceNativeDrv = drv : if crossSystem == null then drv else
-    (drv // { crossDrv = drv.nativeDrv; });
-
-  stdenvCross = lowPrio (makeStdenvCross defaultStdenv crossSystem binutilsCross gccCrossStageFinal);
+  forceNativeDrv = drv:
+    # Even when cross compiling, some packages come from the stdenv's
+    # bootstrapping package set. Those packages are only built for the native
+    # platform.
+    if crossSystem != null && drv ? crossDrv
+    then drv // { crossDrv = drv.nativeDrv; }
+    else drv;
 
   # A stdenv capable of building 32-bit binaries.  On x86_64-linux,
   # it uses GCC compiled with multilib support; on i686-linux, it's
@@ -278,6 +281,8 @@ in
   nixBufferBuilders = import ../build-support/emacs/buffer.nix { inherit (pkgs) lib writeText; inherit (emacsPackagesNg) inherit-local; };
 
   pathsFromGraph = ../build-support/kernel/paths-from-graph.pl;
+
+  singularity-tools = callPackage ../build-support/singularity-tools { };
 
   srcOnly = args: callPackage ../build-support/src-only args;
 
@@ -823,6 +828,8 @@ in
   duperemove = callPackage ../tools/filesystems/duperemove { };
 
   dynamic-colors = callPackage ../tools/misc/dynamic-colors { };
+
+  ecasound = callPackage ../applications/audio/ecasound { };
 
   edac-utils = callPackage ../os-specific/linux/edac-utils { };
 
@@ -2373,6 +2380,8 @@ in
 
   makebootfat = callPackage ../tools/misc/makebootfat { };
 
+  libmarble-ssrf = qt55.callPackage ../development/libraries/libmarble-ssrf { };
+
   matrix-synapse = callPackage ../servers/matrix-synapse { };
 
   memtester = callPackage ../tools/system/memtester { };
@@ -3724,6 +3733,11 @@ in
   ssldump = callPackage ../tools/networking/ssldump { };
 
   sstp = callPackage ../tools/networking/sstp {};
+
+  subsurface =
+    qt55.callPackage ../applications/misc/subsurface {
+        libgit2 = pkgs.libgit2_0_23;
+    };
 
   sudo = callPackage ../tools/security/sudo { };
 
@@ -5559,7 +5573,13 @@ in
   # These are for compatibility and should not be used inside Nixpkgs.
   pythonFull = python.override{x11Support=true;};
   python2Full = python2.override{x11Support=true;};
+  python26Full = python26.override{includeModules=true;self=python26Full;};
+  python27Full = python27.override{x11Support=true;};
   python3Full = python3.override{x11Support=true;};
+  python33Full = python33.override{x11Support=true;};
+  python34Full = python34.override{x11Support=true;};
+  python35Full = python35.override{x11Support=true;};
+  python36Full = python36.override{x11Support=true;};
 
   # pythonPackages further below, but assigned here because they need to be in sync
   pythonPackages = python2Packages;
@@ -7037,6 +7057,7 @@ in
   );
 
   libgit2_0_21 = callPackage ../development/libraries/git2/0.21.nix { };
+  libgit2_0_23 = callPackage ../development/libraries/git2/0.23.nix { };
 
   gle = callPackage ../development/libraries/gle { };
 
@@ -7672,6 +7693,8 @@ in
   libdigidocpp = callPackage ../development/libraries/libdigidocpp { };
 
   libdiscid = callPackage ../development/libraries/libdiscid { };
+
+  libdivecomputer = callPackage ../development/libraries/libdivecomputer { };
 
   libdivsufsort = callPackage ../development/libraries/libdivsufsort { };
 
@@ -9531,11 +9554,6 @@ in
   x265 = callPackage ../development/libraries/x265 { };
 
   xapian = callPackage ../development/libraries/xapian { };
-
-  xapianBindings = callPackage ../development/libraries/xapian/bindings {  # TODO perl php Java, tcl, C#, python
-    php = php56;
-    sphinx = pythonPackages.sphinx;
-  };
 
   xapian-omega = callPackage ../development/libraries/xapian/tools/omega {
     libmagic = file;
@@ -13013,6 +13031,8 @@ in
 
   get_iplayer = callPackage ../applications/misc/get_iplayer {};
 
+  getxbook = callPackage ../applications/misc/getxbook {};
+
   gimp_2_8 = callPackage ../applications/graphics/gimp/2.8.nix {
     inherit (gnome2) libart_lgpl;
     webkit = null;
@@ -13269,6 +13289,8 @@ in
   hyperterm = self.hyper;
 
   slack = callPackage ../applications/networking/instant-messengers/slack { };
+
+  singularity = callPackage ../applications/virtualization/singularity { };
 
   spectrwm = callPackage ../applications/window-managers/spectrwm { };
 
@@ -14170,6 +14192,8 @@ in
     gtksharp = gtk-sharp-2_0;
   };
 
+  plover = callPackage ../applications/misc/plover { };
+
   plugin-torture = callPackage ../applications/audio/plugin-torture { };
 
   pmenu = callPackage ../applications/misc/pmenu { };
@@ -14622,6 +14646,8 @@ in
   src = callPackage ../applications/version-management/src/default.nix {
     git = gitMinimal;
   };
+
+  ssr = callPackage ../applications/audio/soundscape-renderer {};
 
   stalonetray = callPackage ../applications/window-managers/stalonetray {};
 
@@ -16364,6 +16390,8 @@ in
   paml = callPackage ../applications/science/biology/paml { };
 
   plink = callPackage ../applications/science/biology/plink/default.nix { };
+  
+  plink-ng = callPackage ../applications/science/biology/plink-ng/default.nix { };
 
   samtools = callPackage ../applications/science/biology/samtools/default.nix { };
 
