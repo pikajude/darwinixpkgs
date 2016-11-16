@@ -4307,11 +4307,11 @@ in {
   cryptography = buildPythonPackage rec {
     # also bump cryptography_vectors
     name = "cryptography-${version}";
-    version = "1.5.1";
+    version = "1.5.3";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/c/cryptography/${name}.tar.gz";
-      sha256 = "1d8da8xbx51m4dqpy51crvcmjakmfcxpx14hh2izppifrh1fs35d";
+      sha256 = "cf82ddac919b587f5e44247579b433224cc2e03332d2ea4d89aa70d7e6b64ae5";
     };
 
     buildInputs = [ pkgs.openssl self.pretend self.cryptography_vectors
@@ -4328,11 +4328,11 @@ in {
   cryptography_vectors = buildPythonPackage rec {
       # also bump cryptography
     name = "cryptography_vectors-${version}";
-    version = "1.5.1";
+    version = "1.5.3";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/c/cryptography-vectors/${name}.tar.gz";
-      sha256 = "1z74mqwlvxlxz6b1xlflphqhgby1k77shl94zw5ncw3x3cqwbccl";
+      sha256 = "e513fecd146a844da19022abd1b4dfbf3335c1941464988f501d7a16f30acdae";
     };
   };
 
@@ -14883,6 +14883,22 @@ in {
     };
   };
 
+  pint = buildPythonPackage rec {
+    name = "pint-${version}";
+    version = "0.7.2";
+
+    meta = {
+      description = "Physical quantities module";
+      license = licenses.bsd3;
+      homepage = "https://github.com/hgrecco/pint/";
+    };
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/p/pint/Pint-${version}.tar.gz";
+      sha256 = "1bbp5s34gcb9il2wyz4spznshahwbjvwi5bhjm7bnxk358spvf9q";
+    };
+  };
+
   pygal = buildPythonPackage rec {
     version = "2.0.10";
     name = "pygal-${version}";
@@ -15718,16 +15734,13 @@ in {
   numba = callPackage ../development/python-modules/numba { };
 
   numexpr = buildPythonPackage rec {
-    version = "2.5.2";
+    version = "2.6.1";
     name = "numexpr-${version}";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/n/numexpr/${name}.tar.gz";
-      sha256 = "0kb6549fwfxpc4qy3l5liad2mx99dys77c6w1y2rm32wyrf5k1by";
+      sha256 = "db2ee72f277b23c82d204189290ea4b792f9bd5b9d67744b045f8c2a8e929a06";
     };
-
-    # Tests fail with python 3. https://github.com/pydata/numexpr/issues/177
-    # doCheck = !isPy3k;
 
     propagatedBuildInputs = with self; [ numpy ];
 
