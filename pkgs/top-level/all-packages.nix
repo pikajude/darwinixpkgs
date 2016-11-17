@@ -4861,12 +4861,7 @@ in
 
   # Haskell and GHC
 
-  haskell = let haskell' = callPackage ./haskell-packages.nix { };
-    in haskell' // {
-      packages = lib.mapAttrs (compiler: hps: hps.override {
-        overrides = config.haskellPackageOverrides or (self: super: {});
-      }) haskell'.packages;
-    };
+  haskell = callPackage ./haskell-packages.nix { inherit crossSystem; };
 
   haskellPackages = haskell.packages.ghc801;
 

@@ -1041,14 +1041,6 @@ self: super: {
   # https://github.com/pontarius/pontarius-xmpp/issues/105
   pontarius-xmpp = dontCheck super.pontarius-xmpp;
 
-  # https://github.com/jaspervdj/digestive-functors/issues/132
-  # fixed, but not on hackage
-  digestive-functors-blaze = appendPatch super.digestive-functors-blaze (pkgs.fetchpatch {
-    url = "https://github.com/jaspervdj/digestive-functors/commit/64e8bce9407ec840fd82c09b8c4d119e78989a0b.patch";
-    sha256 = "0lh2hx4nn3fvfb7j4sz9jsxaycd4fdxf2lfmwxmmgyd38rv7hswz";
-    stripLen = 1;
-  });
-
   digestive-functors = doJailbreak super.digestive-functors;
 
   # https://github.com/fpco/store/issues/77

@@ -10,7 +10,7 @@ let
     inherit sha256;
   };
 
-  compiler-rt_src = fetch "compiler-rt" "00ljgkjcds0z2z96zv02x39wryj902q29i895xixg60hd0909qra";
+  compiler-rt_src = fetch "compiler-rt" "16m5g0hf8yg9npnw25j2a86g34nsvk9rsm3c84gbch2prm7j5rg0";
   clang-tools-extra_src = fetch "clang-tools-extra" "052zg0h5vbmxnh2ikc743rw3649f112dfyn8hg39x6cfxi3fqyjv";
 
   self = {
