@@ -8,6 +8,7 @@
 , pythonPackages
 , rubySupport ? true, ruby
 , tclSupport ? true, tcl
+, useCustomWcWidth ? true
 , extraBuildInputs ? [] }:
 
 assert guileSupport -> guile != null;
@@ -18,7 +19,13 @@ assert tclSupport -> tcl != null;
 
 let
   inherit (pythonPackages) python pycrypto pync;
+  extraSrc = fetchurl {
+    url = "https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c";
+    sha256 = "0g31j1w5800fmmfddm28z60xhvdpyq9cnpxs0n4s5iz0z73iyrkf";
+  };
 in
+
+  with stdenv.lib;
 
 stdenv.mkDerivation rec {
   version = "1.6";
@@ -42,6 +49,11 @@ stdenv.mkDerivation rec {
     ++ optional (!perlSupport)  "-DENABLE_PERL=OFF"
     ++ optional (!rubySupport)  "-DENABLE_RUBY=OFF"
     ++ optional (!tclSupport)   "-DENABLE_TCL=OFF";
+
+  patches = optional useCustomWcWidth ./wcwidth.patch;
+  postPatch = optionalString useCustomWcWidth ''
+    cp ${extraSrc} src/core/wcwidth.c
+  '';
 
   buildInputs = with stdenv.lib; [
       ncurses python openssl aspell gnutls zlib curl pkgconfig

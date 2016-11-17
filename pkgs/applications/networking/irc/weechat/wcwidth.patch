@@ -1,0 +1,37 @@
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index c290380..512d3cd 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -20,7 +20,7 @@
+ #
+ 
+ set(LIB_CORE_SRC
+-weechat.c weechat.h
++weechat.c weechat.h wcwidth.c
+ wee-arraylist.c wee-arraylist.h
+ wee-backtrace.c wee-backtrace.h
+ wee-command.c wee-command.h
+diff --git a/src/core/wee-utf8.c b/src/core/wee-utf8.c
+index bcff234..32d22b4 100644
+--- a/src/core/wee-utf8.c
++++ b/src/core/wee-utf8.c
+@@ -518,7 +518,7 @@ utf8_strlen_screen (const char *string)
+ 
+     if (mbstowcs (ptr_wstring, string, num_char) != (size_t)(-1))
+     {
+-        length = wcswidth (ptr_wstring, num_char);
++        length = mk_wcswidth (ptr_wstring, num_char);
+         /*
+          * if the char is non-printable, wcswidth returns -1
+          * (for example the length of the snowman without snow (U+26C4) == -1)
+diff --git a/src/core/wee-utf8.h b/src/core/wee-utf8.h
+index 2939128..aaa45a3 100644
+--- a/src/core/wee-utf8.h
++++ b/src/core/wee-utf8.h
+@@ -52,4 +52,6 @@ extern int utf8_real_pos (const char *string, int pos);
+ extern int utf8_pos (const char *string, int real_pos);
+ extern char *utf8_strndup (const char *string, int length);
+ 
++int mk_wcswidth(const wchar_t*, size_t);
++
+ #endif /* WEECHAT_UTF8_H */
