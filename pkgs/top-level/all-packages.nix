@@ -791,6 +791,8 @@ in
 
   daemontools = callPackage ../tools/admin/daemontools { };
 
+  dante = callPackage ../servers/dante { };
+
   datamash = callPackage ../tools/misc/datamash { };
 
   datefudge = callPackage ../tools/system/datefudge { };
@@ -920,6 +922,7 @@ in
 
   long-shebang = callPackage ../misc/long-shebang {};
 
+  magic-wormhole = callPackage ../tools/misc/magic-wormhole {};
   mathics = pythonPackages.mathics;
 
   meson = callPackage ../development/tools/build-managers/meson { };
@@ -5218,6 +5221,7 @@ in
   rustfmt = callPackage ../development/tools/rust/rustfmt { };
   rustracer = callPackage ../development/tools/rust/racer { };
   rustracerd = callPackage ../development/tools/rust/racerd { };
+  rust-bindgen = callPackage ../development/tools/rust/bindgen { };
 
   sbclBootstrap = callPackage ../development/compilers/sbcl/bootstrap.nix {};
   sbcl = callPackage ../development/compilers/sbcl {};
@@ -5528,7 +5532,7 @@ in
   mesos = callPackage ../applications/networking/cluster/mesos {
     sasl = cyrus_sasl;
     inherit (pythonPackages) python boto setuptools wrapPython;
-    pythonProtobuf = pythonPackages.protobuf2_5;
+    pythonProtobuf = pythonPackages.protobuf2_6;
     perf = linuxPackages.perf;
   };
 
@@ -5704,12 +5708,12 @@ in
 
   spark = callPackage ../applications/networking/cluster/spark { };
 
-  spidermonkey = callPackage ../development/interpreters/spidermonkey { };
-  spidermonkey_1_8_0rc1 = callPackage ../development/interpreters/spidermonkey/1.8.0-rc1.nix { };
-  spidermonkey_185 = callPackage ../development/interpreters/spidermonkey/185-1.0.0.nix { };
-  spidermonkey_17 = callPackage ../development/interpreters/spidermonkey/17.0.nix { };
-  spidermonkey_24 = callPackage ../development/interpreters/spidermonkey/24.2.nix { };
-  spidermonkey_31 = callPackage ../development/interpreters/spidermonkey/31.5.nix { };
+  spidermonkey_1_8_5 = callPackage ../development/interpreters/spidermonkey/1.8.5.nix { };
+  spidermonkey_17 = callPackage ../development/interpreters/spidermonkey/17.nix { };
+  spidermonkey_24 = callPackage ../development/interpreters/spidermonkey/24.nix { };
+  spidermonkey_31 = callPackage ../development/interpreters/spidermonkey/31.nix { };
+  spidermonkey_38 = callPackage ../development/interpreters/spidermonkey/38.nix { };
+  spidermonkey = spidermonkey_31;
 
   supercollider = callPackage ../development/interpreters/supercollider {
     fftw = fftwSinglePrec;
@@ -7447,6 +7451,9 @@ in
   iml = callPackage ../development/libraries/iml { };
 
   imlib2 = callPackage ../development/libraries/imlib2 { };
+  imlib2-nox = imlib2.override {
+    x11Support = false;
+  };
 
   imlibsetroot = callPackage ../applications/graphics/imlibsetroot { libXinerama = xorg.libXinerama; } ;
 
@@ -8848,9 +8855,7 @@ in
 
   polarssl = mbedtls;
 
-  polkit = callPackage ../development/libraries/polkit {
-    spidermonkey = spidermonkey_17;
-  };
+  polkit = callPackage ../development/libraries/polkit { };
 
   polkit_qt4 = callPackage ../development/libraries/polkit-qt-1/qt-4.nix { };
 
@@ -9775,10 +9780,6 @@ in
 
   saxonb = callPackage ../development/libraries/java/saxon/default8.nix { };
 
-  sharedobjects = callPackage ../development/libraries/java/shared-objects {
-    stdenv = overrideInStdenv stdenv [gnumake380];
-  };
-
   smack = callPackage ../development/libraries/java/smack { };
 
   swt = callPackage ../development/libraries/java/swt {
@@ -10007,7 +10008,7 @@ in
   charybdis = callPackage ../servers/irc/charybdis {};
 
   couchdb = callPackage ../servers/http/couchdb {
-    spidermonkey = spidermonkey_185;
+    spidermonkey = spidermonkey_1_8_5;
     python = python27;
     sphinx = python27Packages.sphinx;
     erlang = erlangR16;
@@ -10110,9 +10111,7 @@ in
   mattermost = callPackage ../servers/mattermost { };
   matterircd = callPackage ../servers/mattermost/matterircd.nix { };
 
-  mediatomb = callPackage ../servers/mediatomb {
-    spidermonkey = spidermonkey_185;
-  };
+  mediatomb = callPackage ../servers/mediatomb { };
 
   memcached = callPackage ../servers/memcached {};
 
@@ -10328,7 +10327,8 @@ in
     postgresql92
     postgresql93
     postgresql94
-    postgresql95;
+    postgresql95
+    postgresql96;
 
   postgresql_jdbc = callPackage ../servers/sql/postgresql/jdbc { };
 
@@ -11803,6 +11803,8 @@ in
   gnome_user_docs = callPackage ../data/documentation/gnome-user-docs { };
 
   inherit (gnome3) gsettings_desktop_schemas;
+
+  go-font = callPackage ../data/fonts/go-font { };
 
   gyre-fonts = callPackage ../data/fonts/gyre {};
 
@@ -13343,6 +13345,10 @@ in
   hyper = callPackage ../applications/misc/hyper { inherit (gnome2) GConf; };
   hyperterm = self.hyper;
 
+  jackline = callPackage ../applications/networking/instant-messengers/jackline {
+    ocamlPackages = ocaml-ng.ocamlPackages_4_02;
+  };
+
   slack = callPackage ../applications/networking/instant-messengers/slack { };
 
   singularity = callPackage ../applications/virtualization/singularity { };
@@ -14180,6 +14186,8 @@ in
   photoqt = qt5.callPackage ../applications/graphics/photoqt { };
 
   phototonic = qt5.callPackage ../applications/graphics/phototonic { };
+
+  phrasendrescher = callPackage ../tools/security/phrasendrescher { };
 
   phwmon = callPackage ../applications/misc/phwmon { };
 
@@ -15113,13 +15121,15 @@ in
   # Version without X11
   w3m-nox = w3m.override {
     x11Support = false;
+    imlib2 = imlib2-nox;
   };
 
   # Version for batch text processing, not a good browser
   w3m-batch = w3m.override {
     graphicsSupport = false;
-    x11Support = false;
     mouseSupport = false;
+    x11Support = false;
+    imlib2 = imlib2-nox;
   };
 
   weechat = callPackage ../applications/networking/irc/weechat { };
@@ -17165,7 +17175,7 @@ in
 
   nixops = callPackage ../tools/package-management/nixops { };
 
-  nixopsUnstable = nixops;# callPackage ../tools/package-management/nixops/unstable.nix { };
+  nixopsUnstable = callPackage ../tools/package-management/nixops/unstable.nix { };
 
   nixui = callPackage ../tools/package-management/nixui { node_webkit = nwjs_0_12; };
 

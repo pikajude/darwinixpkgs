@@ -48,6 +48,7 @@
   aske = "Kirill Boltaev <aske@fmap.me>";
   asppsa = "Alastair Pharo <asppsa@gmail.com>";
   astsmtl = "Alexander Tsamutali <astsmtl@yandex.ru>";
+  asymmetric = "Lorenzo Manacorda <lorenzo@mailbox.org>";
   aszlig = "aszlig <aszlig@redmoonstudios.org>";
   auntie = "Jonathan Glines <auntieNeo@gmail.com>";
   avnik = "Alexander V. Nikolaev <avn@avnik.info>";
@@ -88,6 +89,7 @@
   chris-martin = "Chris Martin <ch.martin@gmail.com>";
   chrisjefferson = "Christopher Jefferson <chris@bubblescope.net>";
   christopherpoole = "Christopher Mark Poole <mail@christopherpoole.net>";
+  ckampka = "Christian Kampka <christian@kampka.net>";
   cko = "Christine Koppelt <christine.koppelt@gmail.com>";
   cleverca22 = "Michael Bishop <cleverca22@gmail.com>";
   cmcdragonkai = "Roger Qiu <roger.qiu@matrix.ai>";

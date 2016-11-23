@@ -10,7 +10,7 @@ stdenv.mkDerivation {
 
   patches = [ ./getcwd-chroot.patch ];
 
-  hardeningDisable = [ "format" ];
+  hardeningDisable = [ "fortify" "format" ];
 
   sandboxProfile = ''
     (deny file* (subpath "${builtins.xcodeSDKRoot}/usr/include/gssapi"))
