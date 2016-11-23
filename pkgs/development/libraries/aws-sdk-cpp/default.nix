@@ -18,6 +18,10 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ cmake curl ];
 
+  prePatch = ''
+    sed -i '93,137d' aws-cpp-sdk-core-tests/aws/auth/AWSCredentialsProviderTest.cpp
+  '';
+
   cmakeFlags =
     lib.optional (!customMemoryManagement) "-DCUSTOM_MEMORY_MANAGEMENT=0"
     ++ lib.optional (apis != ["*"])

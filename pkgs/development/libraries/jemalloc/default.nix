@@ -14,11 +14,6 @@ stdenv.mkDerivation rec {
   # option should remove the prefix and give us a working jemalloc.
   configureFlags = stdenv.lib.optional stdenv.isDarwin "--with-jemalloc-prefix=";
 
-  patches = stdenv.lib.optional stdenv.isDarwin (fetchpatch {
-    url = "https://patch-diff.githubusercontent.com/raw/jemalloc/jemalloc/pull/427.patch";
-    sha256 = "0b3gzv4yz5s016gwqrvhpr5xw31zanja6y83qm6v91qjz6w196as";
-  });
-
   meta = with stdenv.lib; {
     homepage = http://jemalloc.net;
     description = "General purpose malloc(3) implementation";
