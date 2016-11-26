@@ -218,6 +218,8 @@ in {
 
   pycrypto = callPackage ../development/python-modules/pycrypto { };
 
+  pycryptodome = callPackage ../development/python-modules/pycryptodome { };
+
   pyexiv2 = if (!isPy3k) then callPackage ../development/python-modules/pyexiv2 {} else throw "pyexiv2 not supported for interpreter ${python.executable}";
 
   pygame = callPackage ../development/python-modules/pygame { };
@@ -494,13 +496,13 @@ in {
   };
 
   afew = buildPythonPackage rec {
-    rev = "3f1e5e93119788984c2193292c988ac81ecb0a45";
-    name = "afew-git-2016-01-04";
+    rev = "b19a88fa1c06cc03ed6c636475cf4361b616d128";
+    name = "afew-git-2016-02-29";
 
     src = pkgs.fetchurl {
       url = "https://github.com/teythoon/afew/tarball/${rev}";
       name = "${name}.tar.bz";
-      sha256 = "1fi19g2j1qilh7ikp7pzn6sagkn76g740zdxgnsqmmvl2zk2yhrw";
+      sha256 = "0idlyrk29bmjw3w74vn0c1a6s59phx9zhzghf2cpyqf9qdhxib8k";
     };
 
     buildInputs = with self; [ pkgs.dbacl ];
@@ -766,6 +768,8 @@ in {
   alot = buildPythonPackage rec {
     rev = "0.3.7";
     name = "alot-${rev}";
+
+    disabled = isPy3k;
 
     src = pkgs.fetchFromGitHub {
       owner = "pazz";
@@ -7054,18 +7058,18 @@ in {
   };
 
   gmusicapi = with pkgs; buildPythonPackage rec {
-    name = "gmusicapi-7.0.0";
+    name = "gmusicapi-10.1.0";
 
     src = pkgs.fetchurl {
-      url = "mirror://pypi/g/gmusicapi/gmusicapi-7.0.0.tar.gz";
-      sha256 = "1zji4cgylyzz97cz69lywkbsn5nvvzrhk7iaqnpqpfvj9gwdchwn";
+      url = "mirror://pypi/g/gmusicapi/gmusicapi-10.1.0.tar.gz";
+      sha256 = "0smlrafh1bjzrcjzl7im8pf8f04gcnx92lf3g5qr7yzgq8k20xa2";
     };
 
     propagatedBuildInputs = with self; [
       validictory
       decorator
       mutagen
-      protobuf
+      protobuf3_0
       setuptools
       requests2
       dateutil
@@ -7076,6 +7080,7 @@ in {
       pyopenssl
       gpsoauth
       MechanicalSoup
+      future
     ];
 
     meta = {
@@ -7247,12 +7252,12 @@ in {
   };
 
   gpsoauth = buildPythonPackage rec {
-    version = "0.0.4";
+    version = "0.2.0";
     name = "gpsoauth-${version}";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/g/gpsoauth/${name}.tar.gz";
-      sha256 = "1mhd2lkl1f4fmia1cwxwik8gvqr5q16scjip7kfwzadh9a11n9kw";
+      sha256 = "01zxw8rhml8xfwda7ba8983890bzwkfa55ijd6qf8qrdy6ja1ncn";
     };
 
     propagatedBuildInputs = with self; [
@@ -7265,7 +7270,7 @@ in {
       pyopenssl
       pyasn1
       pycparser
-      pycrypto
+      pycryptodome
       requests2
       six
     ];
@@ -14734,11 +14739,11 @@ in {
   };
 
   mutagen = buildPythonPackage (rec {
-    name = "mutagen-1.32";
+    name = "mutagen-1.34";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/m/mutagen/${name}.tar.gz";
-      sha256 = "1d9sxl442xjj7pdyjj5h0dsjyd7d3wqswr8icqqgqdmg9k8dw8bp";
+      sha256 = "06anfzpjajwwh25n3afavwafrix3abahgwfr2zinrhqh2w98kw5s";
     };
 
     # Needed for tests only
@@ -26275,6 +26280,9 @@ in {
     };
   });
 
+  magic-wormhole = callPackage ../development/python-modules/magic-wormhole {
+    pythonPackages = self;
+  };
 
   wsgiproxy2 = buildPythonPackage rec {
     name = "WSGIProxy2-0.4.2";
@@ -28635,7 +28643,13 @@ in {
       sha256 = "1hknxlp3a3f8njn19w92p8nhzl9jkfwzhv5fmxhmyq2m8hqrfj8j";
     };
 
-    propagatedBuildInputs = with self; [pkgs.libsodium six cffi pycparser pytest];
+    buildInputs = with self; [ pytest coverage ];
+    propagatedBuildInputs = with self; [pkgs.libsodium six cffi pycparser];
+
+    checkPhase = ''
+      coverage run --source nacl --branch -m pytest
+    '';
+
   };
 
   service-identity = buildPythonPackage rec {
