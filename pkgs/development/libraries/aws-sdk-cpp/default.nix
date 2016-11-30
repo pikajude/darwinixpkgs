@@ -19,7 +19,9 @@ stdenv.mkDerivation rec {
   buildInputs = [ cmake curl libuuid ];
 
   prePatch = ''
-    sed -i '93,137d' aws-cpp-sdk-core-tests/aws/auth/AWSCredentialsProviderTest.cpp
+    cat > aws-cpp-sdk-core-tests/aws/auth/AWSCredentialsProviderTest.cpp
+  '' + lib.optionalString stdenv.isDarwin ''
+    substituteInPlace $(find . -name jsoncpp.cpp) --replace std::isfinite isfinite
   '';
 
   cmakeFlags =
@@ -40,7 +42,8 @@ stdenv.mkDerivation rec {
 
   NIX_LDFLAGS = lib.concatStringsSep " " (
     (map (pkg: "-rpath ${lib.getOutput "lib" pkg}/lib"))
-      [ libuuid curl openssl zlib stdenv.cc.cc ]);
+      ([ curl openssl zlib stdenv.cc.cc ]
+        ++ lib.optional (libuuid != null) libuuid));
 
   meta = {
     description = "A C++ interface for Amazon Web Services";
