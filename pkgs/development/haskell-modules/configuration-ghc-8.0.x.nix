@@ -68,4 +68,6 @@ self: super: {
   # https://github.com/christian-marie/xxhash/issues/3
   xxhash = doJailbreak super.xxhash;
 
+  hexpat = doJailbreak super.hexpat;
+
 }

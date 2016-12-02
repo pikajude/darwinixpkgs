@@ -28,15 +28,13 @@ stdenv.mkDerivation rec {
     "-Wno-c99-extensions" "-Wno-long-long" "-Wno-pedantic"
   ];
 
-  enableParallelBuilding = true;
-
   preConfigure = ''
     LIBTOOLIZE=libtoolize ./autogen.sh
   '';
 
   enableParallelBuilding = true;
 
-  doCheck = true;
+  doCheck = !stdenv.isDarwin;
 
   meta = with lib; {
     description = "A multi-platform support library with a focus on asynchronous I/O";
