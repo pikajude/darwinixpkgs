@@ -32,6 +32,7 @@
   enableParallelBuilding = false;
 
   patches = [ ./disable-gc-sensitive-tests.patch ./eai_system.patch ./clang.patch
+  ] ++ stdenv.lib.optional (!stdenv.isDarwin) [
     (fetchpatch {
       # Fixes stability issues with 00-repl-server.test
       url = "http://git.savannah.gnu.org/cgit/guile.git/patch/?id=2fbde7f02adb8c6585e9baf6e293ee49cd23d4c4";
