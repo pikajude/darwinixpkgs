@@ -1133,4 +1133,6 @@ self: super: {
   # requires vty 5.13
   brick = super.brick.overrideScope (self: super: { vty = self.vty_5_13; });
 
+  conduit-extra = dontCheck super.conduit-extra;
+
 }
