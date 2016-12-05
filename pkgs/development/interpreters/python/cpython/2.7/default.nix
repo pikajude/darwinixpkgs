@@ -14,7 +14,7 @@
 , db
 , expat
 , libffi
-, CF, configd, coreutils
+, coreutils
 # For the Python package set
 , pkgs, packageOverrides ? (self: super: {})
 }:

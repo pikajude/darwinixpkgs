@@ -5660,13 +5660,11 @@ in
   };
   python33 = callPackage ../development/interpreters/python/cpython/3.3 {
     self = python33;
-    inherit (darwin) CF configd;
   };
   python34 = hiPrio (callPackage ../development/interpreters/python/cpython/3.4 {
     self = python34;
   });
   python35 = hiPrio (callPackage ../development/interpreters/python/cpython/3.5 {
-    inherit (darwin) CF configd;
     self = python35;
   });
   python36 = callPackage ../development/interpreters/python/cpython/3.6 {

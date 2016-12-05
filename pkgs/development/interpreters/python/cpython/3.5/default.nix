@@ -10,7 +10,6 @@
 , zlib
 , callPackage
 , self
-, CF, configd
 # For the Python package set
 , pkgs, packageOverrides ? (self: super: {})
 }:

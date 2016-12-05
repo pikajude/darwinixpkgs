@@ -12,6 +12,8 @@
 attrs // {
   buildInputs = buildInputs ++ [ bootstrapped-pip ];
 
+  __impureHostDeps = [ "${builtins.xcodeSDKRoot}/System/Library/CoreServices/SystemVersion.plist" ];
+
   installPhase = attrs.installPhase or ''
     runHook preInstall
 
