@@ -14,6 +14,11 @@ attrs // {
 
   __impureHostDeps = [ "${builtins.xcodeSDKRoot}/System/Library/CoreServices/SystemVersion.plist" ];
 
+  configurePhase = attrs.configurePhase or ''
+    runHook preConfigure
+    runHook postConfigure
+  '';
+
   installPhase = attrs.installPhase or ''
     runHook preInstall
 
