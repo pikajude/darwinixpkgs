@@ -5303,9 +5303,7 @@ in
     lua = lua5_1;
   };
 
-  teyjus = callPackage ../development/compilers/teyjus {
-    omake = omake_rc1;
-  };
+  teyjus = callPackage ../development/compilers/teyjus { };
 
   thrust = callPackage ../development/tools/thrust {
     gconf = pkgs.gnome2.GConf;
@@ -6341,7 +6339,9 @@ in
   noweb = callPackage ../development/tools/literate-programming/noweb { };
   nuweb = callPackage ../development/tools/literate-programming/nuweb { tex = texlive.combined.scheme-small; };
 
-  inherit (ocamlPackages) omake omake_rc1;
+  omake = callPackage ../development/tools/ocaml/omake {
+    inherit (ocamlPackages_4_02) ocaml;
+  };
 
   omniorb = callPackage ../development/tools/omniorb { };
 
@@ -13798,6 +13798,8 @@ in
   minimodem = callPackage ../applications/audio/minimodem { };
 
   minidjvu = callPackage ../applications/graphics/minidjvu { };
+
+  minikube = callPackage ../applications/networking/cluster/minikube { };
 
   minitube = callPackage ../applications/video/minitube { };
 
