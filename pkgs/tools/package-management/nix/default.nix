@@ -46,8 +46,6 @@ let
         "--with-dbd-sqlite=${perlPackages.DBDSQLite}/${perl.libPrefix}"
         "--disable-init-state"
         "--enable-gc"
-      ]
-      ++ lib.optional (!lib.versionAtLeast version "1.12pre") [
         "--with-www-curl=${perlPackages.WWWCurl}/${perl.libPrefix}"
       ];
 
