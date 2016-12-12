@@ -1553,7 +1553,6 @@ in
 
   emscriptenStdenv = stdenv // { mkDerivation = buildEmscriptenPackage; };
 
-
   efibootmgr = callPackage ../tools/system/efibootmgr { };
 
   efivar = callPackage ../tools/system/efivar { };
@@ -11033,6 +11032,22 @@ in
       ];
   };
 
+  linux_4_9 = callPackage ../os-specific/linux/kernel/linux-4.9.nix {
+    kernelPatches =
+      [ kernelPatches.bridge_stp_helper
+        # See pkgs/os-specific/linux/kernel/cpu-cgroup-v2-patches/README.md
+        # when adding a new linux version
+        # !!! 4.7 patch doesn't apply, 4.9 patch not up yet, will keep checking
+        # kernelPatches.cpu-cgroup-v2."4.7"
+        kernelPatches.modinst_arg_list_too_long
+      ]
+      ++ lib.optionals ((platform.kernelArch or null) == "mips")
+      [ kernelPatches.mips_fpureg_emu
+        kernelPatches.mips_fpu_sigill
+        kernelPatches.mips_ext3_n32
+      ];
+  };
+
   linux_testing = callPackage ../os-specific/linux/kernel/linux-testing.nix {
     kernelPatches = [
       kernelPatches.bridge_stp_helper
@@ -11194,7 +11209,7 @@ in
   linux = linuxPackages.kernel;
 
   # Update this when adding the newest kernel major version!
-  linuxPackages_latest = linuxPackages_4_8;
+  linuxPackages_latest = linuxPackages_4_9;
   linux_latest = linuxPackages_latest.kernel;
 
   # Build the kernel modules for the some of the kernels.
@@ -11206,6 +11221,7 @@ in
   linuxPackages_4_1 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_1);
   linuxPackages_4_4 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_4);
   linuxPackages_4_8 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_8);
+  linuxPackages_4_9 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_9);
   # Don't forget to update linuxPackages_latest!
 
   # Intentionally lacks recurseIntoAttrs, as -rc kernels will quite likely break out-of-tree modules and cause failed Hydra builds.
@@ -12978,6 +12994,8 @@ in
   inherit (ocamlPackages) google-drive-ocamlfuse;
 
   google-musicmanager = callPackage ../applications/audio/google-musicmanager { };
+
+  gopher = callPackage ../applications/networking/gopher/gopher { };
 
   gpa = callPackage ../applications/misc/gpa { };
 
@@ -15670,6 +15688,8 @@ in
   eduke32 = callPackage ../games/eduke32 { };
 
   egoboo = callPackage ../games/egoboo { };
+
+  endless-sky = callPackage ../games/endless-sky { };
 
   eternity = callPackage ../games/eternity-engine { };
 

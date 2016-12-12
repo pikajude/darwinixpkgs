@@ -589,11 +589,11 @@ in {
 
   aiohttp = buildPythonPackage rec {
     name = "aiohttp-${version}";
-    version = "0.21.5";
+    version = "1.1.6";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/a/aiohttp/${name}.tar.gz";
-      sha256 = "0n8517wc8b6yc925f7zhgl4wqf4ay1w2fzar0pj1h20yfa1wiids";
+      sha256 = "0742feb9759a5832aa4a30abf64e53055e139ed41e26f79b9558d08e05c74d60";
     };
 
     disabled = pythonOlder "3.4";
@@ -601,7 +601,7 @@ in {
     doCheck = false; # Too many tests fail.
 
     buildInputs = with self; [ pytest gunicorn pytest-raisesregexp ];
-    propagatedBuildInputs = with self; [ chardet ];
+    propagatedBuildInputs = with self; [ async-timeout chardet multidict yarl ];
 
     meta = {
       description = "http client/server for asyncio";
@@ -1209,6 +1209,8 @@ in {
       sha256 = "1lfmjm8apy9qpnpbq8g641fd01qxh9jlya5g2d6z60vf8p04rla1";
     };
   };
+
+  async-timeout = callPackage ../development/python-modules/async_timeout { };
 
  asn1ate = buildPythonPackage rec {
   pname = "asn1ate";
@@ -9120,6 +9122,29 @@ in {
 
   };
 
+  pytun = buildPythonPackage rec {
+    name = "pytun-${version}";
+    version = "2.2.1";
+    rev = "v${version}";
+
+    src = pkgs.fetchFromGitHub {
+      inherit rev;
+      owner = "montag451";
+      repo = "pytun";
+      sha256 = "1bxk0z0v8m0b01xg94f039j3bsclkshb7girvjqfzk5whbd2nryh";
+    };
+
+    doCheck = false;
+
+    meta = {
+      homepage = https://github.com/montag451/pytun;
+      description = "Linux TUN/TAP wrapper for Python";
+      license = licenses.mit;
+      maintainers = with maintainers; [ montag451 ];
+      platforms = platforms.linux;
+    };
+  };
+
   raven = buildPythonPackage rec {
     name = "raven-3.4.1";
 
@@ -12177,7 +12202,6 @@ in {
 
   google_apputils = buildPythonPackage rec {
     name = "google-apputils-0.4.1";
-    disabled = isPy3k;
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/g/google-apputils/${name}.tar.gz";
@@ -14359,6 +14383,8 @@ in {
       license = licenses.mit;
     };
   };
+
+  multidict = callPackage ../development/python-modules/multidict { };
 
   munch = buildPythonPackage rec {
     name = "munch-${version}";
@@ -22945,12 +22971,12 @@ in {
 
   scikitlearn = buildPythonPackage rec {
     name = "scikit-learn-${version}";
-    version = "0.18";
+    version = "0.18.1";
     disabled = stdenv.isi686;  # https://github.com/scikit-learn/scikit-learn/issues/5534
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/s/scikit-learn/${name}.tar.gz";
-      sha256 = "240009789d6495240b332e059cbd2499f4d2981c93873983c9e1d5189f90315f";
+      sha256 = "1eddfc27bb37597a5d514de1299981758e660e0af56981c0bfdf462c9568a60c";
     };
 
     buildInputs = with self; [ nose pillow pkgs.gfortran pkgs.glibcLocales ];
@@ -31422,6 +31448,8 @@ in {
       maintainers = with maintainers; [ mikefaille ];
     };
   };
+
+  yarl = callPackage ../development/python-modules/yarl { };
 
   stripe = buildPythonPackage rec {
     name = "${pname}-${version}";
