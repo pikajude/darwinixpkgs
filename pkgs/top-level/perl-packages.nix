@@ -7414,10 +7414,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   locallib = buildPerlPackage rec {
-    name = "local-lib-2.000017";
+    name = "local-lib-2.000019";
     src = fetchurl {
       url = "mirror://cpan/authors/id/H/HA/HAARG/${name}.tar.gz";
-      sha256 = "05607zxpb0jqvxn0cw064pnwsvbajw7k2pmzlisffadihg11m6ps";
+      sha256 = "008b9kgvcs9vjvj7ifg0f1s7i7446ff2441c575vhrwn15x35b9n";
     };
     meta = {
       description = "Create and use a local lib/ for perl modules with PERL5LIB";
@@ -8522,17 +8522,16 @@ let self = _self // overrides; _self = with self; {
   };
 
   Moo = buildPerlPackage rec {
-    name = "Moo-2.002005";
+    name = "Moo-2.003000";
     src = fetchurl {
       url = "mirror://cpan/authors/id/H/HA/HAARG/${name}.tar.gz";
-      sha256 = "8147f98a43f7beb808773202b05d3fba25d5fca018ad939d7e529f4d36d6dc68";
+      sha256 = "ccab84b1377e52922026b24b2ed51d83c439757f2b0783fffa73ac22b4fb3dd2";
     };
     buildInputs = [ TestFatal ];
-    propagatedBuildInputs = [ ClassMethodModifiers DevelGlobalDestruction ModuleRuntime RoleTiny ];
+    propagatedBuildInputs = [ ClassMethodModifiers DevelGlobalDestruction ModuleRuntime RoleTiny SubQuote ];
     meta = {
       description = "Minimalist Object Orientation (with Moose compatibility)";
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
-      maintainers = [ maintainers.rycee ];
     };
   };
 
@@ -11837,6 +11836,19 @@ let self = _self // overrides; _self = with self; {
       sha256 = "13s5zi6qz02q50vv4bmwdmhn9gvg0988fydjlrrv500g6hnyzlkj";
     };
     propagatedBuildInputs = [SubUplevel TestException];
+  };
+
+  SubQuote = buildPerlPackage rec {
+    name = "Sub-Quote-2.003001";
+    src = fetchurl {
+      url = "mirror://cpan/authors/id/H/HA/HAARG/${name}.tar.gz";
+      sha256 = "9d471d8e13e7ce4793d5a5ec04a60fface14dd53be78dd94d228871915cfd1f9";
+    };
+    buildInputs = [ TestFatal ];
+    meta = {
+      description = "Efficient generation of subroutines via string eval";
+      license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
+    };
   };
 
   SubUplevel = buildPerlPackage {

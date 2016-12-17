@@ -35,6 +35,8 @@ let
 
   buildPythonApplication = args: buildPythonPackage ({namePrefix="";} // args );
 
+  graphiteVersion = "0.9.15";
+
 in {
 
   inherit python bootstrapped-pip pythonAtLeast pythonOlder isPy26 isPy27 isPy33 isPy34 isPy35 isPy36 isPyPy isPy3k mkPythonDerivation buildPythonPackage buildPythonApplication;
@@ -211,6 +213,8 @@ in {
         --replace '_open_library(_LIB_NAME)' "_open_library('${pkgs.libdiscid}/lib/libdiscid.so.0')"
     '';
   };
+
+  discordpy = callPackage ../development/python-modules/discordpy { };
 
   h5py = callPackage ../development/python-modules/h5py {
     hdf5 = pkgs.hdf5;
@@ -1484,13 +1488,13 @@ in {
 
   awscli = buildPythonPackage rec {
     name = "awscli-${version}";
-    version = "1.11.10";
+    version = "1.11.30";
 
     namePrefix = "";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/a/awscli/${name}.tar.gz";
-      sha256 = "174lfpai5cga1ml2bwswjil6h544m57js9ki7hqkr9gdbpa8pyrk";
+      sha256 = "07km02wnjbaf745cs8j6zlwk9c2561l82zvr23a6d3qzs8wwxicf";
     };
 
     # No tests included
@@ -1504,6 +1508,7 @@ in {
       colorama_3_3
       docutils
       rsa
+      pyyaml
       pkgs.groff
       pkgs.less
     ];
@@ -2986,13 +2991,13 @@ in {
 
   boto3 = buildPythonPackage rec {
     name = "boto3-${version}";
-    version = "1.4.1";
+    version = "1.4.2";
 
     src = pkgs.fetchFromGitHub {
       owner = "boto";
       repo  = "boto3";
       rev   = version;
-      sha256 = "19ij6cs2n3p5fgipbrq1dybq2sjjvlhg9n5a5sv9wi95x9wqi5wb";
+      sha256 = "19hzxqr7ba07b3zg2wsrz6ic3g7pq50rrcp4616flfgny5vw42j3";
     };
 
     propagatedBuildInputs = [ self.botocore self.jmespath self.s3transfer ] ++
@@ -3023,12 +3028,12 @@ in {
   };
 
   botocore = buildPythonPackage rec {
-    version = "1.4.67"; # This version is required by awscli
+    version = "1.4.87"; # This version is required by awscli
     name = "botocore-${version}";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/b/botocore/${name}.tar.gz";
-      sha256 = "15fh3ng33mcbhm76pk9qqglf342qj471gfcqxv0nrl9f8sn3v60q";
+      sha256 = "0fga1zjffsn2h50hbw7s4lcv6zwz5dcjgvjncl5y392mhivlrika";
     };
 
     propagatedBuildInputs =
@@ -8256,8 +8261,9 @@ in {
         pytestflakes
         pytestpep8
         mock
-        pathlib
-      ];
+      ]
+      # pathlib was made part of standard library in 3.5:
+      ++ (optionals (pythonOlder "3.4") [ pathlib ]);
 
     meta = {
       description = "Natural sorting for python";
@@ -13903,6 +13909,27 @@ in {
       description = "Pythonic binding for the libxml2 and libxslt libraries";
       homepage = http://lxml.de;
       license = licenses.bsd3;
+    };
+  });
+
+  lxc = buildPythonPackage (rec {
+    name = "python-lxc-unstable-2016-08-25";
+    disabled = !isPy27;
+
+    src = pkgs.fetchFromGitHub {
+      owner = "lxc";
+      repo = "python2-lxc";
+      rev = "0553f05d23b56b59bf3015fa5e45bfbfab9021ef";
+      sha256 = "0p9kb20xvq91gx2wfs3vppb7vsp8kmd90i3q95l4nl1y4aismdn4";
+    };
+
+    buildInputs = [ pkgs.lxc ];
+
+    meta = {
+      description = "Out of tree python 2.7 binding for liblxc";
+      homepage = https://github.com/lxc/python2-lxc;
+      license = licenses.lgpl2;
+      maintainers = with maintainers; [ mic92 ];
     };
   });
 
@@ -26087,11 +26114,12 @@ in {
         local wrapped="$out/bin/.$file-wrapped"
         mv "$wrapper" "$wrapped"
 
-        cat > "$wrapper" <<- EOF
-        export PATH="$PATH:\$PATH"
-        export VIRTUALENVWRAPPER_PYTHONPATH="$PYTHONPATH:$(toPythonPath $out)"
-        source "$wrapped"
-        EOF
+        # WARNING: Don't indent the lines below because that would break EOF
+        cat > "$wrapper" << EOF
+export PATH="$PATH:\$PATH"
+export VIRTUALENVWRAPPER_PYTHONPATH="$PYTHONPATH:$(toPythonPath $out)"
+source "$wrapped"
+EOF
 
         chmod -x "$wrapped"
         chmod +x "$wrapper"
@@ -26215,6 +26243,7 @@ in {
     };
   };
 
+  websockets = callPackage ../development/python-modules/websockets { };
 
   wand = buildPythonPackage rec {
     name = "Wand-0.3.5";
@@ -27768,11 +27797,11 @@ in {
 
   whisper = buildPythonPackage rec {
     name = "whisper-${version}";
-    version = "0.9.12";
+    version = graphiteVersion;
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/w/whisper/${name}.tar.gz";
-      sha256 = "0eca66449d6ceb29e2ab5457b01618e0fe525710dd130a286a18282d849ae5b2";
+      sha256 = "1chkphxwnwvy2cs7jc2h2i0lqqvi9jx6vqj3ly88lwk7m35r4ss2";
     };
 
     # error: invalid command 'test'
@@ -27787,7 +27816,7 @@ in {
 
   carbon = buildPythonPackage rec {
     name = "carbon-${version}";
-    version = "0.9.15";
+    version = graphiteVersion;
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/c/carbon/${name}.tar.gz";
@@ -28020,7 +28049,7 @@ in {
   graphite_web = buildPythonPackage rec {
     name = "graphite-web-${version}";
     disabled = isPy3k;
-    version = "0.9.15";
+    version = graphiteVersion;
 
     src = pkgs.fetchurl rec {
       url = "mirror://pypi/g/graphite-web/${name}.tar.gz";
@@ -30093,11 +30122,11 @@ in {
 
   xstatic-jquery-ui = buildPythonPackage rec {
     name = "XStatic-jquery-ui-${version}";
-    version = "1.11.0.1";
+    version = "1.12.0.1";
     propagatedBuildInputs = with self; [ xstatic-jquery ];
     src = pkgs.fetchurl {
       url = "mirror://pypi/X/XStatic-jquery-ui/XStatic-jquery-ui-${version}.tar.gz";
-      sha256 = "0n6sgg9jxrqfz4zg6iqdmx1isqx2aswadf7mk3fbi48dxcv1i6q9";
+      sha256 = "0w7mabv6qflpd47g33j3ggp5rv17mqk0xz3bsdswcj97wqpga2l2";
     };
 
     meta = {
