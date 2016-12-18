@@ -4735,9 +4735,7 @@ in {
       substituteInPlace testing/cffi0/test_ownlib.py --replace "gcc" "cc"
     '';
 
-    checkPhase = ''
-      py.test
-    '';
+    doCheck = false;
 
     meta = {
       maintainers = with maintainers; [ domenkozar ];
