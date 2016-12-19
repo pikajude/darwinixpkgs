@@ -23698,20 +23698,6 @@ in {
     };
   };
 
-  pip2nix = buildPythonPackage rec {
-    name = "pip2nix-${version}";
-    version = "0.3.0";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/p/pip2nix/${name}.tar.gz";
-      sha256 = "1s76i8r4khq8y5r6g4218jg2c6qldmw5xhzymxad51ii8hafpwq6";
-    };
-
-    propagatedBuildInputs = with self; [ click configobj contexter jinja2 pytest ];
-
-    meta.broken = true;
-  };
-
   pychef = buildPythonPackage rec {
     name    = "PyChef-${version}";
     version = "0.3.0";
