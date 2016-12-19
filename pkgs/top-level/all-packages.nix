@@ -2250,6 +2250,8 @@ in
   ioping = callPackage ../tools/system/ioping { };
 
   iops = callPackage ../tools/system/iops { };
+  
+  ior = callPackage ../tools/system/ior { };
 
   iodine = callPackage ../tools/networking/iodine { };
 
@@ -2603,6 +2605,8 @@ in
   libmbim = callPackage ../development/libraries/libmbim { };
 
   libmongo-client = callPackage ../development/libraries/libmongo-client { };
+  
+  libmesode = callPackage ../development/libraries/libmesode { };
 
   libnabo = callPackage ../development/libraries/libnabo { };
 
@@ -5320,7 +5324,9 @@ in
     lua = lua5_1;
   };
 
-  teyjus = callPackage ../development/compilers/teyjus { };
+  teyjus = callPackage ../development/compilers/teyjus {
+    omake = omake_rc1;
+  };
 
   thrust = callPackage ../development/tools/thrust {
     gconf = pkgs.gnome2.GConf;
@@ -5612,6 +5618,8 @@ in
   ocropus = callPackage ../applications/misc/ocropus { };
 
   inherit (callPackages ../development/interpreters/perl {}) perl perl520 perl522;
+
+  pachyderm = callPackage ../applications/networking/cluster/pachyderm { };
 
   php = php70;
 
@@ -6366,6 +6374,8 @@ in
     inherit (ocamlPackages_4_02) ocaml;
   };
 
+  inherit (ocamlPackages) omake_rc1;
+
   omniorb = callPackage ../development/tools/omniorb { };
 
   opengrok = callPackage ../development/tools/misc/opengrok { };
@@ -6715,6 +6725,7 @@ in
   boost155 = callPackage ../development/libraries/boost/1.55.nix { };
   boost159 = callPackage ../development/libraries/boost/1.59.nix { };
   boost160 = callPackage ../development/libraries/boost/1.60.nix { };
+  boost162 = callPackage ../development/libraries/boost/1.62.nix { };
   boost = boost160;
 
   boost_process = callPackage ../development/libraries/boost-process { };
@@ -7027,10 +7038,6 @@ in
 
   fltk13 = callPackage ../development/libraries/fltk { };
   fltk = self.fltk13;
-
-  fmod = callPackage ../development/libraries/fmod { };
-
-  fmod42416 = callPackage ../development/libraries/fmod/4.24.16.nix { };
 
   fplll = callPackage ../development/libraries/fplll {};
   fplll_20160331 = callPackage ../development/libraries/fplll/20160331.nix {};
@@ -8240,8 +8247,6 @@ in
 
   libopus = callPackage ../development/libraries/libopus { };
 
-  liborc = callPackage ../development/libraries/liborc { };
-
   libosinfo = callPackage ../development/libraries/libosinfo {
     inherit (gnome3) libsoup;
   };
@@ -9078,6 +9083,8 @@ in
     qtkeychain = callPackage ../development/libraries/qtkeychain {
       withQt5 = true;
     };
+
+    qtstyleplugins = callPackage ../development/libraries/qtstyleplugins { };
 
     quazip = callPackage ../development/libraries/quazip {
       qt = qtbase;
@@ -10286,10 +10293,12 @@ in
   riak = callPackage ../servers/nosql/riak/2.1.1.nix { };
 
   riak-cs = callPackage ../servers/nosql/riak-cs/2.1.1.nix {
+    inherit (darwin.apple_sdk.frameworks) Carbon Cocoa;
     erlang = erlang_basho_R16B02;
   };
 
   stanchion = callPackage ../servers/nosql/riak-cs/stanchion.nix {
+    inherit (darwin.apple_sdk.frameworks) Carbon Cocoa;
     erlang = erlang_basho_R16B02;
   };
 
@@ -12263,6 +12272,7 @@ in
   };
 
   audacious = callPackage ../applications/audio/audacious { };
+  audaciousQt5 = qt5.callPackage ../applications/audio/audacious/qt-5.nix { };
 
   audacity = callPackage ../applications/audio/audacity { };
 
@@ -13170,6 +13180,8 @@ in
     boost = boost155;
   };
 
+  fte = callPackage ../applications/editors/fte { };
+
   game-music-emu = callPackage ../applications/audio/game-music-emu { };
 
   gcolor2 = callPackage ../applications/graphics/gcolor2 { };
@@ -13609,6 +13621,8 @@ in
   k9copy = qt5.callPackage ../applications/video/k9copy {};
 
   kdeconnect = qt5.callPackage ../applications/misc/kdeconnect { };
+
+  kdecoration-viewer = kde5.callPackage ../tools/misc/kdecoration-viewer {};
 
   kdevelop-pg-qt = kde5.callPackage ../applications/editors/kdevelop5/kdevelop-pg-qt.nix {};
 
@@ -16181,7 +16195,6 @@ in
   xsokoban = callPackage ../games/xsokoban { };
 
   zandronum = callPackage ../games/zandronum {
-    fmod = fmod42416;
     cmake = cmake_2_8;
   };
 
