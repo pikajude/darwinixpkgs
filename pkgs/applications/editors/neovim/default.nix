@@ -5,7 +5,7 @@
 , withPython ? true, pythonPackages, extraPythonPackages ? []
 , withPython3 ? true, python3Packages, extraPython3Packages ? []
 , withJemalloc ? true, jemalloc
-, withRuby ? true, bundlerEnv
+, withRuby ? false, bundlerEnv
 
 , withPyGUI ? false
 , vimAlias ? false
@@ -141,7 +141,7 @@ let
     '' + optionalString withPython3 ''
       ln -s ${python3Env}/bin/python3 $out/bin/nvim-python3
     '' + optionalString (withPython || withPython3 || withRuby) ''
-      wrapProgram $out/bin/nvim ${rubyWrapper + pythonFlags}
+      wrapProgram $out/bin/nvim ${optionalString withRuby rubyWrapper + pythonFlags}
     '';
 
     meta = {
