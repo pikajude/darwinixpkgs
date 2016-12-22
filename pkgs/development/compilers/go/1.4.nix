@@ -95,6 +95,7 @@ stdenv.mkDerivation rec {
     ./remove-tools-1.4.patch
     ./new-binutils.patch
     ./sierra-time.patch
+    ./creds-test-1.4.patch
   ];
 
   GOOS = if stdenv.isDarwin then "darwin" else "linux";

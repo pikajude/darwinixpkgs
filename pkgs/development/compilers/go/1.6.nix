@@ -117,6 +117,7 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./remove-tools-1.5.patch
+    ./creds-test.patch
   ] ++ stdenv.lib.optionals stdenv.isDarwin [
     ./darwin-security-roots.patch
   ];
