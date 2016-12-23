@@ -13,12 +13,12 @@ let
   });
 in
 stdenv.mkDerivation rec {
-  version = "8.0.1.20161117";
+  version = "8.0.1.20161213";
   name = "ghc-${version}";
 
   src = fetchurl {
-    url = "https://downloads.haskell.org/~ghc/8.0.2-rc1/${name}-src.tar.xz";
-    sha256 = "08hpzvg059ha0knmlngd0winfkplkkb7dk88zfz3s177z38kd874";
+    url = "https://downloads.haskell.org/~ghc/8.0.2-rc2/${name}-src.tar.xz";
+    sha256 = "0l1arhbh3rbs011f0y4pgc35yn07x3hz6lfqlvqbwn96f8ff5529";
   };
 
   patches = [

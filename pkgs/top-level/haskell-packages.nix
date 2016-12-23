@@ -52,7 +52,9 @@ rec {
       inherit (bootPkgs) hscolour;
     };
     ghc802 = callPackage ../development/compilers/ghc/8.0.2.nix rec {
-      bootPkgs = packages.ghc7103;
+      bootPkgs = if stdenv.isDarwin
+        then packages.ghc7103Binary
+        else packages.ghc7103;
       inherit (bootPkgs) hscolour;
     };
     ghcHEAD = callPackage ../development/compilers/ghc/head.nix rec {
