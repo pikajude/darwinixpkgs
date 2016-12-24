@@ -21,13 +21,7 @@ stdenv.mkDerivation rec {
     sha256 = "0l1arhbh3rbs011f0y4pgc35yn07x3hz6lfqlvqbwn96f8ff5529";
   };
 
-  patches = [
-    # Already applied?
-    # ./relocation.patch
-    # Fix https://ghc.haskell.org/trac/ghc/ticket/12130
-    # (fetchFilteredPatch { url = https://git.haskell.org/ghc.git/patch/4d71cc89b4e9648f3fbb29c8fcd25d725616e265; sha256 = "0syaxb4y4s2dc440qmrggb4vagvqqhb55m6mx12rip4i9qhxl8k0"; })
-    (fetchFilteredPatch { url = https://git.haskell.org/ghc.git/patch/2f8cd14fe909a377b3e084a4f2ded83a0e6d44dd; sha256 = "06zvlgcf50ab58bw6yw3krn45dsmhg4cmlz4nqff8k4z1f1bj01v"; })
-  ] ++ stdenv.lib.optional stdenv.isLinux ./ghc-no-madv-free.patch;
+  patches = [] ++ stdenv.lib.optional stdenv.isLinux ./ghc-no-madv-free.patch;
 
   buildInputs = [ ghc perl hscolour ];
 
