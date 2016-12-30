@@ -32,8 +32,7 @@ let
 
   buildInputs = filter (p: p != null) [
     zlib bzip2 lzma gdbm sqlite readline ncurses openssl ]
-    ++ optionals x11Support [ tcl tk libX11 xproto ]
-    ++ optionals stdenv.isDarwin [ CF configd ];
+    ++ optionals x11Support [ tcl tk libX11 xproto ];
 
 in stdenv.mkDerivation {
   name = "python3-${version}";

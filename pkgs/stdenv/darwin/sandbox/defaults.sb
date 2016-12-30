@@ -15,9 +15,6 @@
 ; tmp
 (allow file* process-exec (literal "/tmp") (subpath TMPDIR))
 
-; clang likes to read the system version
-; (allow file-read* (literal "/System/Library/CoreServices/SystemVersion.plist"))
-
 ; used for bootstrap builders
 (allow process-exec* (literal "/bin/sh"))
 
@@ -72,6 +69,8 @@
        (literal (sdk-path "/usr/include"))
        (subpath (sdk-path "/usr/lib/system"))
        (sdk-regex "/usr/lib/.*o$"))
+
+(allow file-read* (literal (sdk-path "/System/Library/CoreServices/SystemVersion.plist")))
 
 (allow file-read*
        (literal "/usr/lib/libncurses.5.4.dylib")
