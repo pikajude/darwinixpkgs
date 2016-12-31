@@ -1006,7 +1006,7 @@ self: super: {
 
   # The most current version needs some packages to build that are not in LTS 7.x.
   stack = super.stack.overrideScope (self: super: {
-    http-client = self.http-client_0_5_4;
+    http-client = self.http-client_0_5_5;
     http-client-tls = self.http-client-tls_0_3_3;
     http-conduit = self.http-conduit_2_2_3;
     optparse-applicative = dontCheck self.optparse-applicative_0_13_0_0;
@@ -1148,4 +1148,6 @@ self: super: {
 
   conduit-extra = dontCheck super.conduit-extra;
 
+  # https://github.com/krisajenkins/elm-export/pull/22
+  elm-export = doJailbreak super.elm-export;
 }

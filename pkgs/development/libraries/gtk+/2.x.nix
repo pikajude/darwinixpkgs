@@ -40,9 +40,13 @@ stdenv.mkDerivation rec {
 
   frameworks = [ "ApplicationServices" ];
 
-  configureFlags = if stdenv.isDarwin
-    then "--disable-glibtest --disable-introspection --disable-visibility"
-    else "--with-xinput=yes";
+  configureFlags = [
+    "--with-xinput=yes"
+  ] ++ stdenv.lib.optionals stdenv.isDarwin [
+    "--disable-glibtest"
+    "--disable-introspection"
+    "--disable-visibility"
+  ];
 
   postInstall = ''
     moveToOutput share/gtk-2.0/demo "$devdoc"

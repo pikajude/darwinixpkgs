@@ -81,8 +81,6 @@ rec {
 
   qgit = callPackage ./qgit { };
 
-  qgitGit = callPackage ./qgit/qgit-git.nix { };
-
   stgit = callPackage ./stgit {
   };
 

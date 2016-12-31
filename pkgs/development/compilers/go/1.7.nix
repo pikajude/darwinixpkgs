@@ -67,6 +67,8 @@ stdenv.mkDerivation rec {
     sed -i '/src\/cmd\/api\/run.go/ireturn nil' src/cmd/dist/test.go
     # Remove the coverage test as we have removed this utility
     sed -i '/TestCoverageWithCgo/areturn' src/cmd/go/go_test.go
+    # Remove the timezone naming test
+    sed -i '/TestLoadFixed/areturn' src/time/time_test.go
 
     sed -i '/TestLookupPort/areturn' src/net/lookup_test.go
 

@@ -129,6 +129,7 @@
   dochang = "Desmond O. Chang <dochang@gmail.com>";
   domenkozar = "Domen Kozar <domen@dev.si>";
   doublec = "Chris Double <chris.double@double.co.nz>";
+  dpaetzel = "David Pätzel <david.a.paetzel@gmail.com>";
   drets = "Dmytro Rets <dmitryrets@gmail.com>";
   drewkett = "Andrew Burkett <burkett.andrew@gmail.com>";
   dtzWill = "Will Dietz <nix@wdtz.org>";
@@ -314,6 +315,7 @@
   mudri = "James Wood <lamudri@gmail.com>";
   muflax = "Stefan Dorn <mail@muflax.com>";
   myrl = "Myrl Hex <myrl.0xf@gmail.com>";
+  namore = "Roman Naumann <namor@hemio.de>";
   nand0p = "Fernando Jose Pando <nando@hex7.com>";
   Nate-Devv = "Nathan Moore <natedevv@gmail.com>";
   nathan-gs = "Nathan Bijnens <nathan@nathan.gs>";
@@ -331,6 +333,7 @@
   ocharles = "Oliver Charles <ollie@ocharles.org.uk>";
   odi = "Oliver Dunkl <oliver.dunkl@gmail.com>";
   offline = "Jaka Hudoklin <jakahudoklin@gmail.com>";
+  oida = "oida <oida@posteo.de>";
   okasu = "Okasu <oka.sux@gmail.com>";
   olcai = "Erik Timan <dev@timan.info>";
   olejorgenb = "Ole Jørgen Brønner <olejorgenb@yahoo.no>";
@@ -506,4 +509,5 @@
   zimbatm = "zimbatm <zimbatm@zimbatm.com>";
   zohl = "Al Zohali <zohl@fmap.me>";
   zoomulator = "Kim Simmons <zoomulator@gmail.com>";
+  zraexy = "David Mell <zraexy@gmail.com>";
 }
