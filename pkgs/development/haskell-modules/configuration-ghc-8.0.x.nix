@@ -70,7 +70,4 @@ self: super: {
 
   hexpat = doJailbreak super.hexpat;
 
-  # https://github.com/Deewiant/glob/issues/8
-  Glob = doJailbreak super.Glob;
-
 }

@@ -94,7 +94,6 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./remove-tools-1.4.patch
-    ./sierra-time.patch
     ./creds-test-1.4.patch
   ];
 
