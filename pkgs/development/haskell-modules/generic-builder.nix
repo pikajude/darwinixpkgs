@@ -32,7 +32,7 @@
 , license
 , maintainers ? []
 # TODO Do we care about haddock when cross-compiling?
-, doHaddock ? !isCross && (!stdenv.isDarwin || stdenv.lib.versionAtLeast ghc.version "7.8")
+, doHaddock ? !isCross && (!stdenv.isDarwin || stdenv.lib.versionAtLeast ghc.version "7.8" || (ghc.isGhcjs or false))
 , passthru ? {}
 , pkgconfigDepends ? [], libraryPkgconfigDepends ? [], executablePkgconfigDepends ? [], testPkgconfigDepends ? []
 , testDepends ? [], testHaskellDepends ? [], testSystemDepends ? []
@@ -66,6 +66,8 @@ let
   packageDbFlag = if isGhcjs || versionOlder "7.6" ghc.version
                   then "package-db"
                   else "package-conf";
+
+  isDarwinGhcjs = isGhcjs && stdenv.isDarwin;
 
   nativeGhc = if isCross || isGhcjs then ghc.bootPkgs.ghc else ghc;
   nativePackageDbFlag = if versionOlder "7.6" nativeGhc.version
@@ -231,7 +233,18 @@ stdenv.mkDerivation ({
     runHook postCompileBuildDriver
   '';
 
-  configurePhase = ''
+  # copied from nodejs.nix
+  ${if isDarwinGhcjs then "sandboxProfile" else null} = ''
+    (allow file-read-metadata
+      (literal "/etc")
+      (literal "/private/etc/resolv.conf"))
+    (allow file-read* (literal "/private/var/run/resolv.conf"))
+  '';
+
+  configurePhase = stdenv.lib.optionalString isDarwinGhcjs ''
+    # on darwin, $HOME needs to be writable for the template-haskell runner
+    export HOME="$TMPDIR"
+  '' + ''
     runHook preConfigure
 
     unset GHC_PACKAGE_PATH      # Cabal complains if this variable is set during configure.
