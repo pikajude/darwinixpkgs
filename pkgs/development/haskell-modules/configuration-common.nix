@@ -42,7 +42,8 @@ self: super: {
   Lazy-Pbkdf2 = if pkgs.stdenv.isi686 then dontCheck super.Lazy-Pbkdf2 else super.Lazy-Pbkdf2;
 
   # Use the default version of mysql to build this package (which is actually mariadb).
-  mysql = super.mysql.override { mysql = pkgs.mysql.lib; };
+  # test phase requires networking
+  mysql = dontCheck (super.mysql.override { mysql = pkgs.mysql.lib; });
 
   # Link the proper version.
   zeromq4-haskell = super.zeromq4-haskell.override { zeromq = pkgs.zeromq4; };
@@ -53,7 +54,7 @@ self: super: {
     src = pkgs.fetchFromGitHub {
       owner = "joeyh";
       repo = "git-annex";
-      sha256 = "1a87kllzxmjwkz5arq4c3bp7qfkabn0arbli6s6i68fkgm19s4gr";
+      sha256 = "1vy6bj7f8zyj4n1r0gpi0r7mxapsrjvhwmsi5sbnradfng5j3jya";
       rev = drv.version;
     };
   })).overrideScope (self: super: {
@@ -191,7 +192,8 @@ self: super: {
     then dontCheck (overrideCabal super.hakyll (drv: {
       testToolDepends = [];
     }))
-    else super.hakyll;
+    # https://github.com/jaspervdj/hakyll/issues/491
+    else dontCheck super.hakyll;
 
   # Heist's test suite requires system pandoc
   heist = overrideCabal super.heist (drv: {
@@ -1105,7 +1107,7 @@ self: super: {
 
   # https://github.com/NixOS/nixpkgs/issues/19612
   wai-app-file-cgi = (dontCheck super.wai-app-file-cgi).overrideScope (self: super: {
-    http-client = self.http-client_0_5_3_2;
+    http-client = self.http-client_0_5_5;
     http-client-tls = self.http-client-tls_0_3_3;
     http-conduit = self.http-conduit_2_2_3;
   });

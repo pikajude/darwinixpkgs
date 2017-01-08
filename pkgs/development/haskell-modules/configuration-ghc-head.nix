@@ -129,4 +129,11 @@ self: super: {
          HttpLib{..} = cfgHttpLib
   ''));
 
+  # A bunch of jailbreaks due to 'base' bump
+  old-locale = doJailbreak super.old-locale;
+  primitive = doJailbreak super.primitive;
+  test-framework = doJailbreak super.test-framework;
+  atomic-primops = doJailbreak (appendPatch super.atomic-primops ./patches/atomic-primops-Cabal-1.25.patch);
+  hashable = doJailbreak super.hashable;
+  stm = doJailbreak super.stm;
 }

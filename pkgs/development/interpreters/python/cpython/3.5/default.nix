@@ -6,7 +6,7 @@
 , openssl
 , readline
 , sqlite
-, tcl ? null, tk ? null, libX11 ? null, xproto ? null, x11Support ? false
+, tcl ? null, tk ? null, tix ? null, libX11 ? null, xproto ? null, x11Support ? false
 , zlib
 , callPackage
 , self
@@ -54,6 +54,10 @@ in stdenv.mkDerivation {
   '';
 
   frameworks = [ "Carbon" "SystemConfiguration" ];
+
+  postPatch = optionalString (x11Support && (tix != null)) ''
+    substituteInPlace "Lib/tkinter/tix.py" --replace "os.environ.get('TIX_LIBRARY')" "os.environ.get('TIX_LIBRARY') or '${tix}/lib'"
+  '';
 
   preConfigure = ''
     for i in /usr /sw /opt /pkg; do	# improve purity

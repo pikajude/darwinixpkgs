@@ -21,7 +21,6 @@ stdenv.mkDerivation rec {
   frameworks = [ "Carbon" ];
 
   buildInputs = [ gobjectIntrospection ]
-    ++ optional stdenv.isDarwin fontconfig;
   nativeBuildInputs = [ pkgconfig ];
   propagatedBuildInputs = [ cairo harfbuzz libXft ] ++ libintlOrEmpty;
 
@@ -51,6 +50,6 @@ stdenv.mkDerivation rec {
     license = licenses.lgpl2Plus;
 
     maintainers = with maintainers; [ raskin urkud ];
-    platforms = with platforms; linux ++ darwin;
+    platforms = platforms.linux ++ platforms.darwin;
   };
 }
