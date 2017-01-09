@@ -20,7 +20,7 @@ stdenv.mkDerivation rec {
 
   frameworks = [ "Carbon" ];
 
-  buildInputs = [ gobjectIntrospection ]
+  buildInputs = [ gobjectIntrospection ];
   nativeBuildInputs = [ pkgconfig ];
   propagatedBuildInputs = [ cairo harfbuzz libXft ] ++ libintlOrEmpty;
 

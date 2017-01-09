@@ -1152,4 +1152,6 @@ self: super: {
 
   # https://github.com/krisajenkins/elm-export/pull/22
   elm-export = doJailbreak super.elm-export;
+
+  persistent-sqlite = dontCheck super.persistent-sqlite;
 }
